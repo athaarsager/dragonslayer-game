@@ -32,3 +32,12 @@ description text NOT NULL,
 attack_text text NOT NULL,
 extra_effect_id integer REFERENCES class(id)
 );
+
+--Insert Statements
+
+INSERT INTO class (name, description, denial_text)
+VALUES 
+('Knight', 'A noble warrior who fights for Kingdom, Honor, and Glory.', 'Pffft, as if You could ever be a knight!'),
+('Monk', 'A holy man who whose fists are as strong as his faith.', 'Yeah...no. You ain''t holy enough for this one!'),
+('Thief', 'A dastardly rogue who overcomes his enemies with quickness and cunning.', 'You...cunning?! Don''t make me laugh!'),
+('Peasant', 'A lowly, miserable farmer whose only true companion in life is his lucky chicken', NULL);
