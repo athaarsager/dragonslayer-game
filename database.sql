@@ -29,7 +29,7 @@ create table extra_effect (
 id serial PRIMARY KEY NOT NULL,
 attack_id integer REFERENCES attack(id) NOT NULL,
 target_character varchar(250) NOT NULL,
-target_stat_id integer,
+target_stat varchar(250),
 effect decimal,
 other_outcome text
 );
@@ -75,3 +75,17 @@ VALUES
 (4, 'Eat Chicken Nuggets', 0, 0, 'There''s still one thing your beloved friend can do for you...', 'You eat the lucky chicken nuggets!'),
 (4, 'Call of Cock-a-Doodle-Doo', 100, 600, 'The power and love of your chicken friend fills you from within! A new power is at your disposal!', 'Summoning the power of your dead friend from within, you unleash a powerful blast of...ROOSTER energy?!'),
 (4, 'Listen', 0, 0, 'Don''t be an idiot! The dragon is trying to trick you!', 'Ignoring the fact that this is obviously a TERRIBLE idea, you listen carefully to what the dragon has to say.');
+
+--Extra Effect Inserts for Dragon attacks
+INSERT INTO extra_effect (attack_id, target_character, target_stat, effect, other_outcome)
+VALUES (3, 'player', 'defense', 0.5, NULL);  
+
+--Extra Effect Inserts for Peasant attacks
+INSERT INTO extra_effect (attack_id, target_character, target_stat, effect, other_outcome)
+VALUES
+(8, 'player', 'attack', 2, NULL),
+(9, 'dragon', 'defense', 0.5, 'dragon loses two turns.'),
+(11, 'player', 'defense', 0.5, NULL),
+(10, 'dragon', NULL, NULL, 'dragon loses one turn.'),
+(12, 'player', 'defense', 0.5, NULL),
+(14, 'player', 'hp', 100, NULL);
