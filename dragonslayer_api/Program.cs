@@ -13,6 +13,10 @@ app.Run();
 // define classes here
 public class GameData
 {
+    public List<CharacterClass> CharacterClasses { get; set; }
+    public List<Stat> Stats {get; set; }
+    public List<Attack> Attacks {get; set; }
+    
     public class CharacterClass
     {
         public int Id { get; set; }
