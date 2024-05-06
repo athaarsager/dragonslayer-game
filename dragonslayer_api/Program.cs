@@ -12,14 +12,14 @@ var app = builder.Build();
 
 // api goes here
 
-app.MapGet("/character_classes", async (DragonslayerDb db) => await db.);
-app.MapGet("/stats");
-app.MapGet("/attacks");
+app.MapGet("/character_classes", async (DragonslayerDb db) => await db.CharacterClasses.ToListAsync());
+app.MapGet("/stats", async (DragonslayerDb db) => await db.Stats.ToListAsync());
+app.MapGet("/attacks", async (DragonslayerDb db) => await db.Attacks.ToListAsync());
 
 app.Run();
 
 
-// define classes here
+// define classes (models) here
 
 public class CharacterClass
 {
