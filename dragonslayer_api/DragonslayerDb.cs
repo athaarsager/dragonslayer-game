@@ -11,11 +11,14 @@ public class DragonslayerDb : DbContext
 
     // This is for configuring the table join between the Attack and Extra_Effect Table
     // probably not necessary since configuring everything in the classes now.
-    // protected override void OnModelCreating(ModelBuilder builder)
-    // {
-    //     builder.Entity<Extra_Effect>()
-    //         .HasOne(x => x.Attack)
-    //         .WithMany()
-    //         .HasForeignKey(x => x.Attack_Id);
-    // }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Attack>()
+            // a = Attack
+            // e = Extra_Effect
+            .HasOne(a => a.Extra_Effect)
+            .WithOne(e => e.Attack)
+            .HasForeignKey<Extra_Effect>(e => e.Attack_Id)
+            .IsRequired();
+    }
 }

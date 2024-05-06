@@ -92,6 +92,7 @@ public class Extra_Effect
     public int Effect_Multiplier { get; set; }
     public string Other_Outcome { get; set; }
     // An Extra_Effect MUST have an associated Attack
+    // have to configure this relationship explicitly in the dbContext as well
     public Attack Attack {get; set;} = null!; // Required reference navigation
 }
 
