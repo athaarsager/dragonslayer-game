@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("dragonslayer_api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ce1a56d0282665ba00f770779a7b1b0e0adce96")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d51b45cdaabb3d322ae9c450b38e58072a06c511")]
 [assembly: System.Reflection.AssemblyProductAttribute("dragonslayer_api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("dragonslayer_api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
