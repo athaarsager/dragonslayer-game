@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // connect to PostgreSQL database
 // This checks for the connection string...I think...
 var Configuration = builder.Configuration;
+string connectionString = Environment.GetEnvironmentVariable("SQLCONNSTR_dragonslayerDb");
 builder.Services.AddDbContext<DragonslayerDb>(options =>
-    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 var app = builder.Build();
 
 // api goes here
