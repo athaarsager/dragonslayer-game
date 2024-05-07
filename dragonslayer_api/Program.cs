@@ -58,7 +58,7 @@ public class Character_Class
 public class Stat
 {
     public int Id { get; set; }
-    public int Class_Id { get; set; }
+    public int Character_Class_Id { get; set; }
     public int HP { get; set; }
     public int Mana { get; set; }
     public int Defense { get; set; }
@@ -70,7 +70,7 @@ public class Stat
 public class Attack
 {
     public int Id { get; set; }
-    public int Class_Id { get; set; }
+    public int Character_Class_Id { get; set; }
     public string Name { get; set; } = null!;
     public int Mana_Cost { get; set; }
     public int Power { get; set; }

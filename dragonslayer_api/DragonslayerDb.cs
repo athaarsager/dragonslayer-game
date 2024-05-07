@@ -20,5 +20,12 @@ public class DragonslayerDb : DbContext
             .WithOne(e => e.Attack)
             .HasForeignKey<Extra_Effect>(e => e.Attack_Id)
             .IsRequired();
+            // need to do this again with Character Class and Stat one-to-one relationship
+        modelBuilder.Entity<Character_Class>()
+            .HasOne(c => c.Stat)
+            .WithOne(s => s.Character_Class)
+            .HasForeignKey<Stat>(s => s.Character_Class_Id)
+            .IsRequired();
+            // Then run migrations and test!
     }
 }
