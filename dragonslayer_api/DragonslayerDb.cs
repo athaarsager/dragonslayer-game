@@ -9,8 +9,7 @@ public class DragonslayerDb : DbContext
     public DbSet<Attack> Attack => Set<Attack>();
     public DbSet<Extra_Effect> Extra_Effect => Set<Extra_Effect>();
 
-    // This is for configuring the table join between the Attack and Extra_Effect Table
-    // probably not necessary since configuring everything in the classes now.
+    // The below is for explicitly configuring the table relationships
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Attack>()
@@ -20,12 +19,17 @@ public class DragonslayerDb : DbContext
             .WithOne(e => e.Attack)
             .HasForeignKey<Extra_Effect>(e => e.Attack_Id)
             .IsRequired();
-            // need to do this again with Character Class and Stat one-to-one relationship
+           
         modelBuilder.Entity<Character_Class>()
             .HasOne(c => c.Stat)
             .WithOne(s => s.Character_Class)
             .HasForeignKey<Stat>(s => s.Character_Class_Id)
             .IsRequired();
-            // Then run migrations and test!
+        
+        modelBuilder.Entity<Character_Class>()
+            .HasMany(c => c.Attacks)
+            .WithOne(a => a.Character_Class)
+            .HasForeignKey(a => a.Character_Class_Id)
+            .IsRequired();
     }
 }
