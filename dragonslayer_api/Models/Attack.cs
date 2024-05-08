@@ -19,7 +19,7 @@ public partial class Attack
     public string Description { get; set; } = null!;
 
     public string AttackText { get; set; } = null!;
-
+    [JsonIgnore]
     public virtual CharacterClass CharacterClass { get; set; } = null!;
 
     [JsonIgnore]

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Net.Security;
 using dotenv.net;
 using dragonslayer_api.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SignalR;
@@ -26,9 +27,19 @@ var app = builder.Build();
 // api goes here
 
 app.MapGet("/character_classes", async (DragonslayerGameContext db) => await db.CharacterClasses.ToListAsync());
-app.MapGet("/stats", async (DragonslayerGameContext db) => await db.Stats.ToListAsync());
+// Only get the stats associated with the chosen class. Don't need to store the others on the front end
+app.MapGet("/stats/{characterClassId}", async (DragonslayerGameContext db, int characterClassId) =>
+{
+    var stats = await db.Stats
+    .Where(s => s.CharacterClassId == characterClassId)
+    .ToListAsync();
+
+    return stats;
+});
 // Doing a left join with this one. Gets a bit complicated
-app.MapGet("/attacks", async (DragonslayerGameContext db) => await db.Attacks.GroupJoin(
+app.MapGet("/attacks/{characterClassId}", async (DragonslayerGameContext db, int characterClassId) => await db.Attacks
+.Where(a => a.CharacterClassId == characterClassId)
+.GroupJoin(
     db.ExtraEffects, // join with ExtraEffect table
     Attack => Attack.Id, // join on Attack.Id
     ExtraEffect => ExtraEffect.AttackId, // join on ExtraEffect.AttackId
