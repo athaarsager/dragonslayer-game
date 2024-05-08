@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace dragonslayer_api.Models;
 
@@ -17,5 +18,6 @@ public partial class ExtraEffect
 
     public string? OtherOutcome { get; set; }
 
+    [JsonIgnore]
     public virtual Attack Attack { get; set; } = null!;
 }
