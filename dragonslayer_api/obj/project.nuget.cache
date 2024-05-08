@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "x8i4ZEbtEjgp9bxOojlTu6rrF3kpkR0goMvDbiszSTm4R0ZgtPfIU1qF7nGqYthsjPhg1Wb4OFrAoK8XmHuouw==",
+  "dgSpecHash": "0XLvbxDnmxPKb12lf/Qy2ZCJInRTVgQNsfLCJK5zj4HMph6/5A7WOIYIU44qzPqmSYwVDfHJksvpzSs8ceH0BA==",
   "success": true,
   "projectFilePath": "/Users/andrewhaarsager/software-projects/dragonslayer-game/dragonslayer_api/dragonslayer_api.csproj",
   "expectedPackageFiles": [
+    "/Users/andrewhaarsager/.nuget/packages/dotenv.net/3.1.3/dotenv.net.3.1.3.nupkg.sha512",
     "/Users/andrewhaarsager/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/andrewhaarsager/.nuget/packages/microsoft.bcl.asyncinterfaces/6.0.0/microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "/Users/andrewhaarsager/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.3/microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",

@@ -1,16 +1,29 @@
+using System.Collections;
 using System.Net.Security;
+using dotenv.net;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
+DotEnv.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 // connect to PostgreSQL database
-// This checks for the connection string...I think...
+// This checks for the connection string
 var Configuration = builder.Configuration;
+
 string connectionString = Environment.GetEnvironmentVariable("SQLCONNSTR_dragonslayerDb");
+if (connectionString == null)
+{
+    Console.WriteLine("Connection string is null!");
+}
+else
+{
+    Console.WriteLine($"This is the connection string: {connectionString}");
+}
 builder.Services.AddDbContext<DragonslayerDb>(options =>
-    options.UseNpgsql(connectionString));
+options.UseNpgsql(connectionString));
 var app = builder.Build();
 
 // api goes here
@@ -30,7 +43,7 @@ app.MapGet("/attacks", async (DragonslayerDb db) => await db.Attack.GroupJoin(
 )
 .SelectMany(
     attackWithExtraEffects => attackWithExtraEffects.Extra_Effect,
-    (attackWithExtraEffects, extraEffect) => new 
+    (attackWithExtraEffects, extraEffect) => new
     {
         Attack = attackWithExtraEffects.Attack,
         Extra_Effect = extraEffect
@@ -94,6 +107,6 @@ public class Extra_Effect
     public string Other_Outcome { get; set; }
     // An Extra_Effect MUST have an associated Attack
     // have to configure this relationship explicitly in the dbContext as well
-    public Attack Attack {get; set;} = null!; // Required reference navigation
+    public Attack Attack { get; set; } = null!; // Required reference navigation
 }
 

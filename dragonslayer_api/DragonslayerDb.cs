@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 // class for setting up connection to database.
 public class DragonslayerDb : DbContext
 {
@@ -19,13 +20,13 @@ public class DragonslayerDb : DbContext
             .WithOne(e => e.Attack)
             .HasForeignKey<Extra_Effect>(e => e.Attack_Id)
             .IsRequired();
-           
+
         modelBuilder.Entity<Character_Class>()
             .HasOne(c => c.Stat)
             .WithOne(s => s.Character_Class)
             .HasForeignKey<Stat>(s => s.Character_Class_Id)
             .IsRequired();
-        
+
         modelBuilder.Entity<Character_Class>()
             .HasMany(c => c.Attacks)
             .WithOne(a => a.Character_Class)
