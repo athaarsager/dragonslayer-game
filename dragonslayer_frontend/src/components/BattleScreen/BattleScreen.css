@@ -1,4 +1,26 @@
+#dragon-display {
+    display: flex;
+    justify-content: center;
+}
+
 img {
-    height: 80vh;
-    width: 70vh;
+    height: 65vh;
+    width: 55vh;
+}
+
+.text-box {
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+    border-radius: 10px;
+    width: 100vh;
+    padding: 8px;
+}
+
+#battle-text {
+    border-bottom: none;
+}
+
+#battle-menu {
+    height: 9rem;;
 }
