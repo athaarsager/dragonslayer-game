@@ -52,6 +52,8 @@ img {
 
 .selector {
     font-size: 25px;
+    text-align: right;
+    margin-right: 0.75rem;
     grid-column: 1 / span 1;
 }
 

@@ -6,15 +6,8 @@ function BattleScreen() {
     // putting axios calls here for now. Will very likely need to move them to a different component later
 
 
-    // e.key to detect key code (what key was pressed)
-    // keycodes for arrows:
-    // left = ArrowLeft
-    // up = ArrowUp
-    // right = ArrowRight
-    // down = ArrowDown
-    // so...need to write a function that detects what element does not have the class name "unselected"
-    // on key press, determine which element should next have the unselected class removed based on what key was pressed
-    // selected class will do nothing in terms of css, it will just be an identifier for which element is selected
+    // function manually determines which item should be selected in the battle action menu
+    // based on what key was pressed
     const displaySelector = (e) => {
         const optionOne = document.querySelector(".option-one").children[0];
         const optionTwo = document.querySelector(".option-two").children[0];
