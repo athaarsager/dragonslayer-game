@@ -5,6 +5,15 @@ function BattleScreen() {
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
 
+    
+    // e.key to detect key code (what key was pressed)
+    const displaySelector = (e) => {
+        e.target.children[0].classList.remove("unselected");
+    }
+
+    const hideSelector = (e) => {
+        e.target.children[0].classList.add("unselected");
+    }
 
     return (
         <>
@@ -18,11 +27,12 @@ function BattleScreen() {
             <div id="battle-text" className="text-box">
                 <p>Battle Text Here</p>
             </div>
-            <div id="battle-menu" class="text-box">
-                <div id="attack-action"><span className="selector">&#9659;</span>Attack</div>
-                <div id="defend-action"><span className="selector">&#9659;</span>Defend</div>
-                <div id="magic-action"><span className="selector">&#9659;</span>Magic</div>
-                <div id="run-action"><span className="selector">&#9659;</span>Run</div>
+            <div id="battle-menu" className="text-box">
+                {/* onFocus focuses element, onBlur hides it*/}
+                <div onFocus={displaySelector} onBlur={hideSelector} id="attack-action" tabIndex={1}><span className="selector unselected">&#9659;</span>Attack</div>
+                <div onFocus={displaySelector} onBlur={hideSelector} id="defend-action" tabIndex={2}><span className="selector unselected">&#9659;</span>Defend</div>
+                <div onFocus={displaySelector} onBlur={hideSelector} id="magic-action" tabIndex={3}><span className="selector unselected">&#9659;</span>Magic</div>
+                <div onFocus={displaySelector} onBlur={hideSelector} id="run-action" tabIndex={4}><span className="selector unselected">&#9659;</span>Run</div>
             </div>
         </>
     )
