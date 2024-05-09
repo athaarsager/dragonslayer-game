@@ -33,7 +33,7 @@ img {
 
 .selector-container {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 30% 70%;
     grid-template-rows: auto;
 }
 
