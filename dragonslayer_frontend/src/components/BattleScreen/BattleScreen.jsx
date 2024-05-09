@@ -19,22 +19,10 @@ function BattleScreen() {
                 <p>Battle Text Here</p>
             </div>
             <div id="battle-menu" class="text-box">
-                <div class="action-row">
-                    <div>
-                        <div class="battle-action">Attack</div>
-                    </div>
-                    <div>
-                        <div class="battle-action">Defend</div>
-                    </div>
-                </div>
-                <div class="action-row">
-                    <div>
-                        <div class="battle-action">Magic</div>
-                    </div>
-                    <div>
-                        <div class="battle-action">Run</div>
-                    </div>
-                </div>
+                <div id="attack-action">Attack</div>
+                <div id="defend-action">Defend</div>
+                <div id="magic-action">Magic</div>
+                <div id="run-action">Run</div>
             </div>
         </>
     )
