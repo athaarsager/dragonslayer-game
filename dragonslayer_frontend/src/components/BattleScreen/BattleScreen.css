@@ -1,6 +1,7 @@
 #dragon-display {
     display: flex;
     justify-content: center;
+    margin-bottom: 1rem;
 }
 
 img {
@@ -14,7 +15,7 @@ img {
     border: 2px solid white;
     border-radius: 10px;
     width: 100vh;
-    padding: 8px;
+    padding: 5px;
 }
 
 #battle-text {
@@ -22,5 +23,5 @@ img {
 }
 
 #battle-menu {
-    height: 9rem;;
+    height: 8.5rem;;
 }
