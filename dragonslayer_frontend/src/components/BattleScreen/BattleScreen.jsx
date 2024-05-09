@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./BattleScreen.css";
+import ActionMenu from "../ActionMenu/ActionMenu";
 function BattleScreen() {
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
@@ -74,23 +75,7 @@ function BattleScreen() {
                 <p>Battle Text Here</p>
             </div>
             <div id="battle-menu" className="text-box">
-                {/* onFocus focuses element, onBlur hides it*/}
-                <div className={"option-one selector-container left-option"}>
-                    <div id="attack-select" className="selector">&#9659;</div>
-                    <div className="action">Attack</div>
-                </div>
-                <div className={"option-two selector-container right-option"}>
-                    <div id="defend-select" className="selector unselected">&#9659;</div>
-                    <div className="action">Defend</div>
-                </div>
-                <div className={"option-three selector-container left-option"}>
-                    <div id="magic-select" className="selector unselected">&#9659;</div>
-                    <div className="action">Magic</div>
-                </div>
-                <div className={"option-four selector-container right-option"}>
-                    <div id="run-select" className="selector unselected">&#9659;</div>
-                    <div className="action">Run</div>
-                </div>
+            <ActionMenu />
             </div>
         </>
     )
