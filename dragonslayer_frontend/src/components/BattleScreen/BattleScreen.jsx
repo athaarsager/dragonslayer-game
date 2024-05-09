@@ -5,7 +5,7 @@ function BattleScreen() {
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
 
-    
+
     // e.key to detect key code (what key was pressed)
     const displaySelector = (e) => {
         e.target.children[0].classList.remove("unselected");
@@ -29,10 +29,22 @@ function BattleScreen() {
             </div>
             <div id="battle-menu" className="text-box">
                 {/* onFocus focuses element, onBlur hides it*/}
-                <div onFocus={displaySelector} onBlur={hideSelector} id="attack-action" tabIndex={1}><span className="selector unselected">&#9659;</span>Attack</div>
-                <div onFocus={displaySelector} onBlur={hideSelector} id="defend-action" tabIndex={2}><span className="selector unselected">&#9659;</span>Defend</div>
-                <div onFocus={displaySelector} onBlur={hideSelector} id="magic-action" tabIndex={3}><span className="selector unselected">&#9659;</span>Magic</div>
-                <div onFocus={displaySelector} onBlur={hideSelector} id="run-action" tabIndex={4}><span className="selector unselected">&#9659;</span>Run</div>
+                <div onFocus={displaySelector} onBlur={hideSelector} tabIndex={1} className={"selector-container left-option"}>
+                    <div id="attack-select" className="selector unselected">&#9659;</div>
+                    <div className="action">Attack</div>
+                </div>
+                <div onFocus={displaySelector} onBlur={hideSelector} tabIndex={2} className={"selector-container right-option"}>
+                    <div id="defend-select" className="selector unselected">&#9659;</div>
+                    <div className="action">Defend</div>
+                </div>
+                <div onFocus={displaySelector} onBlur={hideSelector} tabIndex={3} className={"selector-container left-option"}>
+                    <div id="magic-select" className="selector unselected">&#9659;</div>
+                    <div className="action">Magic</div>
+                </div>
+                <div onFocus={displaySelector} onBlur={hideSelector}  tabIndex={4} className={"selector-container right-option"}>
+                    <div id="run-select" className="selector unselected">&#9659;</div>
+                    <div className="action">Run</div>
+                </div>
             </div>
         </>
     )
