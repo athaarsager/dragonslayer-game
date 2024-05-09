@@ -73,7 +73,6 @@ function BattleScreen() {
 
     return (
         <>
-            <h2>A dragon draws near!</h2>
             {/* Credit for dragon image: Image by Artie Blur from Pixabay 
                 Granted, it is AI generated, so do I need to credit him? Probablys still should...*/}
             <div id="dragon-display">
