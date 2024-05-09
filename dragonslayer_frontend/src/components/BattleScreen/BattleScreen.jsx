@@ -5,6 +5,7 @@ function BattleScreen() {
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
 
+
     return (
         <>
             <h2>A dragon draws near!</h2>
@@ -18,7 +19,22 @@ function BattleScreen() {
                 <p>Battle Text Here</p>
             </div>
             <div id="battle-menu" class="text-box">
-                <p>Action Menu Here</p>
+                <div class="action-row">
+                    <div>
+                        <div class="battle-action">Attack</div>
+                    </div>
+                    <div>
+                        <div class="battle-action">Defend</div>
+                    </div>
+                </div>
+                <div class="action-row">
+                    <div>
+                        <div class="battle-action">Magic</div>
+                    </div>
+                    <div>
+                        <div class="battle-action">Run</div>
+                    </div>
+                </div>
             </div>
         </>
     )

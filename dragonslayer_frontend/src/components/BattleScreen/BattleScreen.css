@@ -23,5 +23,12 @@ img {
 }
 
 #battle-menu {
-    height: 8.5rem;;
+    height: 8.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.action-row {
+    display: flex;
+    justify-content: space-around;
 }
