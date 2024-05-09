@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./BattleScreen.css";
 function BattleScreen() {
@@ -7,13 +7,69 @@ function BattleScreen() {
 
 
     // e.key to detect key code (what key was pressed)
+    // keycodes for arrows:
+    // left = ArrowLeft
+    // up = ArrowUp
+    // right = ArrowRight
+    // down = ArrowDown
+    // so...need to write a function that detects what element does not have the class name "unselected"
+    // on key press, determine which element should next have the unselected class removed based on what key was pressed
+    // selected class will do nothing in terms of css, it will just be an identifier for which element is selected
     const displaySelector = (e) => {
-        e.target.children[0].classList.remove("unselected");
+        const optionOne = document.querySelector(".option-one").children[0];
+        const optionTwo = document.querySelector(".option-two").children[0];
+        const optionThree = document.querySelector(".option-three").children[0];
+        const optionFour = document.querySelector(".option-four").children[0];
+        console.log("This is optionOne:", optionOne);
+        console.log("this is the classlist of optionOne:", optionOne.classList);
+        // check for "legal" moves first
+        if (e.key === "ArrowLeft" && (!optionOne.classList.contains("unselected") || !optionThree.classList.contains("unselected"))) {
+            return;
+        } else if (e.key === "ArrowRight" && (!optionTwo.classList.contains("unselected") || !optionFour.classList.contains("unselected"))) {
+            return;
+        } else if (e.key === "ArrowUp" && (!optionOne.classList.contains("unselected") || !optionTwo.classList.contains("unselected"))) {
+            return;
+        } else if (e.key === "ArrowDown" && (!optionThree.classList.contains("unselected") || !optionFour.classList.contains("unselected"))) {
+            return;
+            // now actually determine behavior, one scenario at a time
+        } else if (e.key === "ArrowRight" && !optionOne.classList.contains("unselected")) {
+            optionOne.classList.add("unselected");
+            optionTwo.classList.remove("unselected");
+            return;
+        } else if (e.key === "ArrowDown" && !optionOne.classList.contains("unselected")) {
+            optionOne.classList.add("unselected");
+            optionThree.classList.remove("unselected");
+            return;
+        } else if (e.key === "ArrowDown" && !optionTwo.classList.contains("unselected")) {
+            optionTwo.classList.add("unselected");
+            optionFour.classList.remove("unselected");
+            return;
+        } else if (e.key === "ArrowLeft" && !optionTwo.classList.contains("unselected")) {
+            optionTwo.classList.add("unselected");
+            optionOne.classList.remove("unselected");
+            return;
+        } else if (e.key === "ArrowUp" && !optionThree.classList.contains("unselected")) {
+            optionThree.classList.add("unselected");
+            optionOne.classList.remove("unselected");
+            return;
+        } else if (e.key === "ArrowRight" && !optionThree.classList.contains("unselected")) {
+            optionThree.classList.add("unselected");
+            optionFour.classList.remove("unselected");
+            return;
+        } else if (e.key === "ArrowLeft" && !optionFour.classList.contains("unselected")) {
+            optionFour.classList.add("unselected");
+            optionThree.classList.remove("unselected");
+            return;
+        } else if (e.key === "ArrowUp" && !optionFour.classList.contains("unselected")) {
+            optionFour.classList.add("unselected");
+            optionTwo.classList.remove("unselected");
+            return;
+        }
     }
 
-    const hideSelector = (e) => {
-        e.target.children[0].classList.add("unselected");
-    }
+    useEffect(() => {
+        document.addEventListener("keydown", displaySelector);
+    }, []);
 
     return (
         <>
@@ -29,19 +85,19 @@ function BattleScreen() {
             </div>
             <div id="battle-menu" className="text-box">
                 {/* onFocus focuses element, onBlur hides it*/}
-                <div onFocus={displaySelector} onBlur={hideSelector} tabIndex={1} className={"selector-container left-option"}>
-                    <div id="attack-select" className="selector unselected">&#9659;</div>
+                <div className={"option-one selector-container left-option"}>
+                    <div id="attack-select" className="selector">&#9659;</div>
                     <div className="action">Attack</div>
                 </div>
-                <div onFocus={displaySelector} onBlur={hideSelector} tabIndex={2} className={"selector-container right-option"}>
+                <div className={"option-two selector-container right-option"}>
                     <div id="defend-select" className="selector unselected">&#9659;</div>
                     <div className="action">Defend</div>
                 </div>
-                <div onFocus={displaySelector} onBlur={hideSelector} tabIndex={3} className={"selector-container left-option"}>
+                <div className={"option-three selector-container left-option"}>
                     <div id="magic-select" className="selector unselected">&#9659;</div>
                     <div className="action">Magic</div>
                 </div>
-                <div onFocus={displaySelector} onBlur={hideSelector}  tabIndex={4} className={"selector-container right-option"}>
+                <div className={"option-four selector-container right-option"}>
                     <div id="run-select" className="selector unselected">&#9659;</div>
                     <div className="action">Run</div>
                 </div>
