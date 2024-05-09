@@ -15,14 +15,14 @@ function BattleScreen() {
                 <img src="/public/images/dragon.jpg"
                     alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
             </div>
-            <div id="battle-text" class="text-box">
+            <div id="battle-text" className="text-box">
                 <p>Battle Text Here</p>
             </div>
             <div id="battle-menu" class="text-box">
-                <div id="attack-action">Attack</div>
-                <div id="defend-action">Defend</div>
-                <div id="magic-action">Magic</div>
-                <div id="run-action">Run</div>
+                <div id="attack-action"><span className="selector">&#9659;</span>Attack</div>
+                <div id="defend-action"><span className="selector">&#9659;</span>Defend</div>
+                <div id="magic-action"><span className="selector">&#9659;</span>Magic</div>
+                <div id="run-action"><span className="selector">&#9659;</span>Run</div>
             </div>
         </>
     )

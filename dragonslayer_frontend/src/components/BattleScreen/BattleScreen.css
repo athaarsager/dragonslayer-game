@@ -24,6 +24,7 @@ img {
 
 #battle-menu {
     height: 8.5rem;
+    padding-top: 2rem;
     display: grid;
     /* Create grid with 4 columns and 2 rows with auto width */
     grid-template-columns: auto auto auto auto auto;
@@ -32,17 +33,26 @@ img {
 
 #attack-action {
     grid-column: 2 / span 1;
+    font-size: 24px;
 }
 
 #defend-action {
     grid-column: 4 / span 1;
+    font-size: 24px;
 }
 
 #magic-action {
     grid-column: 2 / span 1;
+    font-size: 24px;
 }
 
 #run-action {
     grid-column: 4 / span 1;
+    font-size: 24px;
+}
+
+.selector {
+    font-size: 25px;
+    margin-right: 5px;
 }
 
