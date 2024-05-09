@@ -13,8 +13,6 @@ function BattleScreen() {
         const optionTwo = document.querySelector(".option-two").children[0];
         const optionThree = document.querySelector(".option-three").children[0];
         const optionFour = document.querySelector(".option-four").children[0];
-        console.log("This is optionOne:", optionOne);
-        console.log("this is the classlist of optionOne:", optionOne.classList);
         // check for "legal" moves first
         if (e.key === "ArrowLeft" && (!optionOne.classList.contains("unselected") || !optionThree.classList.contains("unselected"))) {
             return;
