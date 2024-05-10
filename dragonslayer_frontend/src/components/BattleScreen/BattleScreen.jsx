@@ -58,6 +58,17 @@ function BattleScreen() {
             return;
         }
     }
+    // make separate function for handling when enter or spacebar pressed to account for
+    // different contents of the battle-menu?
+    // the displaySelector function can be global as long as there are always four options
+    // but each individual menu will have different actions for each option based on what was selected
+    // OR give each element in the action menu its own unique id based on its text content
+    // and use that to determine functionality...would require DOM walking again I think...
+    // ...or make function vague and say on enter execute whatever function is associated with this id?
+    //... can I even do that? Create a function name based off of an id name?
+    // I think so, create a generic function called "execute action"
+    // and pass it the id of the selected option
+    // then have it execute an action based on that id
 
     useEffect(() => {
         document.addEventListener("keydown", displaySelector);

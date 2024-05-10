@@ -13,6 +13,8 @@ DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+
 var Configuration = builder.Configuration;
 // connect to PostgreSQL database
 // This checks the .env file for the connection string
@@ -59,4 +61,4 @@ app.MapGet("/attacks/{characterClassId}", async (DragonslayerGameContext db, int
 )
 .ToListAsync());
 
-app.Run();
+app.Run($"http://localhost:{port}");
