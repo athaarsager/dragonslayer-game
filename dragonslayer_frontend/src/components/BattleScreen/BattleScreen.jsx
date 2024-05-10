@@ -7,7 +7,7 @@ function BattleScreen() {
     const [classAttacks, setClassAttacks] = useState([]);
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
-        const response = await axios.get("http://localhost:8080/attacks/4");
+        const response = await axios.get("/api/attacks/4");
         console.log("This is the response:", response.data);
     }
 

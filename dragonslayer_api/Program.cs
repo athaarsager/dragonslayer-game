@@ -26,7 +26,8 @@ string connectionString = Environment.GetEnvironmentVariable("SQLCONNSTR_dragons
 builder.Services.AddDbContext<DragonslayerGameContext>(options =>
 options.UseNpgsql(connectionString));
 
-// Add CORS services
+// Add CORS services. May need to allow for a different origin once website is hosted...
+// This specifies where requests can be accepted from
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
