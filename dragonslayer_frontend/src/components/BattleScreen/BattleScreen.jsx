@@ -4,8 +4,12 @@ import "./BattleScreen.css";
 import ActionMenu from "../ActionMenu/ActionMenu";
 function BattleScreen() {
 
+    const [classAttacks, setClassAttacks] = useState([]);
     // putting axios calls here for now. Will very likely need to move them to a different component later
-
+    async function fetchClassAttacks() {
+        const response = await axios.get("/attacks/4");
+        console.log("This is the response:", response.data);
+    }
 
     // function manually determines which item should be selected in the battle action menu
     // based on what key was pressed
@@ -72,6 +76,7 @@ function BattleScreen() {
 
     useEffect(() => {
         document.addEventListener("keydown", displaySelector);
+        fetchClassAttacks();
     }, []);
 
     return (
