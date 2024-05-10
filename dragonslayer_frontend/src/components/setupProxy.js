@@ -1,10 +1,10 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const { env } = require('process');
 
-const target = 'http://localhost:5087';
+const target = env.PORT ? `http://localhost:${env.PORT}` : "http://localhost:8080";
 
 const context = [
-  "/weatherforecast",
+  "/api",
 ];
 
 const onError = (err, req, resp, target) => {
