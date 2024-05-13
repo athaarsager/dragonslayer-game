@@ -8,7 +8,8 @@ function BattleScreen() {
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         const response = await axios.get("/api/attacks/4");
-        console.log("This is the response:", response.data);
+        console.log(response.data);
+        setClassAttacks(response.data);
     }
 
     // function manually determines which item should be selected in the battle action menu

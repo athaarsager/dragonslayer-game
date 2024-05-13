@@ -75,6 +75,7 @@ app.MapGet("/attacks/{characterClassId}", async (DragonslayerGameContext db, int
         Extra_Effect = extraEffect
     }
 )
+.OrderBy(a => a.Attack.Id) // order by id
 .ToListAsync());
 
 
