@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./BattleScreen.css";
 import ActionMenu from "../ActionMenu/ActionMenu";
+import BattleText from "../BattleText/BattleText";
 function BattleScreen() {
 
     const [onActionMenu, setOnActionMenu] = useState(true);
@@ -115,7 +116,7 @@ function BattleScreen() {
                     alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
             </div>
             <div id="battle-text" className="text-box">
-                <p>Battle Text Here</p>
+                <BattleText />
             </div>
             <div id="battle-menu" className="text-box">
                 <ActionMenu
