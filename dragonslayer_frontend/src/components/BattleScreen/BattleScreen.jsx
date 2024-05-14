@@ -6,6 +6,7 @@ function BattleScreen() {
 
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacks, setClassAttacks] = useState([]);
+    const [characterStats, setCharacterStats] = useState({});
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
     // putting axios calls here for now. Will very likely need to move them to a different component later
@@ -13,6 +14,12 @@ function BattleScreen() {
         const response = await axios.get("/api/attacks/4");
         console.log(response.data);
         setClassAttacks(response.data);
+    }
+
+    async function fetchCharacterStats() {
+        const response = await axios.get(`/api/stats/4`);
+        console.log("These are the character's stats:", response.data[0]);
+        setCharacterStats(response.data[0]);
     }
 
     // function manually determines which item should be selected in the battle action menu
@@ -111,6 +118,7 @@ function BattleScreen() {
 
     useEffect(() => {
         fetchClassAttacks();
+        fetchCharacterStats();
     }, []);
 
     useEffect(() => {
@@ -143,6 +151,10 @@ function BattleScreen() {
             <div id="dragon-display">
                 <img src="/public/images/dragon.jpg"
                     alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
+            </div>
+            <div id="character-stat-display">
+                <p>Hp: {characterStats.hp}</p>
+                <p>Mana: {characterStats.mana}</p>
             </div>
             <div id="battle-text" className="text-box">
                 <p>{battleText}</p>
