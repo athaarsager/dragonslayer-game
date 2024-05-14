@@ -65,7 +65,7 @@ function BattleScreen() {
             return;
         }
     }
-  
+
     // function that will use conditionals to determine which of the above functions to execute on "enter"
     // will need to edit this to make it more universal...
 
@@ -76,7 +76,7 @@ function BattleScreen() {
         const optionThree = document.querySelector(".option-three").children[0];
         const optionFour = document.querySelector(".option-four").children[0];
         if ((e.key === " " || e.key === "Enter") && !optionOne.classList.contains("unselected")) {
-           // option one = "attack". Open attack menu
+            // option one = "attack". Open attack menu
             if (onActionMenu) {
                 setAttackOptionChosen(true);
                 setOnActionMenu(false);
@@ -118,7 +118,10 @@ function BattleScreen() {
                 <p>Battle Text Here</p>
             </div>
             <div id="battle-menu" className="text-box">
-            <ActionMenu classAttacks={classAttacks} attackOptionChosen={attackOptionChosen} setAttackOptionChosen={setAttackOptionChosen}/>
+                <ActionMenu
+                    classAttacks={classAttacks}
+                    attackOptionChosen={attackOptionChosen}
+                    setAttackOptionChosen={setAttackOptionChosen} />
             </div>
         </>
     )
