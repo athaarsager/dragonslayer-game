@@ -1,3 +1,19 @@
+.upper-display {
+    display: flex;
+    align-items: end;
+}
+
+#character-stat-display {
+    width: 12vh;
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+    border-radius: 10px;
+    margin-right: 10vh;
+    padding-left: 1rem;
+    font-size: 16px;
+}
+
 #dragon-display {
     display: flex;
     justify-content: center;
@@ -5,7 +21,7 @@
 }
 
 img {
-    height: 65vh;
+    height: 60vh;
     width: 55vh;
 }
 
