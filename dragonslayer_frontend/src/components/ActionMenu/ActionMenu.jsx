@@ -4,7 +4,7 @@ function ActionMenu({ classAttacks, attackOptionChosen, setAttackOptionChosen })
   
     // will need to update this for other menus
     const returnToFirstMenu = (e) => {
-        if (e.key === "Backspace") {
+        if (e.key === "Backspace" || e.key === "Shift") {
             setAttackOptionChosen(false);
         }
     }
