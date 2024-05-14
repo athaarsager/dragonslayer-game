@@ -4,7 +4,9 @@ import "./BattleScreen.css";
 import ActionMenu from "../ActionMenu/ActionMenu";
 function BattleScreen() {
 
+    const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacks, setClassAttacks] = useState([]);
+    const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         const response = await axios.get("/api/attacks/4");
@@ -63,6 +65,25 @@ function BattleScreen() {
             return;
         }
     }
+  
+    // function that will use conditionals to determine which of the above functions to execute on "enter"
+    // will need to edit this to make it more universal...
+
+    const executeAction = (e) => {
+        //e.preventDefault();
+        const optionOne = document.querySelector(".option-one").children[0];
+        const optionTwo = document.querySelector(".option-two").children[0];
+        const optionThree = document.querySelector(".option-three").children[0];
+        const optionFour = document.querySelector(".option-four").children[0];
+        if ((e.key === " " || e.key === "Enter") && !optionOne.classList.contains("unselected")) {
+           // option one = "attack". Open attack menu
+            if (onActionMenu) {
+                setAttackOptionChosen(true);
+                setOnActionMenu(false);
+            }
+        }
+    }
+
     // make separate function for handling when enter or spacebar pressed to account for
     // different contents of the battle-menu?
     // the displaySelector function can be global as long as there are always four options
@@ -76,9 +97,14 @@ function BattleScreen() {
     // then have it execute an action based on that id
 
     useEffect(() => {
-        document.addEventListener("keydown", displaySelector);
         fetchClassAttacks();
     }, []);
+
+    useEffect(() => {
+        // check syntax here
+        document.addEventListener("keydown", displaySelector);
+        document.addEventListener("keydown", executeAction);
+    });
 
     return (
         <>
@@ -92,7 +118,7 @@ function BattleScreen() {
                 <p>Battle Text Here</p>
             </div>
             <div id="battle-menu" className="text-box">
-            <ActionMenu />
+            <ActionMenu classAttacks={classAttacks} attackOptionChosen={attackOptionChosen}/>
             </div>
         </>
     )
