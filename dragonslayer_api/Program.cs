@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Builder;
 
 // need this plus a nuget install to even get the project to recognize that there is a .env file
 DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
 var Configuration = builder.Configuration;
 // connect to PostgreSQL database
@@ -22,7 +25,22 @@ string connectionString = Environment.GetEnvironmentVariable("SQLCONNSTR_dragons
 // Cannot access the .env file from the dbContext file directly
 builder.Services.AddDbContext<DragonslayerGameContext>(options =>
 options.UseNpgsql(connectionString));
+
+// Add CORS services. May need to allow for a different origin once website is hosted...
+// This specifies where requests can be accepted from
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
+app.UseCors("AllowSpecificOrigins");
 
 // api goes here
 
@@ -57,6 +75,8 @@ app.MapGet("/attacks/{characterClassId}", async (DragonslayerGameContext db, int
         Extra_Effect = extraEffect
     }
 )
+.OrderBy(a => a.Attack.Id) // order by id
 .ToListAsync());
 
-app.Run();
+
+app.Run($"http://localhost:{port}");
