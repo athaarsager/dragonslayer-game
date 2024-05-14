@@ -15,13 +15,21 @@ img {
     border: 2px solid white;
     border-radius: 10px;
     width: 100vh;
-    padding: 5px;
 }
 
 #battle-text {
     border-bottom: none;
-    padding-left: 10px;
-    padding-right: 10px;
+    height: 4rem;
+    width: 938px;
+    padding: 10px;
+    font-size: 18px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#battle-text p {
+    margin: 0px;
 }
 
 #battle-menu {
