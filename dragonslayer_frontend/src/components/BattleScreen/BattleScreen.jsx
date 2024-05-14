@@ -118,7 +118,7 @@ function BattleScreen() {
                 <p>Battle Text Here</p>
             </div>
             <div id="battle-menu" className="text-box">
-            <ActionMenu classAttacks={classAttacks} attackOptionChosen={attackOptionChosen}/>
+            <ActionMenu classAttacks={classAttacks} attackOptionChosen={attackOptionChosen} setAttackOptionChosen={setAttackOptionChosen}/>
             </div>
         </>
     )

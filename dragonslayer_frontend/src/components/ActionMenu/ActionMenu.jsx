@@ -1,7 +1,17 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+function ActionMenu({ classAttacks, attackOptionChosen, setAttackOptionChosen }) {
+  
+    // will need to update this for other menus
+    const returnToFirstMenu = (e) => {
+        if (e.key === "Backspace") {
+            setAttackOptionChosen(false);
+        }
+    }
 
-function ActionMenu({ classAttacks, attackOptionChosen }) {
-    console.log("these are the classAttacks:", classAttacks);
+    useEffect(() => {
+        document.addEventListener("keydown", returnToFirstMenu);
+    });
     return (
         <>
             <div className={"option-one selector-container left-option"}>
@@ -30,6 +40,7 @@ function ActionMenu({ classAttacks, attackOptionChosen }) {
 // This is to avoid a linting error
 ActionMenu.propTypes = {
     classAttacks: PropTypes.array.isRequired,
-    attackOptionChosen: PropTypes.bool.isRequired
+    attackOptionChosen: PropTypes.bool.isRequired,
+    setAttackOptionChosen: PropTypes.func.isRequired
 };
 export default ActionMenu;
