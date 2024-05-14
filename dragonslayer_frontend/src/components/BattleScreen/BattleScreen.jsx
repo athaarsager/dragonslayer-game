@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./BattleScreen.css";
 import ActionMenu from "../ActionMenu/ActionMenu";
-import BattleText from "../BattleText/BattleText";
 function BattleScreen() {
 
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacks, setClassAttacks] = useState([]);
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
+    const [battleText, setBattleText] = useState("");
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         const response = await axios.get("/api/attacks/4");
@@ -77,9 +77,10 @@ function BattleScreen() {
         const optionThree = document.querySelector(".option-three").children[0];
         const optionFour = document.querySelector(".option-four").children[0];
         if ((e.key === " " || e.key === "Enter") && !optionOne.classList.contains("unselected")) {
-            // option one = "attack". Open attack menu
+            // option one = "attack". Open attack menu and set the battle text to option one
             if (onActionMenu) {
                 setAttackOptionChosen(true);
+                setBattleText(classAttacks[0].attack.description);
                 setOnActionMenu(false);
             }
         }
@@ -116,13 +117,15 @@ function BattleScreen() {
                     alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
             </div>
             <div id="battle-text" className="text-box">
-                <BattleText />
+                <p>{battleText}</p>
             </div>
             <div id="battle-menu" className="text-box">
                 <ActionMenu
                     classAttacks={classAttacks}
                     attackOptionChosen={attackOptionChosen}
-                    setAttackOptionChosen={setAttackOptionChosen} />
+                    setAttackOptionChosen={setAttackOptionChosen}
+                    setBattleText={setBattleText}
+                    battleText={battleText} />
             </div>
         </>
     )
