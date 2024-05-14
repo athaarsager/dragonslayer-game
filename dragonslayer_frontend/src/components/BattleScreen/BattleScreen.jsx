@@ -117,20 +117,24 @@ function BattleScreen() {
         // check syntax here
         document.addEventListener("keydown", displaySelector);
         document.addEventListener("keydown", executeAction);
-        // document.addEventListener("keydown", renderBattleText);
     });
 
-    useEffect(() => {
-        console.log("This is the battleText:", battleText);
-        console.log("This is the value of attackOptionChosen:", attackOptionChosen);
-    }, [battleText]);
-
+    // These two use effects make the state update correctly when switching between menus
+    // This first one ensures that the event listener unmounts when the component does...or something...
+    // essentially, it ensures this event listener does not interfere with the above two
     useEffect(() => {
         document.addEventListener("keydown", renderBattleText);
         return () => {
             document.removeEventListener("keydown", renderBattleText);
         }
-    }, [attackOptionChosen, classAttacks]);
+    }, [attackOptionChosen]);
+
+    // This one ensures that renderBattleText runs whenever attackOptionsChosen updates,
+    // which is what allows the state to update correctly when moving from attack menu
+    // to main menu
+    useEffect(() => {
+        renderBattleText();
+    }, [attackOptionChosen]);
 
     return (
         <>
