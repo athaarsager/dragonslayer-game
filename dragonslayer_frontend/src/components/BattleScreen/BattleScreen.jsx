@@ -7,7 +7,7 @@ function BattleScreen() {
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacks, setClassAttacks] = useState([]);
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
-    const [battleText, setBattleText] = useState("");
+    const [battleText, setBattleText] = useState("Default");
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         const response = await axios.get("/api/attacks/4");
@@ -67,6 +67,28 @@ function BattleScreen() {
         }
     }
 
+    const renderBattleText = () => {
+        const optionOne = document.querySelector(".option-one").children[0];
+        const optionTwo = document.querySelector(".option-two").children[0];
+        const optionThree = document.querySelector(".option-three").children[0];
+        const optionFour = document.querySelector(".option-four").children[0];
+
+        if (!attackOptionChosen) {
+            setBattleText("Default");
+            return;
+        } else if (attackOptionChosen) {
+            if (!optionOne.classList.contains("unselected")) {
+                setBattleText(classAttacks[0].attack.description);
+            } else if (!optionTwo.classList.contains("unselected")) {
+                setBattleText(classAttacks[1].attack.description);
+            } else if (!optionThree.classList.contains("unselected")) {
+                setBattleText(classAttacks[2].attack.description);
+            } else if (!optionFour.classList.contains("unselected")) {
+                setBattleText(classAttacks[3].attack.description);
+            }
+        }
+    }
+
     // function that will use conditionals to determine which of the above functions to execute on "enter"
     // will need to edit this to make it more universal...
 
@@ -80,23 +102,12 @@ function BattleScreen() {
             // option one = "attack". Open attack menu and set the battle text to option one
             if (onActionMenu) {
                 setAttackOptionChosen(true);
+                // This line right here is doing nothing to the state of battleText
                 setBattleText(classAttacks[0].attack.description);
                 setOnActionMenu(false);
             }
         }
     }
-
-    // make separate function for handling when enter or spacebar pressed to account for
-    // different contents of the battle-menu?
-    // the displaySelector function can be global as long as there are always four options
-    // but each individual menu will have different actions for each option based on what was selected
-    // OR give each element in the action menu its own unique id based on its text content
-    // and use that to determine functionality...would require DOM walking again I think...
-    // ...or make function vague and say on enter execute whatever function is associated with this id?
-    //... can I even do that? Create a function name based off of an id name?
-    // I think so, create a generic function called "execute action"
-    // and pass it the id of the selected option
-    // then have it execute an action based on that id
 
     useEffect(() => {
         fetchClassAttacks();
@@ -106,7 +117,20 @@ function BattleScreen() {
         // check syntax here
         document.addEventListener("keydown", displaySelector);
         document.addEventListener("keydown", executeAction);
+        // document.addEventListener("keydown", renderBattleText);
     });
+
+    useEffect(() => {
+        console.log("This is the battleText:", battleText);
+        console.log("This is the value of attackOptionChosen:", attackOptionChosen);
+    }, [battleText]);
+
+    useEffect(() => {
+        document.addEventListener("keydown", renderBattleText);
+        return () => {
+            document.removeEventListener("keydown", renderBattleText);
+        }
+    }, [attackOptionChosen, classAttacks]);
 
     return (
         <>
@@ -124,8 +148,7 @@ function BattleScreen() {
                     classAttacks={classAttacks}
                     attackOptionChosen={attackOptionChosen}
                     setAttackOptionChosen={setAttackOptionChosen}
-                    setBattleText={setBattleText}
-                    battleText={battleText} />
+                    setBattleText={setBattleText} />
             </div>
         </>
     )
