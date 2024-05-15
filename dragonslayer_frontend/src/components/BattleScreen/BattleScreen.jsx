@@ -9,10 +9,11 @@ function BattleScreen() {
     const [characterStats, setCharacterStats] = useState({});
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
+    const [battleMenuOpen, setBattleMenuOpen] = useState(true);
 
     let dragonAttacks = [];
     let dragonStats = {};
-    
+
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         const response = await axios.get("/api/attacks/4");
@@ -132,6 +133,10 @@ function BattleScreen() {
         }
     }
 
+    function playRound(action) {
+        setBattleMenuOpen(false);
+    }
+
     useEffect(() => {
         fetchClassAttacks();
         fetchCharacterStats();
@@ -177,7 +182,7 @@ function BattleScreen() {
                     classAttacks={classAttacks}
                     attackOptionChosen={attackOptionChosen}
                     setAttackOptionChosen={setAttackOptionChosen}
-                    setBattleText={setBattleText} />
+                    battleMenuOpen={battleMenuOpen} />
             </div>
         </>
     )
