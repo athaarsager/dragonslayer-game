@@ -136,6 +136,11 @@ function BattleScreen() {
 
     return (
         <>
+            <div id="dragon-hp-container-container">
+                <div id="dragon-hp-container">
+                    <div id="dragon-hp"></div>
+                </div>
+            </div>
             {/* Credit for dragon image: Image by Artie Blur from Pixabay 
                 Granted, it is AI generated, so do I need to credit him? Probablys still should...*/}
             <div id="dragon-display">
