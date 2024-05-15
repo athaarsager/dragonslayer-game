@@ -122,17 +122,13 @@ function BattleScreen() {
     }, []);
 
     useEffect(() => {
-        // check syntax here
+        // removing the top two when component dismounts to prevent excessive remounting
+        // functionality breaks if I remove the bottom one
         document.addEventListener("keydown", displaySelector);
-        document.addEventListener("keydown", executeAction);
-    });
-
-    // These two use effects make the state update correctly when switching between menus
-    // This first one ensures that the event listener unmounts when the component does...or something...
-    // essentially, it ensures this event listener does not interfere with the above two
-    useEffect(() => {
         document.addEventListener("keydown", renderBattleText);
+        document.addEventListener("keydown", executeAction);
         return () => {
+            document.removeEventListener("keydown", displaySelector);
             document.removeEventListener("keydown", renderBattleText);
         }
     }, [attackOptionChosen]);
