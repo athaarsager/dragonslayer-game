@@ -140,12 +140,20 @@ function BattleScreen() {
         const optionFour = document.querySelector(".option-four").children[0];
         if ((e.key === " " || e.key === "Enter") && !optionOne.classList.contains("unselected")) {
             // option one = "attack". Open attack menu and set the battle text to option one
+            if (classAttacks.length === 0) {
+                return;
+            }
             if (onActionMenu) {
                 setAttackOptionChosen(true);
-                // This line right here is doing nothing to the state of battleText
                 setBattleText(classAttacks[0].attack.description);
+                console.log("This is the value of classAttacks[0]:", classAttacks[0]);
                 setOnActionMenu(false);
-            }
+                return;
+            } 
+            // else if(attackOptionChosen) { // This is for when you are selecting the first attack on the attack menu
+            //     playRound(classAttacks[0]);
+            //     return;
+            // }
         }
     }
 
@@ -271,7 +279,7 @@ function BattleScreen() {
             document.removeEventListener("keydown", displaySelector);
             document.removeEventListener("keydown", renderBattleText);
         }
-    }, [attackOptionChosen]);
+    }, [attackOptionChosen, classAttacks]);
 
     return (
         <>
