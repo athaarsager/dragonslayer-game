@@ -6,13 +6,22 @@ function BattleScreen() {
 
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacks, setClassAttacks] = useState([]);
-    const [characterStats, setCharacterStats] = useState({});
+    const [playerStats, setPlayerStats] = useState({});
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
+    const [playerHpDisplay, setPlayerHpDisplay] = useState("");
+    const [playerManaDisplay, setPlayerManaDisplay] = useState("");
 
     let dragonAttacks = [];
     let dragonStats = {};
+    let dragonHp;
+    let dragonMana;
+    let playerHp;
+    let playerMana;
+    let waitingForUserInput = false;
+    // variable for controlling progressing textboxes:
+    let progress = false;
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
@@ -24,7 +33,11 @@ function BattleScreen() {
     async function fetchCharacterStats() {
         const response = await axios.get(`/api/stats/4`);
         console.log("These are the character's stats:", response.data[0]);
-        setCharacterStats(response.data[0]);
+        setPlayerStats(response.data[0]);
+        playerHp = response.data[0].hp;
+        playerMana = response.data[0].mana;
+        setPlayerHpDisplay(playerHp);
+        setPlayerManaDisplay(playerMana);
     }
 
     async function fetchDragonAttacks() {
@@ -37,6 +50,9 @@ function BattleScreen() {
         const response = await axios.get("/api/stats/5");
         console.log("These are the dragon's stats:", response.data[0]);
         dragonStats = response.data[0];
+        // This might be problematic if page refreshed or component remounts several times
+        // don't want to reset hp values accidentally
+        dragonHp = dragonStats.hp;
     }
 
     // function manually determines which item should be selected in the battle action menu
@@ -134,7 +150,102 @@ function BattleScreen() {
     }
 
     function playRound(action) {
-        setBattleMenuOpen(false);
+        if (attackOptionChosen) {
+            // need to ensure action is the correct object in the character attacks array
+            setBattleMenuOpen(false);
+            setBattleText(action.attack.attackText);
+            waitingForUserInput = true;
+            while (!progress) {
+                progressRound();
+            }
+            // need to reset this variable right away for the next loop
+            progress = false;
+            const playerDamageDealt = action.power - dragonStats.defense;
+            setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
+            // change dragon hp here
+            dragonHp -= playerDamageDealt;
+            const dragonHpDisplay = document.getElementById("dragon-hp");
+            let dragonHpWidth = dragonHpDisplay.offsetWidth;
+            dragonHpDisplay.style.width = dragonHpWidth * parseFloat(`0.${dragonHp}`);
+            // user needs to press enter to see next text
+            waitingForUserInput = true;
+            while (!progress) {
+                progressRound();
+            }
+            // account for if attack inflicts a debuff
+            if (action.extra_effect) {
+                const statAffected = action.extra_effect.targetStat;
+                Object.entries(dragonStats).forEach(([key, value]) => {
+                    if (key === statAffected) {
+                        value *= action.extra_effect.effectMultiplier;
+                        console.log(`Dragon received a debuff. This is the stat affected and its current value: 
+                        ${key}: ${value}`);
+                    }
+                });
+                setBattleText(`The dragon's ${statAffected} has been lowered!`);
+                waitingForUserInput = true;
+                while (!progress) {
+                    progressRound();
+                }
+            }
+        }
+        // dragon attacks
+        dragonActs();
+        // user needs to progress the text again
+        waitingForUserInput = true;
+        while (!progress) {
+            progressRound();
+        }
+        // return to main battle menu
+        setBattleMenuOpen(true);
+        setBattleText("Default");
+        setAttackOptionChosen(false);
+        return;
+    }
+
+    function dragonActs() {
+        const randomNumber = Math.floor(Math.random() * 3);
+        for (let i = 0; i < 3; i++) {
+            if (i === randomNumber) {
+                const dragonAttack = dragonAttacks[i];
+                setBattleText(dragonAttack.attackText);
+                waitingForUserInput = true;
+                // need user input to progress the textbox
+                while (!progress) {
+                    progressRound();
+                }
+                const damageDragonDealt = dragonAttack.power - playerStats.defense;
+                if (dragonAttack.extra_effect) {
+                    const statAffected = dragonAttack.extra_effect.targetStat;
+                    Object.entries(playerStats).forEach(([key, value]) => {
+                        if (key === statAffected) {
+                            value *= dragonAttack.extra_effect.effectMultiplier;
+                            console.log(`Player received a debuff. This is the stat that was affected
+                             and its current value: ${key}: ${value}`);
+                        }
+                    });
+                    setBattleText(`You take ${damageDragonDealt} damage and your ${statAffected} has been lowered!`);
+                    playerHp -= damageDragonDealt;
+                    setPlayerHpDisplay(playerHp);
+                    return;
+                } else {
+                    setBattleText(`You take ${damageDragonDealt} damage!`);
+                    playerHp -= damageDragonDealt;
+                    setPlayerHpDisplay(playerHp);
+                    return;
+                }
+            }
+        }
+    }
+
+    function progressRound(e) {
+        if (waitingForUserInput && (e.key === " " || e.key === "Enter")) {
+            progress = true;
+            waitingForUserInput = false;
+            return;
+        } else {
+            return;
+        }
     }
 
     useEffect(() => {
@@ -171,8 +282,8 @@ function BattleScreen() {
                     alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
             </div>
             <div id="character-stat-display">
-                <p>Hp: {characterStats.hp}</p>
-                <p>Mana: {characterStats.mana}</p>
+                <p>Hp: {playerHpDisplay}</p>
+                <p>Mana: {playerManaDisplay}</p>
             </div>
             <div id="battle-text" className="text-box">
                 <p>{battleText}</p>
