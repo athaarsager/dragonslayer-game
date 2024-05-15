@@ -11,14 +11,15 @@
     justify-content: flex-start;
     width: 55vh;
     height: 3vh;
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 10px;
 }
 #dragon-hp {
     width: 55vh;
     height: 3vh;
     background-color: maroon;
-    border: 1px solid white;
     border-radius: 10px;
-    position: absolute;
 }
 .upper-display {
     display: flex;
