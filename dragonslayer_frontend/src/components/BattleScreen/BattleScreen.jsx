@@ -9,6 +9,10 @@ function BattleScreen() {
     const [characterStats, setCharacterStats] = useState({});
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
+
+    let dragonAttacks = [];
+    let dragonStats = {};
+    
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         const response = await axios.get("/api/attacks/4");
@@ -20,6 +24,18 @@ function BattleScreen() {
         const response = await axios.get(`/api/stats/4`);
         console.log("These are the character's stats:", response.data[0]);
         setCharacterStats(response.data[0]);
+    }
+
+    async function fetchDragonAttacks() {
+        const response = await axios.get("/api/attacks/5");
+        console.log("These are the dragon's attacks:", response.data);
+        dragonAttacks = response.data;
+    }
+
+    async function fetchDragonStats() {
+        const response = await axios.get("/api/stats/5");
+        console.log("These are the dragon's stats:", response.data[0]);
+        dragonStats = response.data[0];
     }
 
     // function manually determines which item should be selected in the battle action menu
@@ -119,6 +135,8 @@ function BattleScreen() {
     useEffect(() => {
         fetchClassAttacks();
         fetchCharacterStats();
+        fetchDragonAttacks();
+        fetchDragonStats();
     }, []);
 
     useEffect(() => {
