@@ -127,17 +127,11 @@ function BattleScreen() {
         document.addEventListener("keydown", displaySelector);
         document.addEventListener("keydown", renderBattleText);
         document.addEventListener("keydown", executeAction);
+        renderBattleText();
         return () => {
             document.removeEventListener("keydown", displaySelector);
             document.removeEventListener("keydown", renderBattleText);
         }
-    }, [attackOptionChosen]);
-
-    // This one ensures that renderBattleText runs whenever attackOptionsChosen updates,
-    // which is what allows the state to update correctly when moving from attack menu
-    // to main menu
-    useEffect(() => {
-        renderBattleText();
     }, [attackOptionChosen]);
 
     return (
