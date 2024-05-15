@@ -172,6 +172,7 @@ function BattleScreen() {
             while (!progress) {
                 progressRound();
             }
+            progress = false;
             // account for if attack inflicts a debuff
             if (action.extra_effect) {
                 const statAffected = action.extra_effect.targetStat;
@@ -187,6 +188,7 @@ function BattleScreen() {
                 while (!progress) {
                     progressRound();
                 }
+                progress = false;
             }
         }
         // dragon attacks
@@ -196,10 +198,12 @@ function BattleScreen() {
         while (!progress) {
             progressRound();
         }
+        progress = false;
         // return to main battle menu
         setBattleMenuOpen(true);
         setBattleText("Default");
         setAttackOptionChosen(false);
+        // need to account for mana usage at some point
         return;
     }
 
@@ -214,6 +218,7 @@ function BattleScreen() {
                 while (!progress) {
                     progressRound();
                 }
+                progress = false;
                 const damageDragonDealt = dragonAttack.power - playerStats.defense;
                 if (dragonAttack.extra_effect) {
                     const statAffected = dragonAttack.extra_effect.targetStat;
