@@ -206,7 +206,7 @@ function BattleScreen() {
             }
         }
         // dragon attacks
-        dragonActs();
+        await dragonActs();
         // user needs to progress the text again
         // Paused on damage dealt to player
         document.addEventListener("keydown", resolveUserInput);
@@ -228,10 +228,12 @@ function BattleScreen() {
 
     async function dragonActs() {
         const randomNumber = Math.floor(Math.random() * 3);
+        console.log("In dragonActs");
+        console.log("This is the random number the dragon has chosen:", randomNumber);
         for (let i = 0; i < 3; i++) {
             if (i === randomNumber) {
                 const dragonAttack = dragonAttacks[i];
-                setBattleText(dragonAttack.attackText);
+                setBattleText(dragonAttack.attack.attackText);
                 document.addEventListener("keydown", resolveUserInput);
                 // need user input to progress the textbox
                 // Paused on dragon's attack text
