@@ -207,6 +207,7 @@ function BattleScreen() {
         setBattleMenuOpen(true);
         setBattleText("Default");
         setAttackOptionChosen(false);
+        setOnActionMenu(true);
         document.addEventListener("keydown", executeAction);
         document.addEventListener("keydown", displaySelector);
         document.addEventListener("keydown", renderBattleText);
@@ -297,8 +298,11 @@ function BattleScreen() {
         console.log("This is the dragon's max hp:", dragonMaxHp);
         // Perform actions that depend on the updated HP
         const dragonHpDisplay = document.getElementById("dragon-hp");
+        // need to use this DOM element to ensure that the current width of the hp bar
+        // is always compared to its maximum length
+        const dragonHpDisplayContainer = document.getElementById("dragon-hp-container");
         if (dragonHpDisplay && dragonHp) {
-            const dragonHpWidth = dragonHpDisplay.offsetWidth;
+            const dragonHpWidth = dragonHpDisplayContainer.offsetWidth;
             const newWidth = dragonHpWidth * (dragonHp / dragonMaxHp);
             dragonHpDisplay.style.width = `${newWidth}px`;
             console.log("This is the width after subrating the dragon's hp:", dragonHpDisplay.style.width);
