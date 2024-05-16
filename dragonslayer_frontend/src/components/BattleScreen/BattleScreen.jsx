@@ -138,22 +138,26 @@ function BattleScreen() {
         const optionTwo = document.querySelector(".option-two").children[0];
         const optionThree = document.querySelector(".option-three").children[0];
         const optionFour = document.querySelector(".option-four").children[0];
-        if ((e.key === " " || e.key === "Enter") && !optionOne.classList.contains("unselected")) {
-            // option one = "attack". Open attack menu and set the battle text to option one
-            if (classAttacks.length === 0) {
-                return;
-            }
-            if (onActionMenu) {
-                setAttackOptionChosen(true);
-                setBattleText(classAttacks[0].attack.description);
-                console.log("This is the value of classAttacks[0]:", classAttacks[0]);
-                setOnActionMenu(false);
-                return;
-            } else if (attackOptionChosen) { // This is for when you are selecting the first attack on the attack menu
-                playRound(classAttacks[0]);
-                return;
+        const options = [optionOne, optionTwo, optionThree, optionFour];
+        for (let i = 0; i < options.length; i++) {
+            if ((e.key === " " || e.key === "Enter") && !options[i].classList.contains("unselected")) {
+                // option one = "attack". Open attack menu and set the battle text to option one
+                if (classAttacks.length === 0) {
+                    return;
+                }
+                if (onActionMenu) {
+                    setAttackOptionChosen(true);
+                    setBattleText(classAttacks[i].attack.description);
+                    console.log("This is the value of classAttacks[0]:", classAttacks[i]);
+                    setOnActionMenu(false);
+                    return;
+                } else if (attackOptionChosen) { // This is for when you are selecting the first attack on the attack menu
+                    playRound(classAttacks[i]);
+                    return;
+                }
             }
         }
+
     }
 
     async function playRound(action) {
