@@ -6,6 +6,7 @@ function BattleScreen() {
 
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacks, setClassAttacks] = useState([]);
+    const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
     const [playerStats, setPlayerStats] = useState({});
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
@@ -28,6 +29,11 @@ function BattleScreen() {
         const response = await axios.get("/api/attacks/4");
         console.log(response.data);
         setClassAttacks(response.data);
+        const temporaryClassAttacksArray = [];
+        for (let i=0; i < 4; i++) {
+            temporaryClassAttacksArray.push(response.data[i]);
+        }
+        setClassAttacksToDisplay(temporaryClassAttacksArray);
     }
 
     async function fetchCharacterStats() {
@@ -119,13 +125,13 @@ function BattleScreen() {
             return;
         } else if (attackOptionChosen) {
             if (!optionOne.classList.contains("unselected")) {
-                setBattleText(classAttacks[0].attack.description);
+                setBattleText(classAttacksToDisplay[0].attack.description);
             } else if (!optionTwo.classList.contains("unselected")) {
-                setBattleText(classAttacks[1].attack.description);
+                setBattleText(classAttacksToDisplay[1].attack.description);
             } else if (!optionThree.classList.contains("unselected")) {
-                setBattleText(classAttacks[2].attack.description);
+                setBattleText(classAttacksToDisplay[2].attack.description);
             } else if (!optionFour.classList.contains("unselected")) {
-                setBattleText(classAttacks[3].attack.description);
+                setBattleText(classAttacksToDisplay[3].attack.description);
             }
         }
     }
@@ -142,19 +148,19 @@ function BattleScreen() {
         for (let i = 0; i < options.length; i++) {
             if ((e.key === " " || e.key === "Enter") && !options[i].classList.contains("unselected")) {
                 // option one = "attack". Open attack menu and set the battle text to option one
-                if (classAttacks.length === 0) {
+                if (classAttacksToDisplay.length === 0) {
                     return;
                 }
                 if (onActionMenu) {
                     if (i === 0) {
                         setAttackOptionChosen(true);
-                        setBattleText(classAttacks[i].attack.description);
-                        console.log("This is the value of classAttacks[i]:", classAttacks[i]);
+                        setBattleText(classAttacksToDisplay[i].attack.description);
+                        console.log("This is the value of classAttacksToDisplay[i]:", classAttacksToDisplay[i]);
                         setOnActionMenu(false);
                         return;
                     }
                 } else if (attackOptionChosen) {
-                    playRound(classAttacks[i]);
+                    playRound(classAttacksToDisplay[i]);
                     return;
                 }
             }
@@ -201,6 +207,14 @@ function BattleScreen() {
                     }
                 console.log("This is the value of currentDragonStats:", currentDragonStats);
                 setDragonStats(currentDragonStats);
+                // should include a conditional where if charge sword was already chosen last round
+                // it is not allowed to be chosen again and there is some snarky battle text
+                if (action.attack.name === "Throw Pitchfork") {
+                    const newClassAttacksToDisplay = [...classAttacksToDisplay];
+                    newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
+                    console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
+                    setClassAttacksToDisplay(newClassAttacksToDisplay);
+                }
                 });
                 setBattleText(`The dragon's ${statAffected} has been lowered!`);
                 document.addEventListener("keydown", resolveUserInput);
@@ -365,7 +379,7 @@ function BattleScreen() {
             </div>
             <div id="battle-menu" className="text-box">
                 <ActionMenu
-                    classAttacks={classAttacks}
+                    classAttacksToDisplay={classAttacksToDisplay}
                     attackOptionChosen={attackOptionChosen}
                     setAttackOptionChosen={setAttackOptionChosen}
                     setOnActionMenu={setOnActionMenu}
