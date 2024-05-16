@@ -146,12 +146,14 @@ function BattleScreen() {
                     return;
                 }
                 if (onActionMenu) {
-                    setAttackOptionChosen(true);
-                    setBattleText(classAttacks[i].attack.description);
-                    console.log("This is the value of classAttacks[0]:", classAttacks[i]);
-                    setOnActionMenu(false);
-                    return;
-                } else if (attackOptionChosen) { // This is for when you are selecting the first attack on the attack menu
+                    if (i === 0) {
+                        setAttackOptionChosen(true);
+                        setBattleText(classAttacks[i].attack.description);
+                        console.log("This is the value of classAttacks[0]:", classAttacks[i]);
+                        setOnActionMenu(false);
+                        return;
+                    }
+                } else if (attackOptionChosen) {
                     playRound(classAttacks[i]);
                     return;
                 }
@@ -288,7 +290,6 @@ function BattleScreen() {
         document.addEventListener("keydown", renderBattleText);
         document.addEventListener("keydown", executeAction);
         renderBattleText();
-        console.log("This is the value of attackOptionChosen:", attackOptionChosen);
         return () => {
             document.removeEventListener("keydown", displaySelector);
             document.removeEventListener("keydown", renderBattleText);
