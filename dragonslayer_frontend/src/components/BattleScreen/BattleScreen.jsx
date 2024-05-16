@@ -172,16 +172,18 @@ function BattleScreen() {
             // Paused on player's attack text
             await progressRound();
             document.removeEventListener("keydown", resolveUserInput);
-            // need to reset this variable right away for the next loop
-            const playerDamageDealt = action.attack.power - dragonStats.defense;
-            setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
-            // change dragon hp here
-            // The display will update based on a useEffect asynchronously
-            setDragonHp(dragonHp - playerDamageDealt);
-            document.addEventListener("keydown", resolveUserInput);
-            // Paused on damage dealt by player
-            await progressRound();
-            document.removeEventListener("keydown", resolveUserInput);
+            let playerDamageDealt = 0;
+            if (action.attack.power !== 0) {
+                playerDamageDealt = action.attack.power - dragonStats.defense;
+                setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
+                // change dragon hp here
+                // The display will update based on a useEffect asynchronously
+                setDragonHp(dragonHp - playerDamageDealt);
+                document.addEventListener("keydown", resolveUserInput);
+                // Paused on damage dealt by player
+                await progressRound();
+                document.removeEventListener("keydown", resolveUserInput);
+            }
             // account for if attack inflicts a debuff
             if (action.extra_effect) {
                 const statAffected = action.extra_effect.targetStat;
