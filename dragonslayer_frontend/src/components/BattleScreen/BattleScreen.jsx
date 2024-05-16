@@ -19,8 +19,7 @@ function BattleScreen() {
     const [dragonMana, setDragonMana] = useState(NaN);
     const [playerHp, setPlayerHp] = useState(NaN);
     const [playerMana, setPlayerMana] = useState(NaN);
-    // variable for controlling progressing textboxes:
-    let progress = false;
+
     // This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
 
@@ -167,12 +166,9 @@ function BattleScreen() {
             setBattleText(action.attack.attackText);
             document.addEventListener("keydown", resolveUserInput);
             // Paused on player's attack text
-            while (!progress) {
-                await progressRound();
-            }
+            await progressRound();
             document.removeEventListener("keydown", resolveUserInput);
             // need to reset this variable right away for the next loop
-            progress = false;
             const playerDamageDealt = action.attack.power - dragonStats.defense;
             setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
             // change dragon hp here
@@ -180,11 +176,8 @@ function BattleScreen() {
             setDragonHp(dragonHp - playerDamageDealt);
             document.addEventListener("keydown", resolveUserInput);
             // Paused on damage dealt by player
-            while (!progress) {
-                await progressRound();
-            }
+            await progressRound();
             document.removeEventListener("keydown", resolveUserInput);
-            progress = false;
             // account for if attack inflicts a debuff
             if (action.extra_effect) {
                 const statAffected = action.extra_effect.targetStat;
@@ -198,23 +191,18 @@ function BattleScreen() {
                 setBattleText(`The dragon's ${statAffected} has been lowered!`);
                 document.addEventListener("keydown", resolveUserInput);
                 // Paused on status effect inflicted on dragon
-                while (!progress) {
-                    await progressRound();
-                }
+                await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
-                progress = false;
             }
         }
         // dragon attacks
+        // await ensures the program pauses on the async function
         await dragonActs();
         // user needs to progress the text again
         // Paused on damage dealt to player
         document.addEventListener("keydown", resolveUserInput);
-        while (!progress) {
-            await progressRound();
-        }
+        await progressRound();
         document.removeEventListener("keydown", resolveUserInput);
-        progress = false;
         // return to main action menu
         setBattleMenuOpen(true);
         setBattleText("Default");
@@ -237,11 +225,8 @@ function BattleScreen() {
                 document.addEventListener("keydown", resolveUserInput);
                 // need user input to progress the textbox
                 // Paused on dragon's attack text
-                while (!progress) {
-                    await progressRound();
-                }
+                await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
-                progress = false;
                 const damageDragonDealt = dragonAttack.attack.power - playerStats.defense;
                 if (dragonAttack.extra_effect) {
                     const statAffected = dragonAttack.extra_effect.targetStat;
@@ -266,9 +251,8 @@ function BattleScreen() {
         }
     }
 
-    // function's sole purpose is to wait for user input and set the appropriate variable
-    // to progress the textbox. 
-    // Only when this is resolved will the while loop it is called inside be exited
+    // function's sole purpose is to wait for user input and prevent playRound from continuing
+    // until that user input is received
     function progressRound() {
         return new Promise((resolve) => {
             // This is what changes resolveKeyPress from null to truthy
@@ -281,7 +265,6 @@ function BattleScreen() {
     function resolveUserInput(e) {
         if (resolveKeyPress && (e.key === " " || e.key === "Enter")) {
             resolveKeyPress(); // Resolve the Promise when the desired key is pressed
-            progress = true;
             resolveKeyPress = null; // Reset the resolveKeyPress variable
         }
     }
