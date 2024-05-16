@@ -15,6 +15,7 @@ function BattleScreen() {
     const [dragonAttacks, setDragonAttacks] = useState([]);
     const [dragonStats, setDragonStats] = useState({});
     const [dragonHp, setDragonHp] = useState(NaN);
+    const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
     const [dragonMana, setDragonMana] = useState(NaN);
     const [playerHp, setPlayerHp] = useState(NaN);
     const [playerMana, setPlayerMana] = useState(NaN);
@@ -52,6 +53,7 @@ function BattleScreen() {
         // This might be problematic if page refreshed or component remounts several times
         // don't want to reset hp values accidentally
         setDragonHp(response.data[0].hp);
+        setDragonMaxHp(response.data[0].hp);
         setDragonMana(response.data[0].mana);
     }
 
@@ -159,14 +161,12 @@ function BattleScreen() {
         document.removeEventListener("keydown", executeAction);
         document.removeEventListener("keydown", displaySelector);
         document.removeEventListener("keydown", renderBattleText);
-        console.log("These are the dragon's stats:", dragonStats);
-        console.log("This is the value of the dragon's hp:", dragonHp);
-        console.log("This is the action selected:", action);
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
             setBattleText(action.attack.attackText);
             document.addEventListener("keydown", resolveUserInput);
+            // Paused on player's attack text
             while (!progress) {
                 await progressRound();
             }
@@ -176,12 +176,10 @@ function BattleScreen() {
             const playerDamageDealt = action.attack.power - dragonStats.defense;
             setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
             // change dragon hp here
+            // The display will update based on a useEffect asynchronously
             setDragonHp(dragonHp - playerDamageDealt);
-            const dragonHpDisplay = document.getElementById("dragon-hp");
-            let dragonHpWidth = dragonHpDisplay.offsetWidth;
-            dragonHpDisplay.style.width = dragonHpWidth * parseFloat(`0.${dragonHp}`);
-            // user needs to press enter to see next text
-            document.addEventListener("keydown", progressRound);
+            document.addEventListener("keydown", resolveUserInput);
+            // Paused on damage dealt by player
             while (!progress) {
                 await progressRound();
             }
@@ -198,7 +196,8 @@ function BattleScreen() {
                     }
                 });
                 setBattleText(`The dragon's ${statAffected} has been lowered!`);
-                document.addEventListener("keydown", progressRound);
+                document.addEventListener("keydown", resolveUserInput);
+                // Paused on status effect inflicted on dragon
                 while (!progress) {
                     await progressRound();
                 }
@@ -209,19 +208,20 @@ function BattleScreen() {
         // dragon attacks
         dragonActs();
         // user needs to progress the text again
-        document.addEventListener("keydown", progressRound);
+        // Paused on damage dealt to player
+        document.addEventListener("keydown", resolveUserInput);
         while (!progress) {
             await progressRound();
         }
         document.removeEventListener("keydown", resolveUserInput);
         progress = false;
-        // return to main battle menu
+        // return to main action menu
         setBattleMenuOpen(true);
         setBattleText("Default");
         setAttackOptionChosen(false);
         document.addEventListener("keydown", executeAction);
-        document.removeEventListener("keydown", displaySelector);
-        document.removeEventListener("keydown", renderBattleText);
+        document.addEventListener("keydown", displaySelector);
+        document.addEventListener("keydown", renderBattleText);
         // need to account for mana usage at some point
         return;
     }
@@ -234,6 +234,7 @@ function BattleScreen() {
                 setBattleText(dragonAttack.attackText);
                 document.addEventListener("keydown", resolveUserInput);
                 // need user input to progress the textbox
+                // Paused on dragon's attack text
                 while (!progress) {
                     await progressRound();
                 }
@@ -251,10 +252,12 @@ function BattleScreen() {
                     });
                     setBattleText(`You take ${damageDragonDealt} damage and your ${statAffected} has been lowered!`);
                     setPlayerHp(playerHp - damageDragonDealt);
+                    console.log("This is the player's hp:", playerHp);
                     return;
                 } else {
                     setBattleText(`You take ${damageDragonDealt} damage!`);
                     setPlayerHp(playerHp - damageDragonDealt);
+                    console.log("This is the player's hp:", playerHp);
                     return;
                 }
             }
@@ -300,6 +303,22 @@ function BattleScreen() {
             document.removeEventListener("keydown", executeAction);
         }
     }, [attackOptionChosen, classAttacks]); // may need to add onActionMenu here later?
+
+    // this asynchronously updates the display for the dragon's hp whenever the value of dragonHp changes
+    // do this instead of doing it directly in the playRound function
+    useEffect(() => {
+        // Access the updated dragonHp value here
+        console.log("Updated dragon's HP:", dragonHp);
+        console.log("This is the dragon's max hp:", dragonMaxHp);
+        // Perform actions that depend on the updated HP
+        const dragonHpDisplay = document.getElementById("dragon-hp");
+        if (dragonHpDisplay && dragonHp) {
+            const dragonHpWidth = dragonHpDisplay.offsetWidth;
+            const newWidth = dragonHpWidth * (dragonHp / dragonMaxHp);
+            dragonHpDisplay.style.width = `${newWidth}px`;
+            console.log("This is the width after subrating the dragon's hp:", dragonHpDisplay.style.width);
+        }
+    }, [dragonHp, dragonMaxHp]); // Run this effect whenever dragonHp changes
 
     return (
         <>
