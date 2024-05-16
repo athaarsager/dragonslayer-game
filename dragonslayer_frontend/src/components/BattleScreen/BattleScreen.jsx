@@ -22,6 +22,8 @@ function BattleScreen() {
     let waitingForUserInput = false;
     // variable for controlling progressing textboxes:
     let progress = false;
+    // This variable will be used to resolve the promise in playRound();
+    let resolveKeyPress = null;
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
@@ -149,23 +151,27 @@ function BattleScreen() {
                 console.log("This is the value of classAttacks[0]:", classAttacks[0]);
                 setOnActionMenu(false);
                 return;
-            } 
-            // else if(attackOptionChosen) { // This is for when you are selecting the first attack on the attack menu
-            //     playRound(classAttacks[0]);
-            //     return;
-            // }
+            } else if (attackOptionChosen) { // This is for when you are selecting the first attack on the attack menu
+                playRound(classAttacks[0]);
+                return;
+            }
         }
     }
 
-    function playRound(action) {
+    async function playRound(action) {
+        document.removeEventListener("keydown", executeAction);
+        document.removeEventListener("keydown", displaySelector);
+        document.removeEventListener("keydown", renderBattleText);
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
             setBattleText(action.attack.attackText);
             waitingForUserInput = true;
+            document.addEventListener("keydown", resolveUserInput);
             while (!progress) {
-                progressRound();
+                await progressRound();
             }
+            document.removeEventListener("keydown", resolveUserInput);
             // need to reset this variable right away for the next loop
             progress = false;
             const playerDamageDealt = action.power - dragonStats.defense;
@@ -177,9 +183,11 @@ function BattleScreen() {
             dragonHpDisplay.style.width = dragonHpWidth * parseFloat(`0.${dragonHp}`);
             // user needs to press enter to see next text
             waitingForUserInput = true;
+            document.addEventListener("keydown", progressRound);
             while (!progress) {
-                progressRound();
+                await progressRound();
             }
+            document.removeEventListener("keydown", resolveUserInput);
             progress = false;
             // account for if attack inflicts a debuff
             if (action.extra_effect) {
@@ -193,9 +201,11 @@ function BattleScreen() {
                 });
                 setBattleText(`The dragon's ${statAffected} has been lowered!`);
                 waitingForUserInput = true;
+                document.addEventListener("keydown", progressRound);
                 while (!progress) {
-                    progressRound();
+                    await progressRound();
                 }
+                document.removeEventListener("keydown", resolveUserInput);
                 progress = false;
             }
         }
@@ -203,29 +213,36 @@ function BattleScreen() {
         dragonActs();
         // user needs to progress the text again
         waitingForUserInput = true;
+        document.addEventListener("keydown", progressRound);
         while (!progress) {
-            progressRound();
+            await progressRound();
         }
+        document.removeEventListener("keydown", resolveUserInput);
         progress = false;
         // return to main battle menu
         setBattleMenuOpen(true);
         setBattleText("Default");
         setAttackOptionChosen(false);
+        document.addEventListener("keydown", executeAction);
+        document.removeEventListener("keydown", displaySelector);
+        document.removeEventListener("keydown", renderBattleText);
         // need to account for mana usage at some point
         return;
     }
 
-    function dragonActs() {
+    async function dragonActs() {
         const randomNumber = Math.floor(Math.random() * 3);
         for (let i = 0; i < 3; i++) {
             if (i === randomNumber) {
                 const dragonAttack = dragonAttacks[i];
                 setBattleText(dragonAttack.attackText);
                 waitingForUserInput = true;
+                document.addEventListener("keydown", resolveUserInput);
                 // need user input to progress the textbox
                 while (!progress) {
-                    progressRound();
+                    await progressRound();
                 }
+                document.removeEventListener("keydown", resolveUserInput);
                 progress = false;
                 const damageDragonDealt = dragonAttack.power - playerStats.defense;
                 if (dragonAttack.extra_effect) {
@@ -251,13 +268,16 @@ function BattleScreen() {
         }
     }
 
-    function progressRound(e) {
-        if (waitingForUserInput && (e.key === " " || e.key === "Enter")) {
-            progress = true;
-            waitingForUserInput = false;
-            return;
-        } else {
-            return;
+    function progressRound() {
+        return new Promise((resolve) => {
+            resolveKeyPress = resolve;
+        });
+    }
+
+    function resolveUserInput(e) {
+        if (resolveKeyPress && (e.key === " " || e.key === "Enter")) {
+            resolveKeyPress(); // Resolve the Promise when the desired key is pressed
+            resolveKeyPress = null; // Reset the resolveKeyPress variable
         }
     }
 
