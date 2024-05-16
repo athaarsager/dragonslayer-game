@@ -268,15 +268,22 @@ function BattleScreen() {
         }
     }
 
+    // function's sole purpose is to wait for user input and set the appropriate variable
+    // to progress the textbox. 
+    // Only when this is resolved will the while loop it is called inside be exited
     function progressRound() {
         return new Promise((resolve) => {
+            // This is what changes resolveKeyPress from null to truthy
+            // when it is resolved in the below function, it resolves it here as well
             resolveKeyPress = resolve;
         });
     }
 
+    // This function uses
     function resolveUserInput(e) {
         if (resolveKeyPress && (e.key === " " || e.key === "Enter")) {
             resolveKeyPress(); // Resolve the Promise when the desired key is pressed
+            progress = true;
             resolveKeyPress = null; // Reset the resolveKeyPress variable
         }
     }
