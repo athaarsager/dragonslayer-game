@@ -161,6 +161,7 @@ function BattleScreen() {
         document.removeEventListener("keydown", renderBattleText);
         console.log("These are the dragon's stats:", dragonStats);
         console.log("This is the value of the dragon's hp:", dragonHp);
+        console.log("This is the action selected:", action);
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
@@ -172,7 +173,7 @@ function BattleScreen() {
             document.removeEventListener("keydown", resolveUserInput);
             // need to reset this variable right away for the next loop
             progress = false;
-            const playerDamageDealt = action.power - dragonStats.defense;
+            const playerDamageDealt = action.attack.power - dragonStats.defense;
             setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
             // change dragon hp here
             setDragonHp(dragonHp - playerDamageDealt);
@@ -238,7 +239,7 @@ function BattleScreen() {
                 }
                 document.removeEventListener("keydown", resolveUserInput);
                 progress = false;
-                const damageDragonDealt = dragonAttack.power - playerStats.defense;
+                const damageDragonDealt = dragonAttack.attack.power - playerStats.defense;
                 if (dragonAttack.extra_effect) {
                     const statAffected = dragonAttack.extra_effect.targetStat;
                     Object.entries(playerStats).forEach(([key, value]) => {
