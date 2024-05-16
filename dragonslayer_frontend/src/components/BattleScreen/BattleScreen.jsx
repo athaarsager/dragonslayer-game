@@ -135,7 +135,6 @@ function BattleScreen() {
     // will need to edit this to make it more universal...
 
     const executeAction = (e) => {
-        //e.preventDefault();
         const optionOne = document.querySelector(".option-one").children[0];
         const optionTwo = document.querySelector(".option-two").children[0];
         const optionThree = document.querySelector(".option-three").children[0];
@@ -296,17 +295,17 @@ function BattleScreen() {
     }, []);
 
     useEffect(() => {
-        // removing the top two when component dismounts to prevent excessive remounting
-        // functionality breaks if I remove the bottom one
         document.addEventListener("keydown", displaySelector);
         document.addEventListener("keydown", renderBattleText);
         document.addEventListener("keydown", executeAction);
         renderBattleText();
+        console.log("This is the value of attackOptionChosen:", attackOptionChosen);
         return () => {
             document.removeEventListener("keydown", displaySelector);
             document.removeEventListener("keydown", renderBattleText);
+            document.removeEventListener("keydown", executeAction);
         }
-    }, [attackOptionChosen, classAttacks]);
+    }, [attackOptionChosen, classAttacks]); // may need to add onActionMenu here later?
 
     return (
         <>
@@ -333,6 +332,7 @@ function BattleScreen() {
                     classAttacks={classAttacks}
                     attackOptionChosen={attackOptionChosen}
                     setAttackOptionChosen={setAttackOptionChosen}
+                    setOnActionMenu={setOnActionMenu}
                     battleMenuOpen={battleMenuOpen} />
             </div>
         </>

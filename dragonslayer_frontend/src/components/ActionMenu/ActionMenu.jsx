@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-function ActionMenu({ classAttacks, attackOptionChosen, setAttackOptionChosen, battleMenuOpen }) {
+function ActionMenu({ classAttacks, attackOptionChosen, setAttackOptionChosen, setOnActionMenu, battleMenuOpen }) {
 
     // will need to update this for other menus
     const returnToFirstMenu = (e) => {
         if (e.key === "Backspace" || e.key === "Shift") {
             setAttackOptionChosen(false);
+            setOnActionMenu(true);
         }
     }
 
@@ -47,6 +48,7 @@ ActionMenu.propTypes = {
     classAttacks: PropTypes.array.isRequired,
     attackOptionChosen: PropTypes.bool.isRequired,
     setAttackOptionChosen: PropTypes.func.isRequired,
+    setOnActionMenu: PropTypes.func.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired
 };
 export default ActionMenu;
