@@ -10,16 +10,14 @@ function BattleScreen() {
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
-    const [playerHpDisplay, setPlayerHpDisplay] = useState("");
     const [playerManaDisplay, setPlayerManaDisplay] = useState("");
 
-    let dragonAttacks = [];
-    let dragonStats = {};
-    let dragonHp;
-    let dragonMana;
-    let playerHp;
-    let playerMana;
-    let waitingForUserInput = false;
+    const [dragonAttacks, setDragonAttacks] = useState([]);
+    const [dragonStats, setDragonStats] = useState({});
+    const [dragonHp, setDragonHp] = useState(NaN);
+    const [dragonMana, setDragonMana] = useState(NaN);
+    const [playerHp, setPlayerHp] = useState(NaN);
+    const [playerMana, setPlayerMana] = useState(NaN);
     // variable for controlling progressing textboxes:
     let progress = false;
     // This variable will be used to resolve the promise in playRound();
@@ -36,25 +34,25 @@ function BattleScreen() {
         const response = await axios.get(`/api/stats/4`);
         console.log("These are the character's stats:", response.data[0]);
         setPlayerStats(response.data[0]);
-        playerHp = response.data[0].hp;
-        playerMana = response.data[0].mana;
-        setPlayerHpDisplay(playerHp);
+        setPlayerHp(response.data[0].hp);
+        setPlayerMana(response.data[0].mana);
         setPlayerManaDisplay(playerMana);
     }
 
     async function fetchDragonAttacks() {
         const response = await axios.get("/api/attacks/5");
         console.log("These are the dragon's attacks:", response.data);
-        dragonAttacks = response.data;
+        setDragonAttacks(response.data);
     }
 
     async function fetchDragonStats() {
         const response = await axios.get("/api/stats/5");
         console.log("These are the dragon's stats:", response.data[0]);
-        dragonStats = response.data[0];
+        setDragonStats(response.data[0]);
         // This might be problematic if page refreshed or component remounts several times
         // don't want to reset hp values accidentally
-        dragonHp = dragonStats.hp;
+        setDragonHp(response.data[0].hp);
+        setDragonMana(response.data[0].mana);
     }
 
     // function manually determines which item should be selected in the battle action menu
@@ -161,11 +159,12 @@ function BattleScreen() {
         document.removeEventListener("keydown", executeAction);
         document.removeEventListener("keydown", displaySelector);
         document.removeEventListener("keydown", renderBattleText);
+        console.log("These are the dragon's stats:", dragonStats);
+        console.log("This is the value of the dragon's hp:", dragonHp);
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
             setBattleText(action.attack.attackText);
-            waitingForUserInput = true;
             document.addEventListener("keydown", resolveUserInput);
             while (!progress) {
                 await progressRound();
@@ -176,12 +175,11 @@ function BattleScreen() {
             const playerDamageDealt = action.power - dragonStats.defense;
             setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
             // change dragon hp here
-            dragonHp -= playerDamageDealt;
+            setDragonHp(dragonHp - playerDamageDealt);
             const dragonHpDisplay = document.getElementById("dragon-hp");
             let dragonHpWidth = dragonHpDisplay.offsetWidth;
             dragonHpDisplay.style.width = dragonHpWidth * parseFloat(`0.${dragonHp}`);
             // user needs to press enter to see next text
-            waitingForUserInput = true;
             document.addEventListener("keydown", progressRound);
             while (!progress) {
                 await progressRound();
@@ -199,7 +197,6 @@ function BattleScreen() {
                     }
                 });
                 setBattleText(`The dragon's ${statAffected} has been lowered!`);
-                waitingForUserInput = true;
                 document.addEventListener("keydown", progressRound);
                 while (!progress) {
                     await progressRound();
@@ -211,7 +208,6 @@ function BattleScreen() {
         // dragon attacks
         dragonActs();
         // user needs to progress the text again
-        waitingForUserInput = true;
         document.addEventListener("keydown", progressRound);
         while (!progress) {
             await progressRound();
@@ -235,7 +231,6 @@ function BattleScreen() {
             if (i === randomNumber) {
                 const dragonAttack = dragonAttacks[i];
                 setBattleText(dragonAttack.attackText);
-                waitingForUserInput = true;
                 document.addEventListener("keydown", resolveUserInput);
                 // need user input to progress the textbox
                 while (!progress) {
@@ -254,13 +249,11 @@ function BattleScreen() {
                         }
                     });
                     setBattleText(`You take ${damageDragonDealt} damage and your ${statAffected} has been lowered!`);
-                    playerHp -= damageDragonDealt;
-                    setPlayerHpDisplay(playerHp);
+                    setPlayerHp(playerHp - damageDragonDealt);
                     return;
                 } else {
                     setBattleText(`You take ${damageDragonDealt} damage!`);
-                    playerHp -= damageDragonDealt;
-                    setPlayerHpDisplay(playerHp);
+                    setPlayerHp(playerHp - damageDragonDealt);
                     return;
                 }
             }
@@ -321,8 +314,8 @@ function BattleScreen() {
                     alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
             </div>
             <div id="character-stat-display">
-                <p>Hp: {playerHpDisplay}</p>
-                <p>Mana: {playerManaDisplay}</p>
+                <p>Hp: {playerHp}</p>
+                <p>Mana: {playerMana}</p>
             </div>
             <div id="battle-text" className="text-box">
                 <p>{battleText}</p>
