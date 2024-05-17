@@ -23,52 +23,67 @@ public partial class DragonslayerGameContext : DbContext
 
     public virtual DbSet<Stat> Stats { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("SQLCONNSTR_dragonslayerDb"));
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Attack>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("attack_pkey");
 
-            entity.ToTable("Attack");
+            entity.ToTable("attack");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("nextval('attack_id_seq'::regclass)");
-            entity.Property(e => e.AttackText).HasColumnName("Attack_Text");
-            entity.Property(e => e.CharacterClassId).HasColumnName("Character_Class_Id");
-            entity.Property(e => e.ManaCost).HasColumnName("Mana_Cost");
-            entity.Property(e => e.Name).HasMaxLength(250);
+            entity.HasIndex(e => new { e.CharacterClassId, e.DisplayId }, "attack_character_class_id_display_id_key").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AttackText).HasColumnName("attack_text");
+            entity.Property(e => e.CharacterClassId).HasColumnName("character_class_id");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.DisplayId).HasColumnName("display_id");
+            entity.Property(e => e.ManaCost).HasColumnName("mana_cost");
+            entity.Property(e => e.Name)
+                .HasMaxLength(250)
+                .HasColumnName("name");
+            entity.Property(e => e.Power).HasColumnName("power");
 
             entity.HasOne(d => d.CharacterClass).WithMany(p => p.Attacks)
                 .HasForeignKey(d => d.CharacterClassId)
-                .HasConstraintName("attack_class_id_fkey");
+                .HasConstraintName("attack_character_class_id_fkey");
         });
 
         modelBuilder.Entity<CharacterClass>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("class_pkey");
+            entity.HasKey(e => e.Id).HasName("character_class_pkey");
 
-            entity.ToTable("Character_Class");
+            entity.ToTable("character_class");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("nextval('class_id_seq'::regclass)");
-            entity.Property(e => e.DenialText).HasColumnName("Denial_Text");
-            entity.Property(e => e.Name).HasMaxLength(250);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.DenialText).HasColumnName("denial_text");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Name)
+                .HasMaxLength(250)
+                .HasColumnName("name");
         });
 
         modelBuilder.Entity<ExtraEffect>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("extra_effect_pkey");
 
-            entity.ToTable("Extra_Effect");
+            entity.ToTable("extra_effect");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("nextval('extra_effect_id_seq'::regclass)");
-            entity.Property(e => e.AttackId).HasColumnName("Attack_Id");
-            entity.Property(e => e.EffectMultiplier).HasColumnName("Effect_Multiplier");
-            entity.Property(e => e.OtherOutcome).HasColumnName("Other_Outcome");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AttackId).HasColumnName("attack_id");
+            entity.Property(e => e.AttackToBeReplacedBy).HasColumnName("attack_to_be_replaced_by");
+            entity.Property(e => e.EffectMultiplier).HasColumnName("effect_multiplier");
+            entity.Property(e => e.SpecialText).HasColumnName("special_text");
             entity.Property(e => e.TargetCharacter)
                 .HasMaxLength(250)
-                .HasColumnName("Target_Character");
+                .HasColumnName("target_character");
             entity.Property(e => e.TargetStat)
                 .HasMaxLength(250)
-                .HasColumnName("Target_Stat");
+                .HasColumnName("target_stat");
+            entity.Property(e => e.TurnsLost).HasColumnName("turns_lost");
 
             entity.HasOne(d => d.Attack).WithMany(p => p.ExtraEffects)
                 .HasForeignKey(d => d.AttackId)
@@ -80,14 +95,18 @@ public partial class DragonslayerGameContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("stat_pkey");
 
-            entity.ToTable("Stat");
+            entity.ToTable("stat");
 
-            entity.Property(e => e.Id).HasDefaultValueSql("nextval('stat_id_seq'::regclass)");
-            entity.Property(e => e.CharacterClassId).HasColumnName("Character_Class_Id");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Attack).HasColumnName("attack");
+            entity.Property(e => e.CharacterClassId).HasColumnName("character_class_id");
+            entity.Property(e => e.Defense).HasColumnName("defense");
+            entity.Property(e => e.Hp).HasColumnName("hp");
+            entity.Property(e => e.Mana).HasColumnName("mana");
 
             entity.HasOne(d => d.CharacterClass).WithMany(p => p.Stats)
                 .HasForeignKey(d => d.CharacterClassId)
-                .HasConstraintName("stat_class_id_fkey");
+                .HasConstraintName("stat_character_class_id_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

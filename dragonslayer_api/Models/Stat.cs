@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace dragonslayer_api.Models;
 
@@ -18,6 +17,5 @@ public partial class Stat
 
     public int Attack { get; set; }
 
-    [JsonIgnore]
     public virtual CharacterClass CharacterClass { get; set; } = null!;
 }

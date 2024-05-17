@@ -34,7 +34,7 @@ Target_Character varchar(250) NOT NULL,
 Target_Stat varchar(250),
 Effect_Multiplier decimal,
 Turns_Lost integer,
-Attack_To_Be_Replaced_By integer REFERENCES Attack(Display_Id),
+Attack_To_Be_Replaced_By integer,
 Special_Text text
 );
 

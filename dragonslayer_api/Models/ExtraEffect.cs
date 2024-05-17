@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace dragonslayer_api.Models;
 
@@ -16,8 +15,11 @@ public partial class ExtraEffect
 
     public decimal? EffectMultiplier { get; set; }
 
-    public string? OtherOutcome { get; set; }
+    public int? TurnsLost { get; set; }
 
-    [JsonIgnore]
+    public int? AttackToBeReplacedBy { get; set; }
+
+    public string? SpecialText { get; set; }
+
     public virtual Attack Attack { get; set; } = null!;
 }
