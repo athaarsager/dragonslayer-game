@@ -93,4 +93,4 @@ VALUES
 (10, 'dragon', 'defense', 0.5, 2, 4, 'The dragon is distracted by the pain in its blinded eye!'),
 (11, 'dragon', NULL, NULL, 1, 5, 'The dragon is distracted by the prospect of a delicious snack...'),
 (12, 'player', 'defense', 0.5, NULL, 2, NULL),
-(13, 'player', 'defense', 0.5, NULL, 3, NULL),
+(13, 'player', 'defense', 0.5, NULL, 3, NULL);
