@@ -23,9 +23,6 @@ public partial class DragonslayerGameContext : DbContext
 
     public virtual DbSet<Stat> Stats { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("SQLCONNSTR_dragonslayerDb"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Attack>(entity =>
