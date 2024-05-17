@@ -1,37 +1,41 @@
 -- database name: dragonslayer_game
-CREATE TABLE class (
-id serial PRIMARY KEY NOT NULL,
-name varchar(250) NOT NULL,
-description text NOT NULL,
-denial_text text
+CREATE TABLE Character_Class (
+Id serial PRIMARY KEY NOT NULL,
+Name varchar(250) NOT NULL,
+Description text NOT NULL,
+Denial_Text text
 );
 
-CREATE TABLE stat (
-id serial PRIMARY KEY NOT NULL,
-class_id integer REFERENCES class(id) ON DELETE CASCADE NOT NULL,
-hp integer NOT NULL,
-mana integer NOT NULL,
-defense integer NOT NULL,
-attack integer NOT NULL
+CREATE TABLE Stat (
+Id serial PRIMARY KEY NOT NULL,
+Character_Class_Id integer REFERENCES Character_Class(Id) ON DELETE CASCADE NOT NULL,
+Hp integer NOT NULL,
+Mana integer NOT NULL,
+Defense integer NOT NULL,
+Attack integer NOT NULL
 );
 
-create table attack (
-id serial PRIMARY KEY NOT NULL,
-class_id integer REFERENCES class(id) ON DELETE CASCADE NOT NULL,
-name varchar(250) NOT NULL,
-mana_cost integer NOT NULL,
-power integer NOT NULL,
-description text NOT NULL,
-attack_text text NOT NULL
+create table Attack (
+Id serial PRIMARY KEY NOT NULL,
+Character_Class_Id integer REFERENCES Character_Class(Id) ON DELETE CASCADE NOT NULL,
+Display_Id integer NOT NULL,
+Name varchar(250) NOT NULL,
+Mana_Cost integer NOT NULL,
+Power integer NOT NULL,
+Description text NOT NULL,
+Attack_Text text NOT NULL,
+UNIQUE (Character_Class_Id, Display_Id) -- makes Display_Id unique to the Character_Class
 );
 
-create table extra_effect (
-id serial PRIMARY KEY NOT NULL,
-attack_id integer REFERENCES attack(id) NOT NULL,
-target_character varchar(250) NOT NULL,
-target_stat varchar(250),
-effect decimal,
-other_outcome text
+create table Extra_Effect (
+Id serial PRIMARY KEY NOT NULL,
+Attack_Id integer REFERENCES Attack(Id) NOT NULL,
+Target_Character varchar(250) NOT NULL,
+Target_Stat varchar(250),
+Effect_Multiplier decimal,
+Turns_Lost integer,
+Attack_To_Be_Replaced_By integer REFERENCES Attack(Display_Id),
+Special_Text text
 );
 
 --Insert Statements

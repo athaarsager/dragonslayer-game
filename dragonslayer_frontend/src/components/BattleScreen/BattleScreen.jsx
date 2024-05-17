@@ -216,6 +216,7 @@ function BattleScreen() {
                     setClassAttacksToDisplay(newClassAttacksToDisplay);
                 }
                 });
+                // add an if here to account for any special text associated with the attack?
                 setBattleText(`The dragon's ${statAffected} has been lowered!`);
                 document.addEventListener("keydown", resolveUserInput);
                 // Paused on status effect inflicted on dragon
@@ -270,6 +271,7 @@ function BattleScreen() {
                         }
                     setPlayerStats(currentPlayerStats);
                     });
+                    // add if here to account for any special text with the status effect?
                     setBattleText(`You take ${damageDragonDealt} damage and your ${statAffected} has been lowered!`);
                     setPlayerHp(playerHp - damageDragonDealt);
                     console.log("This is the player's hp:", playerHp);
