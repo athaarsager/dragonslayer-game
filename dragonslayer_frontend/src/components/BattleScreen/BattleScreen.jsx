@@ -29,11 +29,12 @@ function BattleScreen() {
         const response = await axios.get("/api/attacks/4");
         console.log(response.data);
         setClassAttacks(response.data);
-        const temporaryClassAttacksArray = [];
-        for (let i=0; i < 4; i++) {
-            temporaryClassAttacksArray.push(response.data[i]);
-        }
-        setClassAttacksToDisplay(temporaryClassAttacksArray);
+    }
+
+    async function fetchClassAttacksToDisplay() {
+        const response = await axios.get("/api/attacks/4/display");
+        console.log("These are the attacks to display:", response.data);
+        setClassAttacksToDisplay(response.data);
     }
 
     async function fetchCharacterStats() {
@@ -184,7 +185,7 @@ function BattleScreen() {
             document.removeEventListener("keydown", resolveUserInput);
             let playerDamageDealt = 0;
             if (action.attack.power !== 0) {
-                playerDamageDealt = action.attack.power - dragonStats.defense;
+                playerDamageDealt = (action.attack.power + playerStats.attack) - dragonStats.defense;
                 setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
                 // change dragon hp here
                 // The display will update based on a useEffect asynchronously
@@ -197,29 +198,46 @@ function BattleScreen() {
             // account for if attack inflicts a debuff
             if (action.extra_Effect) {
                 const statAffected = action.extra_Effect.targetStat;
+                const targetCharacter = action.extra_Effect.targetCharacter;
+                console.log("Attack has an extra_Effect. This is the target character:", targetCharacter);
                 console.log("Attack has extra_Effect. This is the stat affected:", statAffected);
-                const currentDragonStats = { ...dragonStats };
-                Object.entries(currentDragonStats).forEach(([key, value]) => {
-                    if (key === statAffected) {
-                        currentDragonStats[key] *= action.extra_Effect.effectMultiplier;
-                        console.log(`Dragon received a debuff. This is the stat affected and its current value: 
+                if (targetCharacter === "dragon") {
+                    const currentDragonStats = { ...dragonStats };
+                    Object.entries(currentDragonStats).forEach(([key, value]) => {
+                        if (key === statAffected) {
+                            currentDragonStats[key] *= action.extra_Effect.effectMultiplier;
+                            console.log(`Dragon received a debuff. This is the stat affected and its current value: ${key}:
                         ${currentDragonStats[key]}`);
-                    }
-                console.log("This is the value of currentDragonStats:", currentDragonStats);
-                setDragonStats(currentDragonStats);
-                // should include a conditional where if charge sword was already chosen last round
-                // it is not allowed to be chosen again and there is some snarky battle text
-                if (action.attack.name === "Throw Pitchfork") {
-                    const newClassAttacksToDisplay = [...classAttacksToDisplay];
-                    newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
-                    console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
-                    setClassAttacksToDisplay(newClassAttacksToDisplay);
+                        }
+                        console.log("This is the value of currentDragonStats:", currentDragonStats);
+                        setDragonStats(currentDragonStats);
+                    });
+                    // add an if here to account for any special text associated with the attack?
+                    setBattleText(`The dragon's ${statAffected} has been lowered!`);
+                } else if (targetCharacter === "player") {
+                    const currentPlayerStats = { ...playerStats };
+                    Object.entries(currentPlayerStats).forEach(([key, value]) => {
+                        if (key === statAffected) {
+                            currentPlayerStats[key] *= action.extra_Effect.effectMultiplier;
+                            console.log(`Play received a buff. This is the stat affected and its current value: ${key}:
+                            ${currentPlayerStats[key]}`);
+                        }
+                        console.log("This is the value of currentPlayerStats:", currentPlayerStats);
+                        setPlayerStats(currentPlayerStats);
+                    });
+                    setBattleText(`Your ${statAffected} has increased!`);
+
                 }
-                });
-                // add an if here to account for any special text associated with the attack?
-                setBattleText(`The dragon's ${statAffected} has been lowered!`);
-                document.addEventListener("keydown", resolveUserInput);
+                // should include a conditional where if charge sword was already chosen last round
+                        // it is not allowed to be chosen again and there is some snarky battle text
+                        // if (action.attack.name === "Throw Pitchfork") {
+                        //     const newClassAttacksToDisplay = [...classAttacksToDisplay];
+                        //     newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
+                        //     console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
+                        //     setClassAttacksToDisplay(newClassAttacksToDisplay);
+                        // }
                 // Paused on status effect inflicted on dragon
+                document.addEventListener("keydown", resolveUserInput);
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
             }
@@ -257,7 +275,7 @@ function BattleScreen() {
                 // Paused on dragon's attack text
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
-                const damageDragonDealt = dragonAttack.attack.power - playerStats.defense;
+                const damageDragonDealt = (dragonAttack.attack.power + dragonStats.attack) - playerStats.defense;
                 if (dragonAttack.extra_Effect) {
                     const statAffected = dragonAttack.extra_Effect.targetStat;
                     console.log("dragon's attack has an extra effect. This is the stat affected:", statAffected);
@@ -269,7 +287,7 @@ function BattleScreen() {
                             console.log(`Player received a debuff. This is the stat that was affected
                              and its current value: ${currentPlayerStats[key]}`);
                         }
-                    setPlayerStats(currentPlayerStats);
+                        setPlayerStats(currentPlayerStats);
                     });
                     // add if here to account for any special text with the status effect?
                     setBattleText(`You take ${damageDragonDealt} damage and your ${statAffected} has been lowered!`);
@@ -306,6 +324,7 @@ function BattleScreen() {
 
     useEffect(() => {
         fetchClassAttacks();
+        fetchClassAttacksToDisplay();
         fetchCharacterStats();
         fetchDragonAttacks();
         fetchDragonStats();
