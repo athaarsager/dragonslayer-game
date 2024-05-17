@@ -78,5 +78,28 @@ app.MapGet("/attacks/{characterClassId}", async (DragonslayerGameContext db, int
 .OrderBy(a => a.Attack.Id) // order by id
 .ToListAsync());
 
+// Doing same query as above, but only grabbing the first four entries of the peasant's attacks for display
+app.MapGet("/attacks/{characterClassId}/display", async (DragonslayerGameContext db, int characterClassId) => await db.Attacks
+.Where(a => a.CharacterClassId == characterClassId && a.DisplayId <= 3)
+.GroupJoin(
+    db.ExtraEffects, // join with ExtraEffect table
+    Attack => Attack.Id, // join on Attack.Id
+    ExtraEffect => ExtraEffect.AttackId, // join on ExtraEffect.AttackId
+    (attack, extraEffects) => new
+    {
+        Attack = attack,
+        ExtraEffect = extraEffects.DefaultIfEmpty()
+    }
+)
+.SelectMany(
+    attackWithExtraEffects => attackWithExtraEffects.ExtraEffect,
+    (attackWithExtraEffects, extraEffect) => new
+    {
+        Attack = attackWithExtraEffects.Attack,
+        Extra_Effect = extraEffect
+    }
+)
+.OrderBy(a => a.Attack.Id) // order by id
+.ToListAsync());
 
 app.Run($"http://localhost:{port}");
