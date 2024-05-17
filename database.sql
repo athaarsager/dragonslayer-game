@@ -86,11 +86,11 @@ INSERT INTO extra_effect (Attack_Id, Target_Character, Target_Stat, Effect_Multi
 VALUES (3, 'player', 'defense', 0.5, NULL, NULL, NULL);  
 
 --Extra Effect Inserts for Peasant attacks
+--Attack_To_Be_Replaced_By references the Display_Id of the attack it is supposed to be replaced by
 INSERT INTO extra_effect (Attack_Id, Target_Character, Target_Stat, Effect_Multiplier, Turns_Lost, Attack_To_Be_Replaced_By, Special_Text)
 VALUES
-(8, 'player', 'attack', 2, NULL),
-(9, 'dragon', 'defense', 0.5, 'dragon loses two turns.'),
-(11, 'player', 'defense', 0.5, NULL),
-(10, 'dragon', NULL, NULL, 'dragon loses one turn.'),
-(12, 'player', 'defense', 0.5, NULL),
-(14, 'player', 'hp', 100, NULL);
+(9, 'player', 'attack', 2, NULL, NULL, NULL),
+(10, 'dragon', 'defense', 0.5, 2, 4, 'The dragon is distracted by the pain in its blinded eye!'),
+(11, 'dragon', NULL, NULL, 1, 5, 'The dragon is distracted by the prospect of a delicious snack...'),
+(12, 'player', 'defense', 0.5, NULL, 2, NULL),
+(13, 'player', 'defense', 0.5, NULL, 3, NULL),
