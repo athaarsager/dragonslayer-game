@@ -23,8 +23,8 @@ string connectionString = Environment.GetEnvironmentVariable("SQLCONNSTR_dragons
 
 // This passes the connection string to the dbContext file. 
 // Cannot access the .env file from the dbContext file directly
-// builder.Services.AddDbContext<DragonslayerGameContext>(options =>
-// options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<DragonslayerGameContext>(options =>
+options.UseNpgsql(connectionString));
 
 // Add CORS services. May need to allow for a different origin once website is hosted...
 // This specifies where requests can be accepted from
