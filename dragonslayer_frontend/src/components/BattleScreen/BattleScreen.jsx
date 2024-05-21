@@ -31,7 +31,7 @@ function BattleScreen() {
     const [playerDefenseRoundCounter, setPlayerDefenseRoundCounter] = useState(0);
     const [dragonAttackRoundCounter, setDragonAttackRoundCounter] = useState(0);
     const [dragonDefenseRoundCounter, setDragonDefenseRoundCounter] = useState(0);
-    
+
     // This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
 
@@ -246,9 +246,15 @@ function BattleScreen() {
                             console.log(`Dragon received a debuff. This is the stat affected and its current value: ${key}:
                         ${currentDragonStatsCopy[key]}`);
                         }
-                        console.log("This is the value of currentDragonStats:", currentDragonStats);
-                        setCurrentDragonStats(currentDragonStatsCopy);
                     });
+                    console.log("This is the value of currentDragonStats:", currentDragonStats);
+                    setCurrentDragonStats(currentDragonStatsCopy);
+                    // set the counter for how long the status effect will last
+                    if (statAffected === "defense") {
+                        setDragonDefenseRoundCounter(3);
+                    } else if (statAffected === "attack") {
+                        setDragonAttackRoundCounter(3);
+                    }
                     // add an if here to account for any special text associated with the attack?
                     // This if takes care of letting the player know that debuffs don't stack
                     if (originalStatValue < 1) {
@@ -264,9 +270,15 @@ function BattleScreen() {
                             console.log(`Play received a buff. This is the stat affected and its current value: ${key}:
                             ${playerRoundStats[key]}`);
                         }
-                        console.log("This is the value of playerRoundStats:", playerRoundStats);
-                        setCurrentPlayerStats(playerRoundStats);
                     });
+                    console.log("This is the value of playerRoundStats:", playerRoundStats);
+                    setCurrentPlayerStats(playerRoundStats);
+                    if (statAffected === "attack") {
+                        setPlayerAttackRoundCounter(3);
+                        // need to ensure below if does not apply if player is just drawing near to dragon for one turn
+                    } else if (statAffected === "defense" && action.attack.name !== "Fetch Pitchfork" && action.attack.name !== "Fetch Chicken") {
+                        setPlayerDefenseRoundCounter(3);
+                    }
                     // lets player know that buffs don't stack
                     if (originalStatValue > 1) {
                         setBattleText(`Your ${statAffected} won't go any higher!`);
@@ -326,6 +338,61 @@ function BattleScreen() {
         document.addEventListener("keydown", resolveUserInput);
         await progressRound();
         document.removeEventListener("keydown", resolveUserInput);
+
+        // account for any buffs/debuffs wearing off
+        if (playerAttackRoundCounter > 1) {
+            setPlayerAttackRoundCounter(playerAttackRoundCounter - 1);
+        } else if (playerAttackRoundCounter === 1) {
+            setPlayerAttackRoundCounter(0);
+            setBattleText("Your attack returns to normal.");
+            // adjust player attack here. Is there a way to access a key in a useState variable?
+            setCurrentPlayerStats(prevState => ({
+                ...prevState,
+                attack: 1
+            }));
+            document.addEventListener("keydown", resolveUserInput);
+            await progressRound();
+            document.removeEventListener("keydown", resolveUserInput);
+        }
+        if (playerDefenseRoundCounter > 1) {
+            setPlayerDefenseRoundCounter(playerDefenseRoundCounter -1);
+        } else if (playerDefenseRoundCounter === 1) {
+            setPlayerDefenseRoundCounter(0);
+            setBattleText("Your defense returns to normal.");
+            setCurrentPlayerStats(prevState => ({
+                ...prevState,
+                defense: 1
+            }));
+            document.addEventListener("keydown", resolveUserInput);
+            await progressRound();
+            document.removeEventListener("keydown", resolveUserInput);
+        }
+        if (dragonAttackRoundCounter > 1) {
+            setDragonAttackRoundCounter(dragonAttackRoundCounter - 1);
+        } else if (dragonAttackRoundCounter === 1) {
+            setDragonAttackRoundCounter(0);
+            setBattleText("The dragon's attack returns to normal.");
+            setCurrentDragonStats(prevState => ({
+                ...prevState,
+                attack: 1
+            }));
+            document.addEventListener("keydown", resolveUserInput);
+            await progressRound();
+            document.removeEventListener("keydown", resolveUserInput);
+        }
+        if (dragonDefenseRoundCounter > 1) {
+            setDragonDefenseRoundCounter(dragonDefenseRoundCounter - 1);
+        } else if (dragonDefenseRoundCounter === 1) {
+            setDragonDefenseRoundCounter(0);
+            setBattleText("The dragon's defense returns to normal.");
+            setCurrentDragonStats(prevState => ({
+                ...prevState,
+                defense: 1
+            }));
+            document.addEventListener("keydown", resolveUserInput);
+            await progressRound();
+            document.removeEventListener("keydown", resolveUserInput);
+        }
         // return to main action menu
         setBattleMenuOpen(true);
         setBattleText("Default");
@@ -368,8 +435,14 @@ function BattleScreen() {
                             console.log(`Player received a debuff. This is the stat that was affected
                              and its current value: ${playerRoundStats[key]}`);
                         }
-                        setCurrentPlayerStats(playerRoundStats);
                     });
+                    // Adjust round counter for player buffs/debuffs
+                    setCurrentPlayerStats(playerRoundStats);
+                    if (statAffected === "attack") {
+                        setPlayerAttackRoundCounter(3);
+                    } else if (statAffected === "defense") {
+                        setPlayerDefenseRoundCounter(3);
+                    }
                     // add if here to account for any special text with the status effect?
                     if (originalStatValue < 1) {
                         setBattleText(`You take ${damageDragonDealt} damage, but your ${statAffected} will not go any lower!`);
