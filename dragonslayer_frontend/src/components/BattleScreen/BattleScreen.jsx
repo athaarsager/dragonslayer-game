@@ -254,14 +254,16 @@ function BattleScreen() {
                     // lets player know that buffs don't stack
                     if (originalStatValue > 1) {
                         setBattleText(`Your ${statAffected} won't go any higher!`);
-                    } else {
+                    } else if (action.attack.name !== "Fetch Pitchfork") {
                         setBattleText(`Your ${statAffected} has increased!`);
                     }
                 }
-                // Paused on status effect inflicted on dragon
-                document.addEventListener("keydown", resolveUserInput);
-                await progressRound();
-                document.removeEventListener("keydown", resolveUserInput);
+                if (action.attack.name !== "Fetch Pitchfork") {
+                    // Paused on status effect inflicted on player or dragon
+                    document.addEventListener("keydown", resolveUserInput);
+                    await progressRound();
+                    document.removeEventListener("keydown", resolveUserInput);
+                }
             }
             // evaluating the special effects of individual attacks below:
             // reset attack after swinging charged sword
