@@ -181,7 +181,7 @@ function BattleScreen() {
         console.log("These are the dragon's stats:", currentDragonStats);
         // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
         // to prevent, I had already fully integretated it into the function
-        let playerRoundStats = {};
+        let playerRoundStats = { ...currentPlayerStats };
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
@@ -241,8 +241,7 @@ function BattleScreen() {
                         setBattleText(`The dragon's ${statAffected} has been lowered!`);
                     }
                 } else if (targetCharacter === "player") {
-                    playerRoundStats = { ...currentPlayerStats };
-                    Object.entries(currentPlayerStats).forEach(([key, value]) => {
+                    Object.entries(playerRoundStats).forEach(([key, value]) => {
                         if (key === statAffected) {
                             originalStatValue = playerRoundStats[key];
                             playerRoundStats[key] = action.extra_Effect.effectMultiplier;
@@ -275,9 +274,6 @@ function BattleScreen() {
             // reset attack after swinging charged sword
             if (action.attack.name === "Sword Attack" && swordIsCharged) {
                 setSwordIsCharged(false);
-                if (Object.keys(playerRoundStats).length === 0) {
-                    playerRoundStats = { ...currentPlayerStats };
-                }
                 Object.entries(playerRoundStats).forEach(([key, value]) => {
                     if (key === "attack") {
                         playerRoundStats[key] = 1;
