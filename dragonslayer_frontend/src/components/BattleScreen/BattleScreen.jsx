@@ -583,10 +583,6 @@ function BattleScreen() {
         }
     }, [dragonHp]);
 
-    useEffect(() => {
-        console.log("In useEffect. This is the current value of chickenEaten:", chickenEaten);
-    }, [chickenEaten]);
-
     return (
         <>
             <div id="dragon-hp-container-container">
