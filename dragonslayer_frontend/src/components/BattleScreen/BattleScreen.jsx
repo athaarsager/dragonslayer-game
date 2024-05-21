@@ -7,14 +7,16 @@ function BattleScreen() {
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacks, setClassAttacks] = useState([]);
     const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
-    const [playerStats, setPlayerStats] = useState({});
+    const [maxPlayerStats, setMaxPlayerStats] = useState({});
+    const [currentPlayerStats, setCurrentPlayerStats] = useState({});
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
     const [playerManaDisplay, setPlayerManaDisplay] = useState("");
 
     const [dragonAttacks, setDragonAttacks] = useState([]);
-    const [dragonStats, setDragonStats] = useState({});
+    const [maxDragonStats, setMaxDragonStats] = useState({});
+    const [currentDragonStats, setCurrentDragonStats] = useState({});
     const [dragonHp, setDragonHp] = useState(NaN);
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
     const [dragonMana, setDragonMana] = useState(NaN);
@@ -40,7 +42,8 @@ function BattleScreen() {
     async function fetchCharacterStats() {
         const response = await axios.get(`/api/stats/4`);
         console.log("These are the character's stats:", response.data[0]);
-        setPlayerStats(response.data[0]);
+        setMaxPlayerStats(response.data[0]);
+        setCurrentPlayerStats(response.data[0]);
         setPlayerHp(response.data[0].hp);
         setPlayerMana(response.data[0].mana);
         setPlayerManaDisplay(playerMana);
@@ -55,7 +58,8 @@ function BattleScreen() {
     async function fetchDragonStats() {
         const response = await axios.get("/api/stats/5");
         console.log("These are the dragon's stats:", response.data[0]);
-        setDragonStats(response.data[0]);
+        setMaxDragonStats(response.data[0]);
+        setCurrentDragonStats(response.data[0]);
         // This might be problematic if page refreshed or component remounts several times
         // don't want to reset hp values accidentally
         setDragonHp(response.data[0].hp);
@@ -169,12 +173,16 @@ function BattleScreen() {
 
     }
 
+    // broke buffs and debuffs. has to do with react life cycle
+    // they update correctly in the below loop, but are reset like immediately
+    // even if the dragon debuffs the player after the player buffs,
+    // the buffs the player put on themselves are gone by the time the debuff happens
     async function playRound(action) {
         document.removeEventListener("keydown", executeAction);
         document.removeEventListener("keydown", displaySelector);
         document.removeEventListener("keydown", renderBattleText);
-        console.log("These are the player's stats:", playerStats);
-        console.log("These are the dragon's stats:", dragonStats);
+        console.log("These are the player's stats:", currentPlayerStats);
+        console.log("These are the dragon's stats:", currentDragonStats);
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
@@ -185,7 +193,14 @@ function BattleScreen() {
             document.removeEventListener("keydown", resolveUserInput);
             let playerDamageDealt = 0;
             if (action.attack.power !== 0) {
-                playerDamageDealt = (action.attack.power + playerStats.attack) - dragonStats.defense;
+                console.log(
+                    `This is the playerDamage calculation:
+                    ${action.attack.power},
+                    ${currentPlayerStats.attack},
+                    ${currentDragonStats.defense}
+
+                `);
+                playerDamageDealt = (action.attack.power * currentPlayerStats.attack) * (1 /currentDragonStats.defense) ;
                 setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
                 // change dragon hp here
                 // The display will update based on a useEffect asynchronously
@@ -202,40 +217,40 @@ function BattleScreen() {
                 console.log("Attack has an extra_Effect. This is the target character:", targetCharacter);
                 console.log("Attack has extra_Effect. This is the stat affected:", statAffected);
                 if (targetCharacter === "dragon") {
-                    const currentDragonStats = { ...dragonStats };
-                    Object.entries(currentDragonStats).forEach(([key, value]) => {
+                    const currentDragonStatsCopy = { ...currentDragonStats };
+                    Object.entries(currentDragonStatsCopy).forEach(([key, value]) => {
                         if (key === statAffected) {
-                            currentDragonStats[key] *= action.extra_Effect.effectMultiplier;
+                            currentDragonStatsCopy[key] = action.extra_Effect.effectMultiplier;
                             console.log(`Dragon received a debuff. This is the stat affected and its current value: ${key}:
-                        ${currentDragonStats[key]}`);
+                        ${currentDragonStatsCopy[key]}`);
                         }
                         console.log("This is the value of currentDragonStats:", currentDragonStats);
-                        setDragonStats(currentDragonStats);
+                        setCurrentDragonStats(currentDragonStatsCopy);
                     });
                     // add an if here to account for any special text associated with the attack?
                     setBattleText(`The dragon's ${statAffected} has been lowered!`);
                 } else if (targetCharacter === "player") {
-                    const currentPlayerStats = { ...playerStats };
+                    const temporaryStatsArray = { ...currentPlayerStats }
                     Object.entries(currentPlayerStats).forEach(([key, value]) => {
                         if (key === statAffected) {
-                            currentPlayerStats[key] *= action.extra_Effect.effectMultiplier;
+                            temporaryStatsArray[key] = action.extra_Effect.effectMultiplier;
                             console.log(`Play received a buff. This is the stat affected and its current value: ${key}:
-                            ${currentPlayerStats[key]}`);
+                            ${temporaryStatsArray[key]}`);
                         }
-                        console.log("This is the value of currentPlayerStats:", currentPlayerStats);
-                        setPlayerStats(currentPlayerStats);
+                        console.log("This is the value of temporaryStatsArray:", temporaryStatsArray);
+                        setCurrentPlayerStats(temporaryStatsArray);
                     });
                     setBattleText(`Your ${statAffected} has increased!`);
 
                 }
                 // should include a conditional where if charge sword was already chosen last round
-                        // it is not allowed to be chosen again and there is some snarky battle text
-                        // if (action.attack.name === "Throw Pitchfork") {
-                        //     const newClassAttacksToDisplay = [...classAttacksToDisplay];
-                        //     newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
-                        //     console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
-                        //     setClassAttacksToDisplay(newClassAttacksToDisplay);
-                        // }
+                // it is not allowed to be chosen again and there is some snarky battle text
+                // if (action.attack.name === "Throw Pitchfork") {
+                //     const newClassAttacksToDisplay = [...classAttacksToDisplay];
+                //     newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
+                //     console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
+                //     setClassAttacksToDisplay(newClassAttacksToDisplay);
+                // }
                 // Paused on status effect inflicted on dragon
                 document.addEventListener("keydown", resolveUserInput);
                 await progressRound();
@@ -275,19 +290,19 @@ function BattleScreen() {
                 // Paused on dragon's attack text
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
-                const damageDragonDealt = (dragonAttack.attack.power + dragonStats.attack) - playerStats.defense;
+                const damageDragonDealt = (dragonAttack.attack.power * currentDragonStats.attack) * (1 / currentPlayerStats.defense);
                 if (dragonAttack.extra_Effect) {
                     const statAffected = dragonAttack.extra_Effect.targetStat;
                     console.log("dragon's attack has an extra effect. This is the stat affected:", statAffected);
-                    const currentPlayerStats = { ...playerStats };
+                    const temporaryStatsArray = { ...currentPlayerStats };
                     Object.entries(currentPlayerStats).forEach(([key, value]) => {
                         if (key === statAffected) {
                             console.log("In loop checking object key values for dragon. This is the key affected:", key);
-                            currentPlayerStats[key] *= dragonAttack.extra_Effect.effectMultiplier;
+                            temporaryStatsArray[key] = dragonAttack.extra_Effect.effectMultiplier;
                             console.log(`Player received a debuff. This is the stat that was affected
-                             and its current value: ${currentPlayerStats[key]}`);
+                             and its current value: ${temporaryStatsArray[key]}`);
                         }
-                        setPlayerStats(currentPlayerStats);
+                        setCurrentPlayerStats(temporaryStatsArray);
                     });
                     // add if here to account for any special text with the status effect?
                     setBattleText(`You take ${damageDragonDealt} damage and your ${statAffected} has been lowered!`);
