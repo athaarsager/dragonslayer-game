@@ -32,6 +32,9 @@ function BattleScreen() {
     const [dragonAttackRoundCounter, setDragonAttackRoundCounter] = useState(0);
     const [dragonDefenseRoundCounter, setDragonDefenseRoundCounter] = useState(0);
 
+    const [lostTurnCounter, setLostTurnCounter] = useState(0);
+    const [isBlinded, setIsBlinded] = useState(false);
+
     // This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
 
@@ -292,6 +295,10 @@ function BattleScreen() {
                     await progressRound();
                     document.removeEventListener("keydown", resolveUserInput);
                 }
+                // evaluate if the dragon should lose turns
+                if (action.extra_Effect.turnsLost) {
+                    setLostTurnCounter(action.extra_Effect.turnsLost);
+                }
             }
             // evaluating the special effects of individual attacks below:
             // reset attack after swinging charged sword
@@ -313,6 +320,7 @@ function BattleScreen() {
                 newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
                 console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
                 setClassAttacksToDisplay(newClassAttacksToDisplay);
+                setIsBlinded(true);
             }
             if (action.attack.name === "Fetch Pitchfork") {
                 const newClassAttacksToDisplay = [...classAttacksToDisplay];
@@ -332,7 +340,7 @@ function BattleScreen() {
         }
         // dragon attacks
         // await ensures the program pauses on the async function
-        await dragonActs(playerRoundStats);
+        await dragonActs(playerRoundStats, action);
         // user needs to progress the text again
         // Paused on damage dealt to player
         document.addEventListener("keydown", resolveUserInput);
@@ -355,7 +363,7 @@ function BattleScreen() {
             document.removeEventListener("keydown", resolveUserInput);
         }
         if (playerDefenseRoundCounter > 1) {
-            setPlayerDefenseRoundCounter(playerDefenseRoundCounter -1);
+            setPlayerDefenseRoundCounter(playerDefenseRoundCounter - 1);
         } else if (playerDefenseRoundCounter === 1) {
             setPlayerDefenseRoundCounter(0);
             setBattleText("Your defense returns to normal.");
@@ -393,6 +401,17 @@ function BattleScreen() {
             await progressRound();
             document.removeEventListener("keydown", resolveUserInput);
         }
+        if (lostTurnCounter > 0) {
+            if (lostTurnCounter === 1 && isBlinded) {
+                setLostTurnCounter(0);
+                setBattleText("The dragon's eye has recovered!");
+                document.addEventListener("keydown", resolveUserInput);
+                await progressRound();
+                document.removeEventListener("keydown", resolveUserInput);
+            } else {
+                setLostTurnCounter(lostTurnCounter - 1);
+            }
+        }
         // return to main action menu
         setBattleMenuOpen(true);
         setBattleText("Default");
@@ -405,7 +424,25 @@ function BattleScreen() {
         return;
     }
 
-    async function dragonActs(playerRoundStats) {
+    async function dragonActs(playerRoundStats, action) {
+        if (lostTurnCounter > 0) {
+            if (isBlinded) {
+                if (lostTurnCounter === 2) {
+                    setBattleText("The dragon is distracted by its eye pain!");
+                } else if (lostTurnCounter === 1) {
+                    setBattleText("The dragon is trying to blink its pain away!");
+                }
+            }
+            // need to add right flavor text. Probably need an isBlinded variable
+            return;
+        }
+        if (action.attack.name === "Throw Pitchfork") {
+            setBattleText("The dragon is blinded by the pitchfork in its eye!");
+            return;
+        } else if (action.attack.name === "Throw Chicken") {
+            setBattleText("The dragon swallows your chicken in one gulp!");
+            return;
+        }
         const randomNumber = Math.floor(Math.random() * 3);
         console.log("In dragonActs");
         console.log("This is the random number the dragon has chosen:", randomNumber);
@@ -535,6 +572,10 @@ function BattleScreen() {
             setDragonHp(0);
         }
     }, [dragonHp]);
+
+    useEffect(() => {
+        console.log("This is the current number of lostTurns:", lostTurnCounter);
+    }, [lostTurnCounter]);
 
     return (
         <>
