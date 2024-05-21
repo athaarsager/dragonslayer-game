@@ -23,6 +23,15 @@ function BattleScreen() {
     const [playerHp, setPlayerHp] = useState(NaN);
     const [playerMana, setPlayerMana] = useState(NaN);
     const [swordIsCharged, setSwordIsCharged] = useState(false);
+
+    // These variables will track when status effects wear off
+    // Tracking each stat individually in case multiple buffs/debuffs inflicted at once
+    // don't know if that's actually possible with the attacks I designed, but good for theoretical scaling
+    const [playerAttackRoundCounter, setPlayerAttackRoundCounter] = useState(0);
+    const [playerDefenseRoundCounter, setPlayerDefenseRoundCounter] = useState(0);
+    const [dragonAttackRoundCounter, setDragonAttackRoundCounter] = useState(0);
+    const [dragonDefenseRoundCounter, setDragonDefenseRoundCounter] = useState(0);
+    
     // This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
 
