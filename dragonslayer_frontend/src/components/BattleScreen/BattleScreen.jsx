@@ -200,7 +200,7 @@ function BattleScreen() {
                     ${currentDragonStats.defense}
 
                 `);
-                playerDamageDealt = (action.attack.power * currentPlayerStats.attack) * (1 /currentDragonStats.defense) ;
+                playerDamageDealt = (action.attack.power * currentPlayerStats.attack) * (1 / currentDragonStats.defense);
                 setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
                 // change dragon hp here
                 // The display will update based on a useEffect asynchronously
@@ -214,13 +214,15 @@ function BattleScreen() {
             if (action.extra_Effect) {
                 const statAffected = action.extra_Effect.targetStat;
                 const targetCharacter = action.extra_Effect.targetCharacter;
+                let originalStatValue;
                 console.log("Attack has an extra_Effect. This is the target character:", targetCharacter);
                 console.log("Attack has extra_Effect. This is the stat affected:", statAffected);
                 if (targetCharacter === "dragon") {
                     const currentDragonStatsCopy = { ...currentDragonStats };
                     Object.entries(currentDragonStatsCopy).forEach(([key, value]) => {
                         if (key === statAffected) {
-                            currentDragonStatsCopy[key] = action.extra_Effect.effectMultiplier;
+                            originalStatValue = currentDragonStatsCopy[key];
+                            currentDragonStatsCopy[key] = action.extra_Effect.effectMultiplier;  
                             console.log(`Dragon received a debuff. This is the stat affected and its current value: ${key}:
                         ${currentDragonStatsCopy[key]}`);
                         }
@@ -228,11 +230,17 @@ function BattleScreen() {
                         setCurrentDragonStats(currentDragonStatsCopy);
                     });
                     // add an if here to account for any special text associated with the attack?
-                    setBattleText(`The dragon's ${statAffected} has been lowered!`);
+                    // This if takes care of letting the player know that debuffs don't stack
+                    if (originalStatValue < 1) {
+                        setBattleText(`The dragon's ${statAffected} won't go any lower!`);
+                    } else {
+                        setBattleText(`The dragon's ${statAffected} has been lowered!`);
+                    }
                 } else if (targetCharacter === "player") {
                     const temporaryStatsArray = { ...currentPlayerStats }
                     Object.entries(currentPlayerStats).forEach(([key, value]) => {
                         if (key === statAffected) {
+                            originalStatValue = temporaryStatsArray[key];
                             temporaryStatsArray[key] = action.extra_Effect.effectMultiplier;
                             console.log(`Play received a buff. This is the stat affected and its current value: ${key}:
                             ${temporaryStatsArray[key]}`);
@@ -240,7 +248,12 @@ function BattleScreen() {
                         console.log("This is the value of temporaryStatsArray:", temporaryStatsArray);
                         setCurrentPlayerStats(temporaryStatsArray);
                     });
-                    setBattleText(`Your ${statAffected} has increased!`);
+                    // lets player know that buffs don't stack
+                    if (originalStatValue > 1) {
+                        setBattleText(`Your ${statAffected} won't go any higher!`);
+                    } else {
+                        setBattleText(`Your ${statAffected} has increased!`);
+                    }
 
                 }
                 // should include a conditional where if charge sword was already chosen last round
@@ -293,10 +306,12 @@ function BattleScreen() {
                 const damageDragonDealt = (dragonAttack.attack.power * currentDragonStats.attack) * (1 / currentPlayerStats.defense);
                 if (dragonAttack.extra_Effect) {
                     const statAffected = dragonAttack.extra_Effect.targetStat;
+                    let originalStatValue;
                     console.log("dragon's attack has an extra effect. This is the stat affected:", statAffected);
                     const temporaryStatsArray = { ...currentPlayerStats };
                     Object.entries(currentPlayerStats).forEach(([key, value]) => {
                         if (key === statAffected) {
+                            originalStatValue = temporaryStatsArray[key];
                             console.log("In loop checking object key values for dragon. This is the key affected:", key);
                             temporaryStatsArray[key] = dragonAttack.extra_Effect.effectMultiplier;
                             console.log(`Player received a debuff. This is the stat that was affected
@@ -305,7 +320,11 @@ function BattleScreen() {
                         setCurrentPlayerStats(temporaryStatsArray);
                     });
                     // add if here to account for any special text with the status effect?
+                    if (originalStatValue < 1) {
+                        setBattleText(`You take ${damageDragonDealt} damage, but your ${statAffected} will not go any lower!`);
+                    } else {
                     setBattleText(`You take ${damageDragonDealt} damage and your ${statAffected} has been lowered!`);
+                    }
                     setPlayerHp(playerHp - damageDragonDealt);
                     console.log("This is the player's hp:", playerHp);
                     return;
