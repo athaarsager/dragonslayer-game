@@ -258,19 +258,12 @@ function BattleScreen() {
                         setBattleText(`Your ${statAffected} has increased!`);
                     }
                 }
-                // should include a conditional where if charge sword was already chosen last round
-                // it is not allowed to be chosen again and there is some snarky battle text
-                // if (action.attack.name === "Throw Pitchfork") {
-                //     const newClassAttacksToDisplay = [...classAttacksToDisplay];
-                //     newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
-                //     console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
-                //     setClassAttacksToDisplay(newClassAttacksToDisplay);
-                // }
                 // Paused on status effect inflicted on dragon
                 document.addEventListener("keydown", resolveUserInput);
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
             }
+            // evaluating the special effects of individual attacks below:
             // reset attack after swinging charged sword
             if (action.attack.name === "Sword Attack" && swordIsCharged) {
                 setSwordIsCharged(false);
@@ -284,6 +277,19 @@ function BattleScreen() {
                 document.addEventListener("keydown", resolveUserInput);
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
+            }
+            // should include a conditional where if charge sword was already chosen last round
+            // it is not allowed to be chosen again and there is some snarky battle text
+            if (action.attack.name === "Throw Pitchfork") {
+                const newClassAttacksToDisplay = [...classAttacksToDisplay];
+                newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
+                console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
+                setClassAttacksToDisplay(newClassAttacksToDisplay);
+            }
+            if (action.attack.name === "Fetch Pitchfork") {
+                const newClassAttacksToDisplay = [...classAttacksToDisplay];
+                newClassAttacksToDisplay.splice(2, 1, classAttacks[2]);
+                setClassAttacksToDisplay(newClassAttacksToDisplay);
             }
         }
         // dragon attacks
@@ -325,7 +331,7 @@ function BattleScreen() {
                     let originalStatValue;
                     console.log("dragon's attack has an extra effect. This is the stat affected:", statAffected);
                     if (Object.keys(playerRoundStats).length === 0) {
-                    playerRoundStats = { ...currentPlayerStats };
+                        playerRoundStats = { ...currentPlayerStats };
                     }
                     Object.entries(playerRoundStats).forEach(([key, value]) => {
                         if (key === statAffected) {
