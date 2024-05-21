@@ -173,16 +173,14 @@ function BattleScreen() {
 
     }
 
-    // broke buffs and debuffs. has to do with react life cycle
-    // they update correctly in the below loop, but are reset like immediately
-    // even if the dragon debuffs the player after the player buffs,
-    // the buffs the player put on themselves are gone by the time the debuff happens
     async function playRound(action) {
         document.removeEventListener("keydown", executeAction);
         document.removeEventListener("keydown", displaySelector);
         document.removeEventListener("keydown", renderBattleText);
         console.log("These are the player's stats:", currentPlayerStats);
         console.log("These are the dragon's stats:", currentDragonStats);
+        // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
+        // to prevent, I had already fully integretated it into the function
         let playerRoundStats = {};
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
@@ -436,10 +434,6 @@ function BattleScreen() {
             setDragonHp(0);
         }
     }, [dragonHp]);
-
-    useEffect(() => {
-        console.log("These are the player's stats:", currentPlayerStats);
-    }, [currentPlayerStats]);
 
     return (
         <>
