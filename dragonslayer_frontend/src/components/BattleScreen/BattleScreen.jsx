@@ -174,6 +174,8 @@ function BattleScreen() {
     }
 
     async function playRound(action) {
+        // should include a conditional where if charge sword was already chosen last round
+        // it is not allowed to be chosen again and there is some snarky battle text
         document.removeEventListener("keydown", executeAction);
         document.removeEventListener("keydown", displaySelector);
         document.removeEventListener("keydown", renderBattleText);
@@ -280,8 +282,6 @@ function BattleScreen() {
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
             }
-            // should include a conditional where if charge sword was already chosen last round
-            // it is not allowed to be chosen again and there is some snarky battle text
             if (action.attack.name === "Throw Pitchfork") {
                 const newClassAttacksToDisplay = [...classAttacksToDisplay];
                 newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
@@ -291,6 +291,16 @@ function BattleScreen() {
             if (action.attack.name === "Fetch Pitchfork") {
                 const newClassAttacksToDisplay = [...classAttacksToDisplay];
                 newClassAttacksToDisplay.splice(2, 1, classAttacks[2]);
+                setClassAttacksToDisplay(newClassAttacksToDisplay);
+            }
+            if (action.attack.name === "Throw Chicken") {
+                const newClassAttacksToDisplay = [...classAttacksToDisplay];
+                newClassAttacksToDisplay.splice(3, 1, classAttacks[5]);
+                setClassAttacksToDisplay(newClassAttacksToDisplay);
+            }
+            if (action.attack.name === "Fetch Chicken") {
+                const newClassAttacksToDisplay = [...classAttacksToDisplay];
+                newClassAttacksToDisplay.splice(3, 1, classAttacks[3]);
                 setClassAttacksToDisplay(newClassAttacksToDisplay);
             }
         }
