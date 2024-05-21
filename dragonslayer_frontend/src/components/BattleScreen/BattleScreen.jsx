@@ -131,6 +131,8 @@ function BattleScreen() {
         } else if (attackOptionChosen) {
             if (!optionOne.classList.contains("unselected")) {
                 setBattleText(classAttacksToDisplay[0].attack.description);
+            } else if (!optionTwo.classList.contains("unselected") && swordIsCharged) {
+                setBattleText("You're already gripping the sword with both hands. Grip it any tighter and you might faint.");
             } else if (!optionTwo.classList.contains("unselected")) {
                 setBattleText(classAttacksToDisplay[1].attack.description);
             } else if (!optionThree.classList.contains("unselected")) {
@@ -176,6 +178,9 @@ function BattleScreen() {
     async function playRound(action) {
         // should include a conditional where if charge sword was already chosen last round
         // it is not allowed to be chosen again and there is some snarky battle text
+        if (action.attack.name === "Charge Sword" && swordIsCharged) {
+            return;
+        }
         document.removeEventListener("keydown", executeAction);
         document.removeEventListener("keydown", displaySelector);
         document.removeEventListener("keydown", renderBattleText);
