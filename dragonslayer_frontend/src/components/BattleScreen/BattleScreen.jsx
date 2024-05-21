@@ -219,7 +219,7 @@ function BattleScreen() {
                 document.removeEventListener("keydown", resolveUserInput);
             }
             // account for if attack inflicts a debuff
-            if (action.extra_Effect) {
+            if (action.extra_Effect && action.extra_Effect.effectMultiplier) {
                 const statAffected = action.extra_Effect.targetStat;
                 const targetCharacter = action.extra_Effect.targetCharacter;
                 let originalStatValue;
@@ -260,7 +260,7 @@ function BattleScreen() {
                         setBattleText(`Your ${statAffected} has increased!`);
                     }
                 }
-                if (action.attack.name !== "Fetch Pitchfork") {
+                if (action.attack.name !== "Fetch Pitchfork" && action.attack.name !== "Fetch Chicken") {
                     // Paused on status effect inflicted on player or dragon
                     document.addEventListener("keydown", resolveUserInput);
                     await progressRound();
