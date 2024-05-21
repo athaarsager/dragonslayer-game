@@ -34,7 +34,9 @@ function BattleScreen() {
 
     const [lostTurnCounter, setLostTurnCounter] = useState(0);
     const [isBlinded, setIsBlinded] = useState(false);
-
+    
+    // This variable did not update in time when it was a useState variable
+    let chickenEaten = false;
     // This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
 
@@ -412,6 +414,14 @@ function BattleScreen() {
                 setLostTurnCounter(lostTurnCounter - 1);
             }
         }
+        // did the dragon eat the chicken on his turn?
+        console.log("This is the value of chickenEaten:", chickenEaten);
+        if (chickenEaten) {
+            // appears to be one behind
+            const newClassAttacksToDisplay = [...classAttacksToDisplay];
+            newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
+            setClassAttacksToDisplay(newClassAttacksToDisplay);
+        }
         // return to main action menu
         setBattleMenuOpen(true);
         setBattleText("Default");
@@ -433,7 +443,6 @@ function BattleScreen() {
                     setBattleText("The dragon is trying to blink its pain away!");
                 }
             }
-            // need to add right flavor text. Probably need an isBlinded variable
             return;
         }
         if (action.attack.name === "Throw Pitchfork") {
@@ -441,6 +450,7 @@ function BattleScreen() {
             return;
         } else if (action.attack.name === "Throw Chicken") {
             setBattleText("The dragon swallows your chicken in one gulp!");
+            chickenEaten = true;
             return;
         }
         const randomNumber = Math.floor(Math.random() * 3);
@@ -574,8 +584,8 @@ function BattleScreen() {
     }, [dragonHp]);
 
     useEffect(() => {
-        console.log("This is the current number of lostTurns:", lostTurnCounter);
-    }, [lostTurnCounter]);
+        console.log("In useEffect. This is the current value of chickenEaten:", chickenEaten);
+    }, [chickenEaten]);
 
     return (
         <>
