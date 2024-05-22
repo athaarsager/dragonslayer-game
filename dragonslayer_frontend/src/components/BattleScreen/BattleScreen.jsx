@@ -198,7 +198,6 @@ function BattleScreen() {
 
     }
 
-
     async function playRound(enemy, action) {
         // should include a conditional where if charge sword was already chosen last round
         // it is not allowed to be chosen again and there is some snarky battle text
@@ -210,9 +209,92 @@ function BattleScreen() {
         document.removeEventListener("keydown", renderBattleText);
         console.log("These are the player's stats:", currentPlayerStats);
         console.log("These are the dragon's stats:", currentEnemyStats);
+        let playerRoundStats = { ...currentPlayerStats };
+        await playerActs(enemy, action, playerRoundStats);
+        // enemy attacks
+        // await ensures the program pauses on the async function
+        await EnemyActs(enemy, action, playerRoundStats);
+        // user needs to progress the text again
+        // Paused on damage dealt to player
+        await pauseOnText();
+        // account for any buffs/debuffs wearing off
+        if (playerAttackRoundCounter > 1) {
+            setPlayerAttackRoundCounter(playerAttackRoundCounter - 1);
+        } else if (playerAttackRoundCounter === 1) {
+            setPlayerAttackRoundCounter(0);
+            setBattleText("Your attack returns to normal.");
+            // adjust player attack here. Is there a way to access a key in a useState variable?
+            setCurrentPlayerStats(prevState => ({
+                ...prevState,
+                attack: 1
+            }));
+            await pauseOnText();
+        }
+        if (playerDefenseRoundCounter > 1) {
+            setPlayerDefenseRoundCounter(playerDefenseRoundCounter - 1);
+        } else if (playerDefenseRoundCounter === 1) {
+            setPlayerDefenseRoundCounter(0);
+            setBattleText("Your defense returns to normal.");
+            setCurrentPlayerStats(prevState => ({
+                ...prevState,
+                defense: 1
+            }));
+            await pauseOnText();
+        }
+        if (enemyAttackRoundCounter > 1) {
+            setEnemyAttackRoundCounter(enemyAttackRoundCounter - 1);
+        } else if (enemyAttackRoundCounter === 1) {
+            setEnemyAttackRoundCounter(0);
+            setBattleText(`The ${enemy}'s attack returns to normal.`);
+            setCurrentEnemyStats(prevState => ({
+                ...prevState,
+                attack: 1
+            }));
+            await pauseOnText();
+        }
+        if (enemyDefenseRoundCounter > 1) {
+            setEnemyDefenseRoundCounter(enemyDefenseRoundCounter - 1);
+        } else if (enemyDefenseRoundCounter === 1) {
+            setEnemyDefenseRoundCounter(0);
+            setBattleText(`The ${enemy}'s defense returns to normal.`);
+            setCurrentEnemyStats(prevState => ({
+                ...prevState,
+                defense: 1
+            }));
+            await pauseOnText();
+        }
+        if (lostTurnCounter > 0) {
+            if (lostTurnCounter === 1 && isBlinded) {
+                setLostTurnCounter(0);
+                setBattleText(`The ${enemy}'s eye has recovered!`);
+                await pauseOnText();
+            } else {
+                setLostTurnCounter(lostTurnCounter - 1);
+            }
+        }
+        // did the dragon eat the chicken on his turn?
+        console.log("This is the value of chickenEaten:", chickenEaten);
+        if (chickenEaten) {
+            // appears to be one behind
+            const newClassAttacksToDisplay = [...classAttacksToDisplay];
+            newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
+            setClassAttacksToDisplay(newClassAttacksToDisplay);
+        }
+        // return to main action menu
+        setBattleMenuOpen(true);
+        setBattleText("Default");
+        setAttackOptionChosen(false);
+        setOnActionMenu(true);
+        document.addEventListener("keydown", executeAction);
+        document.addEventListener("keydown", displaySelector);
+        document.addEventListener("keydown", renderBattleText);
+        // need to account for mana usage at some point
+        return;
+    }
+
+    async function playerActs(enemy, action, playerRoundStats) {
         // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
         // to prevent, I had already fully integretated it into the function
-        let playerRoundStats = { ...currentPlayerStats };
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
@@ -240,7 +322,7 @@ function BattleScreen() {
                 // change dragon hp here
                 // The display will update based on a useEffect asynchronously
                 setDragonHp(dragonHp - playerDamageDealt);
-                
+
                 // Paused on damage dealt by player
                 await pauseOnText();
             }
@@ -343,89 +425,9 @@ function BattleScreen() {
                 setClassAttacksToDisplay(newClassAttacksToDisplay);
             }
         }
-        // enemy attacks
-        // await ensures the program pauses on the async function
-        await EnemyActs(enemy, playerRoundStats, action);
-        // user needs to progress the text again
-        // Paused on damage dealt to player
-        await pauseOnText();
-
-        // account for any buffs/debuffs wearing off
-        if (playerAttackRoundCounter > 1) {
-            setPlayerAttackRoundCounter(playerAttackRoundCounter - 1);
-        } else if (playerAttackRoundCounter === 1) {
-            setPlayerAttackRoundCounter(0);
-            setBattleText("Your attack returns to normal.");
-            // adjust player attack here. Is there a way to access a key in a useState variable?
-            setCurrentPlayerStats(prevState => ({
-                ...prevState,
-                attack: 1
-            }));
-            await pauseOnText();
-        }
-        if (playerDefenseRoundCounter > 1) {
-            setPlayerDefenseRoundCounter(playerDefenseRoundCounter - 1);
-        } else if (playerDefenseRoundCounter === 1) {
-            setPlayerDefenseRoundCounter(0);
-            setBattleText("Your defense returns to normal.");
-            setCurrentPlayerStats(prevState => ({
-                ...prevState,
-                defense: 1
-            }));
-            await pauseOnText();
-        }
-        if (enemyAttackRoundCounter > 1) {
-            setEnemyAttackRoundCounter(enemyAttackRoundCounter - 1);
-        } else if (enemyAttackRoundCounter === 1) {
-            setEnemyAttackRoundCounter(0);
-            setBattleText(`The ${enemy}'s attack returns to normal.`);
-            setCurrentEnemyStats(prevState => ({
-                ...prevState,
-                attack: 1
-            }));
-            await pauseOnText();
-        }
-        if (enemyDefenseRoundCounter > 1) {
-            setEnemyDefenseRoundCounter(enemyDefenseRoundCounter - 1);
-        } else if (enemyDefenseRoundCounter === 1) {
-            setEnemyDefenseRoundCounter(0);
-            setBattleText(`The ${enemy}'s defense returns to normal.`);
-            setCurrentEnemyStats(prevState => ({
-                ...prevState,
-                defense: 1
-            }));
-            await pauseOnText();
-        }
-        if (lostTurnCounter > 0) {
-            if (lostTurnCounter === 1 && isBlinded) {
-                setLostTurnCounter(0);
-                setBattleText(`The ${enemy}'s eye has recovered!`);
-                await pauseOnText();
-            } else {
-                setLostTurnCounter(lostTurnCounter - 1);
-            }
-        }
-        // did the dragon eat the chicken on his turn?
-        console.log("This is the value of chickenEaten:", chickenEaten);
-        if (chickenEaten) {
-            // appears to be one behind
-            const newClassAttacksToDisplay = [...classAttacksToDisplay];
-            newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
-            setClassAttacksToDisplay(newClassAttacksToDisplay);
-        }
-        // return to main action menu
-        setBattleMenuOpen(true);
-        setBattleText("Default");
-        setAttackOptionChosen(false);
-        setOnActionMenu(true);
-        document.addEventListener("keydown", executeAction);
-        document.addEventListener("keydown", displaySelector);
-        document.addEventListener("keydown", renderBattleText);
-        // need to account for mana usage at some point
-        return;
     }
 
-    async function EnemyActs(enemy, playerRoundStats, action) {
+    async function EnemyActs(enemy, action, playerRoundStats) {
         if (lostTurnCounter > 0) {
             if (isBlinded) {
                 if (lostTurnCounter === 2) {
