@@ -342,7 +342,7 @@ function BattleScreen() {
         }
         // dragon attacks
         // await ensures the program pauses on the async function
-        await dragonActs(playerRoundStats, action);
+        await EnemyActs(playerRoundStats, action);
         // user needs to progress the text again
         // Paused on damage dealt to player
         document.addEventListener("keydown", resolveUserInput);
@@ -434,7 +434,7 @@ function BattleScreen() {
         return;
     }
 
-    async function dragonActs(playerRoundStats, action) {
+    async function EnemyActs(playerRoundStats, action) {
         if (lostTurnCounter > 0) {
             if (isBlinded) {
                 if (lostTurnCounter === 2) {
@@ -454,7 +454,7 @@ function BattleScreen() {
             return;
         }
         const randomNumber = Math.floor(Math.random() * 3);
-        console.log("In dragonActs");
+        console.log("In EnemyActs");
         console.log("This is the random number the dragon has chosen:", randomNumber);
         for (let i = 0; i < 3; i++) {
             if (i === randomNumber) {
