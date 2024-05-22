@@ -473,7 +473,7 @@ function BattleScreen() {
                 // Paused on dragon's attack text
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
-                const damageDragonDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / currentPlayerStats.defense);
+                const damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / currentPlayerStats.defense);
                 if (enemyAttack.extra_Effect) {
                     const statAffected = enemyAttack.extra_Effect.targetStat;
                     let originalStatValue;
@@ -500,16 +500,16 @@ function BattleScreen() {
                     }
                     // add if here to account for any special text with the status effect?
                     if (originalStatValue < 1) {
-                        setBattleText(`You take ${damageDragonDealt} damage, but your ${statAffected} will not go any lower!`);
+                        setBattleText(`You take ${damageEnemyDealt} damage, but your ${statAffected} will not go any lower!`);
                     } else {
-                        setBattleText(`You take ${damageDragonDealt} damage and your ${statAffected} has been lowered!`);
+                        setBattleText(`You take ${damageEnemyDealt} damage and your ${statAffected} has been lowered!`);
                     }
-                    setPlayerHp(playerHp - damageDragonDealt);
+                    setPlayerHp(playerHp - damageEnemyDealt);
                     console.log("This is the player's hp:", playerHp);
                     return;
                 } else {
-                    setBattleText(`You take ${damageDragonDealt} damage!`);
-                    setPlayerHp(playerHp - damageDragonDealt);
+                    setBattleText(`You take ${damageEnemyDealt} damage!`);
+                    setPlayerHp(playerHp - damageEnemyDealt);
                     console.log("This is the player's hp:", playerHp);
                     return;
                 }
