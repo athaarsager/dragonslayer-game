@@ -14,12 +14,13 @@ function BattleScreen() {
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
     const [playerManaDisplay, setPlayerManaDisplay] = useState("");
 
-    const [dragonAttacks, setDragonAttacks] = useState([]);
-    const [maxDragonStats, setMaxDragonStats] = useState({});
-    const [currentDragonStats, setCurrentDragonStats] = useState({});
     const [dragonHp, setDragonHp] = useState(NaN);
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
     const [dragonMana, setDragonMana] = useState(NaN);
+
+    const [enemyAttacks, setEnemyAttacks] = useState([]);
+    const [currentEnemyStats, setCurrentEnemyStats] = useState({});
+
     const [playerHp, setPlayerHp] = useState(NaN);
     const [playerMana, setPlayerMana] = useState(NaN);
     const [swordIsCharged, setSwordIsCharged] = useState(false);
@@ -29,8 +30,8 @@ function BattleScreen() {
     // don't know if that's actually possible with the attacks I designed, but good for theoretical scaling
     const [playerAttackRoundCounter, setPlayerAttackRoundCounter] = useState(0);
     const [playerDefenseRoundCounter, setPlayerDefenseRoundCounter] = useState(0);
-    const [dragonAttackRoundCounter, setDragonAttackRoundCounter] = useState(0);
-    const [dragonDefenseRoundCounter, setDragonDefenseRoundCounter] = useState(0);
+    const [enemyAttackRoundCounter, setEnemyAttackRoundCounter] = useState(0);
+    const [enemyDefenseRoundCounter, setEnemyDefenseRoundCounter] = useState(0);
 
     const [lostTurnCounter, setLostTurnCounter] = useState(0);
     const [isBlinded, setIsBlinded] = useState(false);
@@ -66,14 +67,13 @@ function BattleScreen() {
     async function fetchDragonAttacks() {
         const response = await axios.get("/api/attacks/5");
         console.log("These are the dragon's attacks:", response.data);
-        setDragonAttacks(response.data);
+        setEnemyAttacks(response.data);
     }
 
     async function fetchDragonStats() {
         const response = await axios.get("/api/stats/5");
         console.log("These are the dragon's stats:", response.data[0]);
-        setMaxDragonStats(response.data[0]);
-        setCurrentDragonStats(response.data[0]);
+        setCurrentEnemyStats(response.data[0]);
         // This might be problematic if page refreshed or component remounts several times
         // don't want to reset hp values accidentally
         setDragonHp(response.data[0].hp);
@@ -81,6 +81,7 @@ function BattleScreen() {
         setDragonMana(response.data[0].mana);
     }
 
+    
     // function manually determines which item should be selected in the battle action menu
     // based on what key was pressed
     const displaySelector = (e) => {
@@ -199,7 +200,7 @@ function BattleScreen() {
         document.removeEventListener("keydown", displaySelector);
         document.removeEventListener("keydown", renderBattleText);
         console.log("These are the player's stats:", currentPlayerStats);
-        console.log("These are the dragon's stats:", currentDragonStats);
+        console.log("These are the dragon's stats:", currentEnemyStats);
         // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
         // to prevent, I had already fully integretated it into the function
         let playerRoundStats = { ...currentPlayerStats };
@@ -220,13 +221,13 @@ function BattleScreen() {
                     `This is the playerDamage calculation:
                     ${action.attack.power},
                     ${currentPlayerStats.attack},
-                    ${currentDragonStats.defense}
+                    ${currentEnemyStats.defense}
                 `);
                 // account for if player is trying to apply their charged sword buff to their pitchfork. Not allowed
                 if (action.attack.name === "Throw Pitchfork" && swordIsCharged) {
-                    playerDamageDealt = (action.attack.power) * (1 / currentDragonStats.defense);
+                    playerDamageDealt = (action.attack.power) * (1 / currentEnemyStats.defense);
                 } else {
-                    playerDamageDealt = (action.attack.power * currentPlayerStats.attack) * (1 / currentDragonStats.defense);
+                    playerDamageDealt = (action.attack.power * currentPlayerStats.attack) * (1 / currentEnemyStats.defense);
                 }
                 setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
                 // change dragon hp here
@@ -243,22 +244,22 @@ function BattleScreen() {
                 const targetCharacter = action.extra_Effect.targetCharacter;
                 let originalStatValue;
                 if (targetCharacter === "dragon") {
-                    const currentDragonStatsCopy = { ...currentDragonStats };
-                    Object.entries(currentDragonStatsCopy).forEach(([key, value]) => {
+                    const currentEnemyStatsCopy = { ...currentEnemyStats };
+                    Object.entries(currentEnemyStatsCopy).forEach(([key, value]) => {
                         if (key === statAffected) {
-                            originalStatValue = currentDragonStatsCopy[key];
-                            currentDragonStatsCopy[key] = action.extra_Effect.effectMultiplier;
+                            originalStatValue = currentEnemyStatsCopy[key];
+                            currentEnemyStatsCopy[key] = action.extra_Effect.effectMultiplier;
                             console.log(`Dragon received a debuff. This is the stat affected and its current value: ${key}:
-                        ${currentDragonStatsCopy[key]}`);
+                        ${currentEnemyStatsCopy[key]}`);
                         }
                     });
-                    console.log("This is the value of currentDragonStats:", currentDragonStats);
-                    setCurrentDragonStats(currentDragonStatsCopy);
+                    console.log("This is the value of currentEnemyStats:", currentEnemyStats);
+                    setCurrentEnemyStats(currentEnemyStatsCopy);
                     // set the counter for how long the status effect will last
                     if (statAffected === "defense") {
-                        setDragonDefenseRoundCounter(3);
+                        setenemyDefenseRoundCounter(3);
                     } else if (statAffected === "attack") {
-                        setDragonAttackRoundCounter(3);
+                        setEnemyAttackRoundCounter(3);
                     }
                     // add an if here to account for any special text associated with the attack?
                     // This if takes care of letting the player know that debuffs don't stack
@@ -377,12 +378,12 @@ function BattleScreen() {
             await progressRound();
             document.removeEventListener("keydown", resolveUserInput);
         }
-        if (dragonAttackRoundCounter > 1) {
-            setDragonAttackRoundCounter(dragonAttackRoundCounter - 1);
-        } else if (dragonAttackRoundCounter === 1) {
-            setDragonAttackRoundCounter(0);
+        if (enemyAttackRoundCounter > 1) {
+            setEnemyAttackRoundCounter(enemyAttackRoundCounter - 1);
+        } else if (enemyAttackRoundCounter === 1) {
+            setEnemyAttackRoundCounter(0);
             setBattleText("The dragon's attack returns to normal.");
-            setCurrentDragonStats(prevState => ({
+            setCurrentEnemyStats(prevState => ({
                 ...prevState,
                 attack: 1
             }));
@@ -390,12 +391,12 @@ function BattleScreen() {
             await progressRound();
             document.removeEventListener("keydown", resolveUserInput);
         }
-        if (dragonDefenseRoundCounter > 1) {
-            setDragonDefenseRoundCounter(dragonDefenseRoundCounter - 1);
-        } else if (dragonDefenseRoundCounter === 1) {
-            setDragonDefenseRoundCounter(0);
+        if (enemyDefenseRoundCounter > 1) {
+            setEnemyDefenseRoundCounter(enemyDefenseRoundCounter - 1);
+        } else if (enemyDefenseRoundCounter === 1) {
+            setEnemyDefenseRoundCounter(0);
             setBattleText("The dragon's defense returns to normal.");
-            setCurrentDragonStats(prevState => ({
+            setCurrentEnemyStats(prevState => ({
                 ...prevState,
                 defense: 1
             }));
@@ -434,40 +435,39 @@ function BattleScreen() {
         return;
     }
 
-    async function EnemyActs(playerRoundStats, action) {
+    async function EnemyActs(enemy, playerRoundStats, action) {
         if (lostTurnCounter > 0) {
             if (isBlinded) {
                 if (lostTurnCounter === 2) {
-                    setBattleText("The dragon is distracted by its eye pain!");
+                    setBattleText(`The ${enemy} is distracted by its eye pain!`);
                 } else if (lostTurnCounter === 1) {
-                    setBattleText("The dragon is trying to blink its pain away!");
+                    setBattleText(`The ${enemy} is trying to blink its pain away!`);
                 }
             }
             return;
         }
         if (action.attack.name === "Throw Pitchfork") {
-            setBattleText("The dragon is blinded by the pitchfork in its eye!");
+            setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
             return;
         } else if (action.attack.name === "Throw Chicken") {
-            setBattleText("The dragon swallows your chicken in one gulp!");
+            setBattleText(`The ${enemy} swallows your chicken in one gulp!`);
             chickenEaten = true;
             return;
         }
         const randomNumber = Math.floor(Math.random() * 3);
-        console.log("In EnemyActs");
-        console.log("This is the random number the dragon has chosen:", randomNumber);
+        console.log("This is the random number the enemy has chosen:", randomNumber);
         for (let i = 0; i < 3; i++) {
             if (i === randomNumber) {
-                const dragonAttack = dragonAttacks[i];
-                setBattleText(dragonAttack.attack.attackText);
+                const enemyAttack = enemyAttacks[i];
+                setBattleText(enemyAttack.attack.attackText);
                 document.addEventListener("keydown", resolveUserInput);
                 // need user input to progress the textbox
                 // Paused on dragon's attack text
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
-                const damageDragonDealt = (dragonAttack.attack.power * currentDragonStats.attack) * (1 / currentPlayerStats.defense);
-                if (dragonAttack.extra_Effect) {
-                    const statAffected = dragonAttack.extra_Effect.targetStat;
+                const damageDragonDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / currentPlayerStats.defense);
+                if (enemyAttack.extra_Effect) {
+                    const statAffected = enemyAttack.extra_Effect.targetStat;
                     let originalStatValue;
                     console.log("dragon's attack has an extra effect. This is the stat affected:", statAffected);
                     if (Object.keys(playerRoundStats).length === 0) {
@@ -475,10 +475,10 @@ function BattleScreen() {
                     }
                     Object.entries(playerRoundStats).forEach(([key, value]) => {
                         if (key === statAffected) {
-                            console.log("In dragon's attack's debuff. This is the value of currentPlayerStats:", currentPlayerStats);
+                            console.log("In enemy's attack's debuff. This is the value of currentPlayerStats:", currentPlayerStats);
                             console.log("In same spot, this is the value of the playerRoundStats:", playerRoundStats);
                             originalStatValue = playerRoundStats[key];
-                            playerRoundStats[key] = dragonAttack.extra_Effect.effectMultiplier;
+                            playerRoundStats[key] = enemyAttack.extra_Effect.effectMultiplier;
                             console.log(`Player received a debuff. This is the stat that was affected
                              and its current value: ${playerRoundStats[key]}`);
                         }
