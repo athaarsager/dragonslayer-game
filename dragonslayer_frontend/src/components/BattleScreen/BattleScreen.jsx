@@ -18,6 +18,7 @@ function BattleScreen() {
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
     const [dragonMana, setDragonMana] = useState(NaN);
 
+    const [enemyName, setEnemyName] = useState("");
     const [enemyAttacks, setEnemyAttacks] = useState([]);
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
 
@@ -81,7 +82,14 @@ function BattleScreen() {
         setDragonMana(response.data[0].mana);
     }
 
-    
+    // This function may need to be moved to the class display screen. Leaving it here for now
+    async function fetchClasses() {
+        const response = await axios.get("/api/character_classes");
+        console.log("These are the character classes:", response.data);
+        // set the enemy's name to "dragon" right off the bat
+        setEnemyName(response.data[4].name);
+    }
+
     // function manually determines which item should be selected in the battle action menu
     // based on what key was pressed
     const displaySelector = (e) => {
@@ -182,7 +190,7 @@ function BattleScreen() {
                         return;
                     }
                 } else if (attackOptionChosen) {
-                    playRound(classAttacksToDisplay[i]);
+                    playRound(enemyName, classAttacksToDisplay[i]);
                     return;
                 }
             }
@@ -190,7 +198,7 @@ function BattleScreen() {
 
     }
 
-    async function playRound(action) {
+    async function playRound(enemy, action) {
         // should include a conditional where if charge sword was already chosen last round
         // it is not allowed to be chosen again and there is some snarky battle text
         if (action.attack.name === "Charge Sword" && swordIsCharged) {
@@ -229,7 +237,7 @@ function BattleScreen() {
                 } else {
                     playerDamageDealt = (action.attack.power * currentPlayerStats.attack) * (1 / currentEnemyStats.defense);
                 }
-                setBattleText(`The dragon takes ${playerDamageDealt} damage!`);
+                setBattleText(`The ${enemy} takes ${playerDamageDealt} damage!`);
                 // change dragon hp here
                 // The display will update based on a useEffect asynchronously
                 setDragonHp(dragonHp - playerDamageDealt);
@@ -257,16 +265,16 @@ function BattleScreen() {
                     setCurrentEnemyStats(currentEnemyStatsCopy);
                     // set the counter for how long the status effect will last
                     if (statAffected === "defense") {
-                        setenemyDefenseRoundCounter(3);
+                        setEnemyDefenseRoundCounter(3);
                     } else if (statAffected === "attack") {
                         setEnemyAttackRoundCounter(3);
                     }
                     // add an if here to account for any special text associated with the attack?
                     // This if takes care of letting the player know that debuffs don't stack
                     if (originalStatValue < 1) {
-                        setBattleText(`The dragon's ${statAffected} won't go any lower!`);
+                        setBattleText(`The ${enemy}'s ${statAffected} won't go any lower!`);
                     } else {
-                        setBattleText(`The dragon's ${statAffected} has been lowered!`);
+                        setBattleText(`The ${enemy}'s ${statAffected} has been lowered!`);
                     }
                 } else if (targetCharacter === "player") {
                     Object.entries(playerRoundStats).forEach(([key, value]) => {
@@ -343,7 +351,7 @@ function BattleScreen() {
         }
         // dragon attacks
         // await ensures the program pauses on the async function
-        await EnemyActs(playerRoundStats, action);
+        await EnemyActs(enemy, playerRoundStats, action);
         // user needs to progress the text again
         // Paused on damage dealt to player
         document.addEventListener("keydown", resolveUserInput);
@@ -382,7 +390,7 @@ function BattleScreen() {
             setEnemyAttackRoundCounter(enemyAttackRoundCounter - 1);
         } else if (enemyAttackRoundCounter === 1) {
             setEnemyAttackRoundCounter(0);
-            setBattleText("The dragon's attack returns to normal.");
+            setBattleText(`The ${enemy}'s attack returns to normal.`);
             setCurrentEnemyStats(prevState => ({
                 ...prevState,
                 attack: 1
@@ -395,7 +403,7 @@ function BattleScreen() {
             setEnemyDefenseRoundCounter(enemyDefenseRoundCounter - 1);
         } else if (enemyDefenseRoundCounter === 1) {
             setEnemyDefenseRoundCounter(0);
-            setBattleText("The dragon's defense returns to normal.");
+            setBattleText(`The ${enemy}'s defense returns to normal.`);
             setCurrentEnemyStats(prevState => ({
                 ...prevState,
                 defense: 1
@@ -407,7 +415,7 @@ function BattleScreen() {
         if (lostTurnCounter > 0) {
             if (lostTurnCounter === 1 && isBlinded) {
                 setLostTurnCounter(0);
-                setBattleText("The dragon's eye has recovered!");
+                setBattleText(`The ${enemy}'s eye has recovered!`);
                 document.addEventListener("keydown", resolveUserInput);
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
@@ -528,6 +536,7 @@ function BattleScreen() {
     }
 
     useEffect(() => {
+        fetchClasses();
         fetchClassAttacks();
         fetchClassAttacksToDisplay();
         fetchCharacterStats();
