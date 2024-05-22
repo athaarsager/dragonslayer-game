@@ -36,7 +36,7 @@ function BattleScreen() {
 
     const [lostTurnCounter, setLostTurnCounter] = useState(0);
     const [isBlinded, setIsBlinded] = useState(false);
-    
+
     // This variable did not update in time when it was a useState variable
     let chickenEaten = false;
     // This variable will be used to resolve the promise in playRound();
@@ -198,6 +198,7 @@ function BattleScreen() {
 
     }
 
+
     async function playRound(enemy, action) {
         // should include a conditional where if charge sword was already chosen last round
         // it is not allowed to be chosen again and there is some snarky battle text
@@ -216,10 +217,8 @@ function BattleScreen() {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
             setBattleText(action.attack.attackText);
-            document.addEventListener("keydown", resolveUserInput);
             // Paused on player's attack text
-            await progressRound();
-            document.removeEventListener("keydown", resolveUserInput);
+            await pauseOnText();
             let playerDamageDealt = 0;
             if (action.attack.name === "Charge Sword") {
                 setSwordIsCharged(true);
@@ -241,10 +240,9 @@ function BattleScreen() {
                 // change dragon hp here
                 // The display will update based on a useEffect asynchronously
                 setDragonHp(dragonHp - playerDamageDealt);
-                document.addEventListener("keydown", resolveUserInput);
+                
                 // Paused on damage dealt by player
-                await progressRound();
-                document.removeEventListener("keydown", resolveUserInput);
+                await pauseOnText();
             }
             // account for if attack inflicts a debuff
             if (action.extra_Effect && action.extra_Effect.effectMultiplier) {
@@ -302,9 +300,7 @@ function BattleScreen() {
                 }
                 if (action.attack.name !== "Fetch Pitchfork" && action.attack.name !== "Fetch Chicken") {
                     // Paused on status effect inflicted on player or dragon
-                    document.addEventListener("keydown", resolveUserInput);
-                    await progressRound();
-                    document.removeEventListener("keydown", resolveUserInput);
+                    await pauseOnText();
                 }
                 // evaluate if the dragon should lose turns
                 if (action.extra_Effect.turnsLost) {
@@ -322,9 +318,7 @@ function BattleScreen() {
                 });
                 setCurrentPlayerStats(playerRoundStats);
                 setBattleText("You let go of your sword with one hand like the clumsy peasant you are, returning your attack to normal.");
-                document.addEventListener("keydown", resolveUserInput);
-                await progressRound();
-                document.removeEventListener("keydown", resolveUserInput);
+                await pauseOnText();
             }
             if (action.attack.name === "Throw Pitchfork") {
                 const newClassAttacksToDisplay = [...classAttacksToDisplay];
@@ -349,14 +343,12 @@ function BattleScreen() {
                 setClassAttacksToDisplay(newClassAttacksToDisplay);
             }
         }
-        // dragon attacks
+        // enemy attacks
         // await ensures the program pauses on the async function
         await EnemyActs(enemy, playerRoundStats, action);
         // user needs to progress the text again
         // Paused on damage dealt to player
-        document.addEventListener("keydown", resolveUserInput);
-        await progressRound();
-        document.removeEventListener("keydown", resolveUserInput);
+        await pauseOnText();
 
         // account for any buffs/debuffs wearing off
         if (playerAttackRoundCounter > 1) {
@@ -369,9 +361,7 @@ function BattleScreen() {
                 ...prevState,
                 attack: 1
             }));
-            document.addEventListener("keydown", resolveUserInput);
-            await progressRound();
-            document.removeEventListener("keydown", resolveUserInput);
+            await pauseOnText();
         }
         if (playerDefenseRoundCounter > 1) {
             setPlayerDefenseRoundCounter(playerDefenseRoundCounter - 1);
@@ -382,9 +372,7 @@ function BattleScreen() {
                 ...prevState,
                 defense: 1
             }));
-            document.addEventListener("keydown", resolveUserInput);
-            await progressRound();
-            document.removeEventListener("keydown", resolveUserInput);
+            await pauseOnText();
         }
         if (enemyAttackRoundCounter > 1) {
             setEnemyAttackRoundCounter(enemyAttackRoundCounter - 1);
@@ -395,9 +383,7 @@ function BattleScreen() {
                 ...prevState,
                 attack: 1
             }));
-            document.addEventListener("keydown", resolveUserInput);
-            await progressRound();
-            document.removeEventListener("keydown", resolveUserInput);
+            await pauseOnText();
         }
         if (enemyDefenseRoundCounter > 1) {
             setEnemyDefenseRoundCounter(enemyDefenseRoundCounter - 1);
@@ -408,17 +394,13 @@ function BattleScreen() {
                 ...prevState,
                 defense: 1
             }));
-            document.addEventListener("keydown", resolveUserInput);
-            await progressRound();
-            document.removeEventListener("keydown", resolveUserInput);
+            await pauseOnText();
         }
         if (lostTurnCounter > 0) {
             if (lostTurnCounter === 1 && isBlinded) {
                 setLostTurnCounter(0);
                 setBattleText(`The ${enemy}'s eye has recovered!`);
-                document.addEventListener("keydown", resolveUserInput);
-                await progressRound();
-                document.removeEventListener("keydown", resolveUserInput);
+                await pauseOnText();
             } else {
                 setLostTurnCounter(lostTurnCounter - 1);
             }
@@ -515,6 +497,13 @@ function BattleScreen() {
                 }
             }
         }
+    }
+
+    // adds event listeners for progressing text box and progresses the round 
+    async function pauseOnText() {
+        document.addEventListener("keydown", resolveUserInput);
+        await progressRound();
+        document.removeEventListener("keydown", resolveUserInput);
     }
 
     // function's sole purpose is to wait for user input and prevent playRound from continuing
