@@ -294,7 +294,8 @@ function BattleLogic(props) {
                 // Paused on dragon's attack text
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
-                const damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / currentPlayerStats.defense);
+                console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
+                const damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
                 if (enemyAttack.extra_Effect) {
                     const statAffected = enemyAttack.extra_Effect.targetStat;
                     let originalStatValue;
