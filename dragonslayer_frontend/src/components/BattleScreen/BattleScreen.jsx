@@ -111,13 +111,13 @@ function BattleScreen() {
     }
 
     const renderBattleText = () => {
-
+        const currentSelectedOption = selectedOptionRef.current;
         if (!attackOptionChosen) {
             setBattleText("Default");
             return;
         } else {
             const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
-            if (selectedOption === 2 && swordIsCharged) {
+            if (currentSelectedOption === 2 && swordIsCharged) {
                 setBattleText("You're already gripping the sword with both hands. Grip it any tighter and you might faint.");
             } else {
                 setBattleText(attackDescriptions[selectedOption]);
@@ -128,10 +128,10 @@ function BattleScreen() {
     // function that will use conditionals to determine which of the above functions to execute on "enter"
     // will need to edit this to make it more universal...
 
-    const executeAction = (e) => {
-
+    const executeAction = async (e) => {
         if ((e.key === " " || e.key === "Enter")) {
             if (classAttacksToDisplay.length === 0) return;
+            console.log("In execute action. this is the value of onActionMenu:", onActionMenu);
 
             // use the ref so that we're always using the most recent value
             // since this function runs as part of an event listener,
@@ -150,8 +150,8 @@ function BattleScreen() {
                 removeMenuEventListeners();
                 // calls the playRound function as a ref coming from the BattleLogic component
                 console.log("Attack option chosen");
-                playRoundRef.current(enemyName, classAttacksToDisplay[selectedOption]);
-                addMenuEventListeners();
+                await playRoundRef.current(enemyName, classAttacksToDisplay[currentSelectedOption]);
+                setSelectedOption(0);
                 return;
             }
         }
@@ -160,13 +160,11 @@ function BattleScreen() {
     function removeMenuEventListeners() {
         document.removeEventListener("keydown", executeAction);
         document.removeEventListener("keydown", displaySelector);
-        document.removeEventListener("keydown", renderBattleText);
     }
 
     function addMenuEventListeners() {
         document.addEventListener("keydown", executeAction);
         document.addEventListener("keydown", displaySelector);
-        document.addEventListener("keydown", renderBattleText);
     }
 
     const battleLogicProps = {
@@ -215,17 +213,15 @@ function BattleScreen() {
     }, []);
 
     useEffect(() => {
-        document.addEventListener("keydown", displaySelector);
-        document.addEventListener("keydown", renderBattleText);
-        document.addEventListener("keydown", executeAction);
-        renderBattleText();
-        console.log("This is the value of attackOptionChosen:", attackOptionChosen);
+        addMenuEventListeners();
         return () => {
-            document.removeEventListener("keydown", displaySelector);
-            document.removeEventListener("keydown", renderBattleText);
-            document.removeEventListener("keydown", executeAction);
+            removeMenuEventListeners();
         }
     }, [attackOptionChosen, classAttacks]); // may need to add onActionMenu here later?
+
+    useEffect(() => {
+        renderBattleText();
+    }, [onActionMenu, selectedOption]);
 
     // this asynchronously updates the display for the dragon's hp whenever the value of dragonHp changes
     // do this instead of doing it directly in the playRound function
@@ -269,12 +265,9 @@ function BattleScreen() {
     }, [selectedOption]);
 
     useEffect(() => {
-        console.log("This is the selected option:", selectedOption);
-    }, [selectedOption]);
-
-    useEffect(() => {
-        console.log("This is the value of onActionMenu:", onActionMenu);
-    }, [onActionMenu]);
+        console.log("Is battleMenuOpen?", battleMenuOpen);
+        console.log("On Action Menu?", onActionMenu);
+    }, [battleMenuOpen, onActionMenu]);
 
     return (
         <>

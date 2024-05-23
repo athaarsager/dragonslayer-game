@@ -46,12 +46,11 @@ function BattleLogic(props) {
     playRoundRef.current = async (enemy, action) => {
         // should include a conditional where if charge sword was already chosen last round
         // it is not allowed to be chosen again and there is some snarky battle text
-        console.log("in playRoundRef");
         if (action.attack.name === "Charge Sword" && swordIsCharged) {
             return;
         }
-        console.log("These are the player's stats:", currentPlayerStats);
-        console.log("These are the dragon's stats:", currentEnemyStats);
+        // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
+        // to prevent, I had already fully integretated it into the function
         let playerRoundStats = { ...currentPlayerStats };
         await playerActs(enemy, action, playerRoundStats);
         // enemy attacks
@@ -133,8 +132,6 @@ function BattleLogic(props) {
     }
 
     async function playerActs(enemy, action, playerRoundStats) {
-        // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
-        // to prevent, I had already fully integretated it into the function
         if (attackOptionChosen) {
             // need to ensure action is the correct object in the character attacks array
             setBattleMenuOpen(false);
