@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./BattleScreen.css";
@@ -263,11 +264,6 @@ function BattleScreen() {
     useEffect(() => {
         selectedOptionRef.current = selectedOption;
     }, [selectedOption]);
-
-    useEffect(() => {
-        console.log("Is battleMenuOpen?", battleMenuOpen);
-        console.log("On Action Menu?", onActionMenu);
-    }, [battleMenuOpen, onActionMenu]);
 
     return (
         <>
