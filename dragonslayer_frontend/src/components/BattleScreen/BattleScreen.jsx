@@ -39,6 +39,12 @@ function BattleScreen() {
     const [lostTurnCounter, setLostTurnCounter] = useState(0);
     const [isBlinded, setIsBlinded] = useState(false);
 
+    // state variable for evaluating where the selector arrow is
+    const [selectedOption, setSelectedOption] = useState(0);
+
+    // need to use ref to ensure an old value is not captured when an event listener is added
+    const selectedOptionRef = useRef(selectedOption);
+
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         const response = await axios.get("/api/attacks/4");
@@ -90,75 +96,31 @@ function BattleScreen() {
     // function manually determines which item should be selected in the battle action menu
     // based on what key was pressed
     const displaySelector = (e) => {
-        const optionOne = document.querySelector(".option-one").children[0];
-        const optionTwo = document.querySelector(".option-two").children[0];
-        const optionThree = document.querySelector(".option-three").children[0];
-        const optionFour = document.querySelector(".option-four").children[0];
-        // check for "legal" moves first
-        if (e.key === "ArrowLeft" && (!optionOne.classList.contains("unselected") || !optionThree.classList.contains("unselected"))) {
-            return;
-        } else if (e.key === "ArrowRight" && (!optionTwo.classList.contains("unselected") || !optionFour.classList.contains("unselected"))) {
-            return;
-        } else if (e.key === "ArrowUp" && (!optionOne.classList.contains("unselected") || !optionTwo.classList.contains("unselected"))) {
-            return;
-        } else if (e.key === "ArrowDown" && (!optionThree.classList.contains("unselected") || !optionFour.classList.contains("unselected"))) {
-            return;
-            // now actually determine behavior, one scenario at a time
-        } else if (e.key === "ArrowRight" && !optionOne.classList.contains("unselected")) {
-            optionOne.classList.add("unselected");
-            optionTwo.classList.remove("unselected");
-            return;
-        } else if (e.key === "ArrowDown" && !optionOne.classList.contains("unselected")) {
-            optionOne.classList.add("unselected");
-            optionThree.classList.remove("unselected");
-            return;
-        } else if (e.key === "ArrowDown" && !optionTwo.classList.contains("unselected")) {
-            optionTwo.classList.add("unselected");
-            optionFour.classList.remove("unselected");
-            return;
-        } else if (e.key === "ArrowLeft" && !optionTwo.classList.contains("unselected")) {
-            optionTwo.classList.add("unselected");
-            optionOne.classList.remove("unselected");
-            return;
-        } else if (e.key === "ArrowUp" && !optionThree.classList.contains("unselected")) {
-            optionThree.classList.add("unselected");
-            optionOne.classList.remove("unselected");
-            return;
-        } else if (e.key === "ArrowRight" && !optionThree.classList.contains("unselected")) {
-            optionThree.classList.add("unselected");
-            optionFour.classList.remove("unselected");
-            return;
-        } else if (e.key === "ArrowLeft" && !optionFour.classList.contains("unselected")) {
-            optionFour.classList.add("unselected");
-            optionThree.classList.remove("unselected");
-            return;
-        } else if (e.key === "ArrowUp" && !optionFour.classList.contains("unselected")) {
-            optionFour.classList.add("unselected");
-            optionTwo.classList.remove("unselected");
-            return;
+        // left options are represented by 0 and 2
+        // right options are represented by 1 and 3
+        // using 0 indexing to fit with array locations
+        if (e.key === "ArrowLeft") {
+            setSelectedOption((prev) => (prev % 2 === 1 ? prev - 1 : prev));
+        } else if (e.key === "ArrowRight") {
+            setSelectedOption((prev) => (prev % 2 === 0 ? prev + 1 : prev));
+        } else if (e.key === "ArrowUp") {
+            setSelectedOption((prev) => (prev > 1 ? prev - 2 : prev));
+        } else if (e.key === "ArrowDown") {
+            setSelectedOption((prev) => (prev < 2 ? prev + 2 : prev));
         }
     }
 
     const renderBattleText = () => {
-        const optionOne = document.querySelector(".option-one").children[0];
-        const optionTwo = document.querySelector(".option-two").children[0];
-        const optionThree = document.querySelector(".option-three").children[0];
-        const optionFour = document.querySelector(".option-four").children[0];
 
         if (!attackOptionChosen) {
             setBattleText("Default");
             return;
-        } else if (attackOptionChosen) {
-            if (!optionOne.classList.contains("unselected")) {
-                setBattleText(classAttacksToDisplay[0].attack.description);
-            } else if (!optionTwo.classList.contains("unselected") && swordIsCharged) {
+        } else {
+            const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
+            if (selectedOption === 2 && swordIsCharged) {
                 setBattleText("You're already gripping the sword with both hands. Grip it any tighter and you might faint.");
-            } else if (!optionTwo.classList.contains("unselected")) {
-                setBattleText(classAttacksToDisplay[1].attack.description);
-            } else if (!optionThree.classList.contains("unselected")) {
-                setBattleText(classAttacksToDisplay[2].attack.description);
-            } else if (!optionFour.classList.contains("unselected")) {
-                setBattleText(classAttacksToDisplay[3].attack.description);
+            } else {
+                setBattleText(attackDescriptions[selectedOption]);
             }
         }
     }
@@ -167,36 +129,32 @@ function BattleScreen() {
     // will need to edit this to make it more universal...
 
     const executeAction = (e) => {
-        const optionOne = document.querySelector(".option-one").children[0];
-        const optionTwo = document.querySelector(".option-two").children[0];
-        const optionThree = document.querySelector(".option-three").children[0];
-        const optionFour = document.querySelector(".option-four").children[0];
-        const options = [optionOne, optionTwo, optionThree, optionFour];
-        for (let i = 0; i < options.length; i++) {
-            if ((e.key === " " || e.key === "Enter") && !options[i].classList.contains("unselected")) {
-                // option one = "attack". Open attack menu and set the battle text to option one
-                if (classAttacksToDisplay.length === 0) {
+
+        if ((e.key === " " || e.key === "Enter")) {
+            if (classAttacksToDisplay.length === 0) return;
+
+            // use the ref so that we're always using the most recent value
+            // since this function runs as part of an event listener,
+            // the normal selectedOption variable will be out of date
+            // since its value was only captured when the event listener was initially added
+            const currentSelectedOption = selectedOptionRef.current;
+            // if selectedOption is 0, then "attack" was selected. Open attack menu and set the battle text
+            if (onActionMenu) {
+                if (currentSelectedOption === 0) {
+                    setAttackOptionChosen(true);
+                    setBattleText(classAttacksToDisplay[0].attack.description);
+                    setOnActionMenu(false);
                     return;
                 }
-                if (onActionMenu) {
-                    if (i === 0) {
-                        setAttackOptionChosen(true);
-                        setBattleText(classAttacksToDisplay[i].attack.description);
-                        console.log("This is the value of classAttacksToDisplay[i]:", classAttacksToDisplay[i]);
-                        setOnActionMenu(false);
-                        return;
-                    }
-                } else if (attackOptionChosen) {
-                    removeMenuEventListeners();
-                    // calls the playRound function as a ref coming from the BattleLogic component
-                    console.log("Attack option chosen");
-                    playRoundRef.current(enemyName, classAttacksToDisplay[i]);
-                    addMenuEventListeners();
-                    return;
-                }
+            } else if (attackOptionChosen) {
+                removeMenuEventListeners();
+                // calls the playRound function as a ref coming from the BattleLogic component
+                console.log("Attack option chosen");
+                playRoundRef.current(enemyName, classAttacksToDisplay[selectedOption]);
+                addMenuEventListeners();
+                return;
             }
         }
-
     }
 
     function removeMenuEventListeners() {
@@ -245,7 +203,7 @@ function BattleScreen() {
         setAttackOptionChosen,
         setOnActionMenu,
         playRoundRef
-      };
+    };
 
     useEffect(() => {
         fetchClasses();
@@ -261,6 +219,7 @@ function BattleScreen() {
         document.addEventListener("keydown", renderBattleText);
         document.addEventListener("keydown", executeAction);
         renderBattleText();
+        console.log("This is the value of attackOptionChosen:", attackOptionChosen);
         return () => {
             document.removeEventListener("keydown", displaySelector);
             document.removeEventListener("keydown", renderBattleText);
@@ -304,9 +263,22 @@ function BattleScreen() {
         }
     }, [dragonHp]);
 
+    // This updates the selectedOptionRef whenever the selectedOption is updated
+    useEffect(() => {
+        selectedOptionRef.current = selectedOption;
+    }, [selectedOption]);
+
+    useEffect(() => {
+        console.log("This is the selected option:", selectedOption);
+    }, [selectedOption]);
+
+    useEffect(() => {
+        console.log("This is the value of onActionMenu:", onActionMenu);
+    }, [onActionMenu]);
+
     return (
         <>
-        <BattleLogic {...battleLogicProps} />
+            <BattleLogic {...battleLogicProps} />
             <div id="dragon-hp-container-container">
                 <div id="dragon-hp-container">
                     <div id="dragon-hp"></div>
@@ -328,6 +300,7 @@ function BattleScreen() {
             <div id="battle-menu" className="text-box">
                 <ActionMenu
                     classAttacksToDisplay={classAttacksToDisplay}
+                    selectedOption={selectedOption}
                     attackOptionChosen={attackOptionChosen}
                     setAttackOptionChosen={setAttackOptionChosen}
                     setOnActionMenu={setOnActionMenu}
