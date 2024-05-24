@@ -55,7 +55,7 @@ function BattleLogic(props) {
         await playerActs(enemy, action, playerRoundStats);
         // enemy attacks
         // await ensures the program pauses on the async function
-        await EnemyActs(enemy, action, playerRoundStats);
+        await enemyActs(enemy, action, playerRoundStats);
         // user needs to progress the text again
         // Paused on damage dealt to player
         await pauseOnText();
@@ -133,138 +133,142 @@ function BattleLogic(props) {
 
     async function playerActs(enemy, action, playerRoundStats) {
         if (attackOptionChosen) {
-            // need to ensure action is the correct object in the character attacks array
-            setBattleMenuOpen(false);
-            setBattleText(action.attack.attackText);
-            // Paused on player's attack text
-            await pauseOnText();
-            let playerDamageDealt = 0;
-            if (action.attack.name === "Charge Sword") {
-                setSwordIsCharged(true);
-            }
-            if (action.attack.power !== 0) {
-                console.log(
-                    `This is the playerDamage calculation:
-                    ${action.attack.power},
-                    ${currentPlayerStats.attack},
-                    ${currentEnemyStats.defense}
-                `);
-                // account for if player is trying to apply their charged sword buff to their pitchfork. Not allowed
-                if (action.attack.name === "Throw Pitchfork" && swordIsCharged) {
-                    playerDamageDealt = (action.attack.power) * (1 / currentEnemyStats.defense);
-                } else {
-                    playerDamageDealt = (action.attack.power * currentPlayerStats.attack) * (1 / currentEnemyStats.defense);
-                }
-                setBattleText(`The ${enemy} takes ${playerDamageDealt} damage!`);
-                // change dragon hp here
-                // The display will update based on a useEffect asynchronously
-                setDragonHp(dragonHp - playerDamageDealt);
-
-                // Paused on damage dealt by player
-                await pauseOnText();
-            }
-            // account for if attack inflicts a debuff
-            if (action.extra_Effect && action.extra_Effect.effectMultiplier) {
-                const statAffected = action.extra_Effect.targetStat;
-                const targetCharacter = action.extra_Effect.targetCharacter;
-                let originalStatValue;
-                if (targetCharacter === "dragon") {
-                    const currentEnemyStatsCopy = { ...currentEnemyStats };
-                    Object.entries(currentEnemyStatsCopy).forEach(([key, value]) => {
-                        if (key === statAffected) {
-                            originalStatValue = currentEnemyStatsCopy[key];
-                            currentEnemyStatsCopy[key] = action.extra_Effect.effectMultiplier;
-                            console.log(`Dragon received a debuff. This is the stat affected and its current value: ${key}:
-                        ${currentEnemyStatsCopy[key]}`);
-                        }
-                    });
-                    console.log("This is the value of currentEnemyStats:", currentEnemyStats);
-                    setCurrentEnemyStats(currentEnemyStatsCopy);
-                    // set the counter for how long the status effect will last
-                    if (statAffected === "defense") {
-                        setEnemyDefenseRoundCounter(3);
-                    } else if (statAffected === "attack") {
-                        setEnemyAttackRoundCounter(3);
-                    }
-                    // add an if here to account for any special text associated with the attack?
-                    // This if takes care of letting the player know that debuffs don't stack
-                    if (originalStatValue < 1) {
-                        setBattleText(`The ${enemy}'s ${statAffected} won't go any lower!`);
-                    } else {
-                        setBattleText(`The ${enemy}'s ${statAffected} has been lowered!`);
-                    }
-                } else if (targetCharacter === "player") {
-                    Object.entries(playerRoundStats).forEach(([key, value]) => {
-                        if (key === statAffected) {
-                            originalStatValue = playerRoundStats[key];
-                            playerRoundStats[key] = action.extra_Effect.effectMultiplier;
-                            console.log(`Play received a buff. This is the stat affected and its current value: ${key}:
-                            ${playerRoundStats[key]}`);
-                        }
-                    });
-                    console.log("This is the value of playerRoundStats:", playerRoundStats);
-                    setCurrentPlayerStats(playerRoundStats);
-                    if (statAffected === "attack" && action.attack.name !== "Charge Sword") {
-                        setPlayerAttackRoundCounter(3);
-                        // need to ensure below if does not apply if player is just drawing near to dragon for one turn
-                    } else if (statAffected === "defense" && action.attack.name !== "Fetch Pitchfork" && action.attack.name !== "Fetch Chicken") {
-                        setPlayerDefenseRoundCounter(3);
-                    }
-                    // lets player know that buffs don't stack
-                    if (originalStatValue > 1) {
-                        setBattleText(`Your ${statAffected} won't go any higher!`);
-                    } else if (action.attack.name !== "Fetch Pitchfork") {
-                        setBattleText(`Your ${statAffected} has increased!`);
-                    }
-                }
-                if (action.attack.name !== "Fetch Pitchfork" && action.attack.name !== "Fetch Chicken") {
-                    // Paused on status effect inflicted on player or dragon
-                    await pauseOnText();
-                }
-                // evaluate if the dragon should lose turns
-                if (action.extra_Effect.turnsLost) {
-                    setLostTurnCounter(action.extra_Effect.turnsLost);
-                }
-            }
-            // evaluating the special effects of individual attacks below:
-            // reset attack after swinging charged sword
-            if (action.attack.name === "Sword Attack" && swordIsCharged) {
-                setSwordIsCharged(false);
-                Object.entries(playerRoundStats).forEach(([key, value]) => {
-                    if (key === "attack") {
-                        playerRoundStats[key] = 1;
-                    }
-                });
-                setCurrentPlayerStats(playerRoundStats);
-                setBattleText("You let go of your sword with one hand like the clumsy peasant you are, returning your attack to normal.");
-                await pauseOnText();
-            }
-            if (action.attack.name === "Throw Pitchfork") {
-                const newClassAttacksToDisplay = [...classAttacksToDisplay];
-                newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
-                console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
-                setClassAttacksToDisplay(newClassAttacksToDisplay);
-                setIsBlinded(true);
-            }
-            if (action.attack.name === "Fetch Pitchfork") {
-                const newClassAttacksToDisplay = [...classAttacksToDisplay];
-                newClassAttacksToDisplay.splice(2, 1, classAttacks[2]);
-                setClassAttacksToDisplay(newClassAttacksToDisplay);
-            }
-            if (action.attack.name === "Throw Chicken") {
-                const newClassAttacksToDisplay = [...classAttacksToDisplay];
-                newClassAttacksToDisplay.splice(3, 1, classAttacks[5]);
-                setClassAttacksToDisplay(newClassAttacksToDisplay);
-            }
-            if (action.attack.name === "Fetch Chicken") {
-                const newClassAttacksToDisplay = [...classAttacksToDisplay];
-                newClassAttacksToDisplay.splice(3, 1, classAttacks[3]);
-                setClassAttacksToDisplay(newClassAttacksToDisplay);
-            }
+            await playerAttacks(enemy, action, playerRoundStats);
         }
     }
 
-    async function EnemyActs(enemy, action, playerRoundStats) {
+    async function playerAttacks(enemy, action, playerRoundStats) {
+        // need to ensure action is the correct object in the character attacks array
+        setBattleMenuOpen(false);
+        setBattleText(action.attack.attackText);
+        // Paused on player's attack text
+        await pauseOnText();
+        let playerDamageDealt = 0;
+        if (action.attack.name === "Charge Sword") {
+            setSwordIsCharged(true);
+        }
+        if (action.attack.power !== 0) {
+            console.log(
+                `This is the playerDamage calculation:
+                ${action.attack.power},
+                ${currentPlayerStats.attack},
+                ${currentEnemyStats.defense}
+            `);
+            // account for if player is trying to apply their charged sword buff to their pitchfork. Not allowed
+            if (action.attack.name === "Throw Pitchfork" && swordIsCharged) {
+                playerDamageDealt = (action.attack.power) * (1 / currentEnemyStats.defense);
+            } else {
+                playerDamageDealt = (action.attack.power * currentPlayerStats.attack) * (1 / currentEnemyStats.defense);
+            }
+            setBattleText(`The ${enemy} takes ${playerDamageDealt} damage!`);
+            // change dragon hp here
+            // The display will update based on a useEffect asynchronously
+            setDragonHp(dragonHp - playerDamageDealt);
+
+            // Paused on damage dealt by player
+            await pauseOnText();
+        }
+        // account for if attack inflicts a debuff
+        if (action.extra_Effect && action.extra_Effect.effectMultiplier) {
+            const statAffected = action.extra_Effect.targetStat;
+            const targetCharacter = action.extra_Effect.targetCharacter;
+            let originalStatValue;
+            if (targetCharacter === "dragon") {
+                const currentEnemyStatsCopy = { ...currentEnemyStats };
+                Object.entries(currentEnemyStatsCopy).forEach(([key, value]) => {
+                    if (key === statAffected) {
+                        originalStatValue = currentEnemyStatsCopy[key];
+                        currentEnemyStatsCopy[key] = action.extra_Effect.effectMultiplier;
+                        console.log(`Dragon received a debuff. This is the stat affected and its current value: ${key}:
+                    ${currentEnemyStatsCopy[key]}`);
+                    }
+                });
+                console.log("This is the value of currentEnemyStats:", currentEnemyStats);
+                setCurrentEnemyStats(currentEnemyStatsCopy);
+                // set the counter for how long the status effect will last
+                if (statAffected === "defense") {
+                    setEnemyDefenseRoundCounter(3);
+                } else if (statAffected === "attack") {
+                    setEnemyAttackRoundCounter(3);
+                }
+                // add an if here to account for any special text associated with the attack?
+                // This if takes care of letting the player know that debuffs don't stack
+                if (originalStatValue < 1) {
+                    setBattleText(`The ${enemy}'s ${statAffected} won't go any lower!`);
+                } else {
+                    setBattleText(`The ${enemy}'s ${statAffected} has been lowered!`);
+                }
+            } else if (targetCharacter === "player") {
+                Object.entries(playerRoundStats).forEach(([key, value]) => {
+                    if (key === statAffected) {
+                        originalStatValue = playerRoundStats[key];
+                        playerRoundStats[key] = action.extra_Effect.effectMultiplier;
+                        console.log(`Play received a buff. This is the stat affected and its current value: ${key}:
+                        ${playerRoundStats[key]}`);
+                    }
+                });
+                console.log("This is the value of playerRoundStats:", playerRoundStats);
+                setCurrentPlayerStats(playerRoundStats);
+                if (statAffected === "attack" && action.attack.name !== "Charge Sword") {
+                    setPlayerAttackRoundCounter(3);
+                    // need to ensure below if does not apply if player is just drawing near to dragon for one turn
+                } else if (statAffected === "defense" && action.attack.name !== "Fetch Pitchfork" && action.attack.name !== "Fetch Chicken") {
+                    setPlayerDefenseRoundCounter(3);
+                }
+                // lets player know that buffs don't stack
+                if (originalStatValue > 1) {
+                    setBattleText(`Your ${statAffected} won't go any higher!`);
+                } else if (action.attack.name !== "Fetch Pitchfork") {
+                    setBattleText(`Your ${statAffected} has increased!`);
+                }
+            }
+            if (action.attack.name !== "Fetch Pitchfork" && action.attack.name !== "Fetch Chicken") {
+                // Paused on status effect inflicted on player or dragon
+                await pauseOnText();
+            }
+            // evaluate if the dragon should lose turns
+            if (action.extra_Effect.turnsLost) {
+                setLostTurnCounter(action.extra_Effect.turnsLost);
+            }
+        }
+        // evaluating the special effects of individual attacks below:
+        // reset attack after swinging charged sword
+        if (action.attack.name === "Sword Attack" && swordIsCharged) {
+            setSwordIsCharged(false);
+            Object.entries(playerRoundStats).forEach(([key, value]) => {
+                if (key === "attack") {
+                    playerRoundStats[key] = 1;
+                }
+            });
+            setCurrentPlayerStats(playerRoundStats);
+            setBattleText("You let go of your sword with one hand like the clumsy peasant you are, returning your attack to normal.");
+            await pauseOnText();
+        }
+        if (action.attack.name === "Throw Pitchfork") {
+            const newClassAttacksToDisplay = [...classAttacksToDisplay];
+            newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
+            console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
+            setClassAttacksToDisplay(newClassAttacksToDisplay);
+            setIsBlinded(true);
+        }
+        if (action.attack.name === "Fetch Pitchfork") {
+            const newClassAttacksToDisplay = [...classAttacksToDisplay];
+            newClassAttacksToDisplay.splice(2, 1, classAttacks[2]);
+            setClassAttacksToDisplay(newClassAttacksToDisplay);
+        }
+        if (action.attack.name === "Throw Chicken") {
+            const newClassAttacksToDisplay = [...classAttacksToDisplay];
+            newClassAttacksToDisplay.splice(3, 1, classAttacks[5]);
+            setClassAttacksToDisplay(newClassAttacksToDisplay);
+        }
+        if (action.attack.name === "Fetch Chicken") {
+            const newClassAttacksToDisplay = [...classAttacksToDisplay];
+            newClassAttacksToDisplay.splice(3, 1, classAttacks[3]);
+            setClassAttacksToDisplay(newClassAttacksToDisplay);
+        }
+    }
+
+    async function enemyActs(enemy, action, playerRoundStats) {
         if (lostTurnCounter > 0) {
             if (isBlinded) {
                 if (lostTurnCounter === 2) {

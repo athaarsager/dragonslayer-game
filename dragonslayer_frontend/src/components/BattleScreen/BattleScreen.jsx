@@ -7,16 +7,20 @@ import ActionMenu from "../ActionMenu/ActionMenu";
 function BattleScreen() {
     const playRoundRef = useRef();
 
-    // maybe clean up some of these, then fix css
+    const [battleMenuOpen, setBattleMenuOpen] = useState(true);
     const [onActionMenu, setOnActionMenu] = useState(true);
-    const [classAttacks, setClassAttacks] = useState([]);
-    const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
-    const [maxPlayerStats, setMaxPlayerStats] = useState({});
-    const [currentPlayerStats, setCurrentPlayerStats] = useState({});
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
-    const [battleMenuOpen, setBattleMenuOpen] = useState(true);
+
+    const [classAttacks, setClassAttacks] = useState([]);
+    const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
+
+    const [maxPlayerStats, setMaxPlayerStats] = useState({});
+    const [currentPlayerStats, setCurrentPlayerStats] = useState({});
     const [playerManaDisplay, setPlayerManaDisplay] = useState("");
+    const [playerHp, setPlayerHp] = useState(NaN);
+    const [playerMana, setPlayerMana] = useState(NaN);
+    const [swordIsCharged, setSwordIsCharged] = useState(false);
 
     const [dragonHp, setDragonHp] = useState(NaN);
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
@@ -26,9 +30,7 @@ function BattleScreen() {
     const [enemyAttacks, setEnemyAttacks] = useState([]);
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
 
-    const [playerHp, setPlayerHp] = useState(NaN);
-    const [playerMana, setPlayerMana] = useState(NaN);
-    const [swordIsCharged, setSwordIsCharged] = useState(false);
+    
 
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
@@ -136,8 +138,12 @@ function BattleScreen() {
                     setBattleText(classAttacksToDisplay[0].attack.description);
                     setOnActionMenu(false);
                     return;
+                } else if (currentSelectedOption === 1) {
+                    removeMenuEventListeners();
+                    setBattleText("You hold your weak arms up in self-defense!");
+                    await playRoundRef.current(enemyName, "defend");
                 }
-            } else if (attackOptionChosen) {
+            } else if (attackOptionChosen) { // runs when on attack menu, not action menu
                 removeMenuEventListeners();
                 // calls the playRound function as a ref coming from the BattleLogic component
                 console.log("Attack option chosen");
