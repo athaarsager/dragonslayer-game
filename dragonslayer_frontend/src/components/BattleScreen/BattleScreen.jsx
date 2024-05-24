@@ -95,10 +95,6 @@ function BattleScreen() {
         if (e.key === "ArrowLeft") {
             setSelectedOption((prev) => (prev % 2 === 1 ? prev - 1 : prev));
         } else if (e.key === "ArrowRight") {
-            if (selectedOption === 0 && swordIsCharged) {
-                setSelectedOption(1);
-                setBattleText("You already have a deathgrip on that sword. You can't hold it any tighter!");
-            } 
             setSelectedOption((prev) => (prev % 2 === 0 ? prev + 1 : prev));
         } else if (e.key === "ArrowUp") {
             setSelectedOption((prev) => (prev > 1 ? prev - 2 : prev));
@@ -108,14 +104,13 @@ function BattleScreen() {
     }
 
     const renderBattleText = () => {
-        const currentSelectedOption = selectedOptionRef.current;
         if (!attackOptionChosen) {
             setBattleText("Default");
             return;
         } else {
             const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
-            if (currentSelectedOption === 2 && swordIsCharged) {
-                setBattleText("You're already gripping the sword with both hands. Grip it any tighter and you might faint.");
+            if (selectedOption === 1 && swordIsCharged) {
+                setBattleText("You're already gripping the sword with both hands. You can't hold it any tighter!.");
             } else {
                 setBattleText(attackDescriptions[selectedOption]);
             }
@@ -209,7 +204,7 @@ function BattleScreen() {
         return () => {
             removeMenuEventListeners();
         }
-    }, [attackOptionChosen, classAttacks]); // may need to add onActionMenu here later?
+    }, [attackOptionChosen, classAttacks, swordIsCharged]); // may need to add onActionMenu here later?
 
     useEffect(() => {
         renderBattleText();
