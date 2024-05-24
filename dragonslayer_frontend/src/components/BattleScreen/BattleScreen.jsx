@@ -147,6 +147,7 @@ function BattleScreen() {
                     setOnActionMenu(false);
                     setDefendOptionChosen(true);
                     await playRoundRef.current(enemyName, "defend");
+                    setSelectedOption(0);
                     return;
                 }
             } else if (attackOptionChosen) { // runs when on attack menu, not action menu
