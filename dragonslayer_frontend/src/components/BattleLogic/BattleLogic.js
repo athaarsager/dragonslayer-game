@@ -44,11 +44,6 @@ function BattleLogic(props) {
 
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {
-        // should include a conditional where if charge sword was already chosen last round
-        // it is not allowed to be chosen again and there is some snarky battle text
-        if (action.attack.name === "Charge Sword" && swordIsCharged) {
-            return;
-        }
         // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
         // to prevent, I had already fully integretated it into the function
         let playerRoundStats = { ...currentPlayerStats };

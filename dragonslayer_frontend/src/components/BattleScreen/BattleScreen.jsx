@@ -30,7 +30,7 @@ function BattleScreen() {
     const [enemyAttacks, setEnemyAttacks] = useState([]);
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
 
-    
+
 
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
@@ -95,6 +95,10 @@ function BattleScreen() {
         if (e.key === "ArrowLeft") {
             setSelectedOption((prev) => (prev % 2 === 1 ? prev - 1 : prev));
         } else if (e.key === "ArrowRight") {
+            if (selectedOption === 0 && swordIsCharged) {
+                setSelectedOption(1);
+                setBattleText("You already have a deathgrip on that sword. You can't hold it any tighter!");
+            } 
             setSelectedOption((prev) => (prev % 2 === 0 ? prev + 1 : prev));
         } else if (e.key === "ArrowUp") {
             setSelectedOption((prev) => (prev > 1 ? prev - 2 : prev));
@@ -144,6 +148,9 @@ function BattleScreen() {
                     await playRoundRef.current(enemyName, "defend");
                 }
             } else if (attackOptionChosen) { // runs when on attack menu, not action menu
+                if (classAttacksToDisplay[currentSelectedOption].attack.name === "Charge Sword" && swordIsCharged) {
+                    return;
+                }
                 removeMenuEventListeners();
                 // calls the playRound function as a ref coming from the BattleLogic component
                 console.log("Attack option chosen");
