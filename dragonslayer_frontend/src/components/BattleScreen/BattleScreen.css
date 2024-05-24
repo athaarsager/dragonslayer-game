@@ -15,6 +15,7 @@
     border: 1px solid white;
     border-radius: 10px;
 }
+
 #dragon-hp {
     width: 55vh;
     height: 3vh;
@@ -59,7 +60,7 @@ img {
 #battle-text {
     border-bottom: none;
     height: 4rem;
-    width: 938px;
+    width: 100vh;
     padding: 10px;
     font-size: 18px;
     display: flex;
@@ -73,10 +74,12 @@ img {
 
 #battle-menu {
     height: 8.5rem;
+    width: 99.7%;
     padding-top: 2rem;
     display: grid;
     /* Create grid with 4 columns and 2 rows with auto width */
-    grid-template-columns: 25% 25% 25% 25%;
+    /* Not sure why these percentages work, but looks about evenly distributed with these */
+    grid-template-columns: 40% 25% 5% 5%;
     grid-template-rows: 50% 50%;
 }
 
