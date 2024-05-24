@@ -78,8 +78,7 @@ img {
     padding-top: 2rem;
     display: grid;
     /* Create grid with 4 columns and 2 rows with auto width */
-    /* Not sure why these percentages work, but looks about evenly distributed with these */
-    grid-template-columns: 40% 25% 5% 5%;
+    grid-template-columns: 30% 25% 25% 20%;
     grid-template-rows: 50% 50%;
 }
 
