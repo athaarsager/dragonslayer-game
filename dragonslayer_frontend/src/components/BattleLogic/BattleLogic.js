@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 function BattleLogic(props) {
 
@@ -15,18 +16,6 @@ function BattleLogic(props) {
         swordIsCharged,
         setSwordIsCharged,
         setBattleText,
-        playerAttackRoundCounter,
-        setPlayerAttackRoundCounter,
-        playerDefenseRoundCounter,
-        setPlayerDefenseRoundCounter,
-        enemyAttackRoundCounter,
-        setEnemyAttackRoundCounter,
-        enemyDefenseRoundCounter,
-        setEnemyDefenseRoundCounter,
-        lostTurnCounter,
-        setLostTurnCounter,
-        isBlinded,
-        setIsBlinded,
         playerHp,
         setPlayerHp,
         enemyAttacks,
@@ -37,6 +26,17 @@ function BattleLogic(props) {
         setOnActionMenu,
         playRoundRef
     } = props;
+
+    // These variables will track when status effects wear off
+    // Tracking each stat individually in case multiple buffs/debuffs inflicted at once
+    // don't know if that's actually possible with the attacks I designed, but good for theoretical scaling
+    const [playerAttackRoundCounter, setPlayerAttackRoundCounter] = useState(0);
+    const [playerDefenseRoundCounter, setPlayerDefenseRoundCounter] = useState(0);
+    const [enemyAttackRoundCounter, setEnemyAttackRoundCounter] = useState(0);
+    const [enemyDefenseRoundCounter, setEnemyDefenseRoundCounter] = useState(0);
+
+    const [lostTurnCounter, setLostTurnCounter] = useState(0);
+    const [isBlinded, setIsBlinded] = useState(false);
 
     //This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
@@ -380,18 +380,6 @@ BattleLogic.propTypes = {
     swordIsCharged: PropTypes.bool.isRequired,
     setSwordIsCharged: PropTypes.func.isRequired,
     setBattleText: PropTypes.func.isRequired,
-    playerAttackRoundCounter: PropTypes.number.isRequired,
-    setPlayerAttackRoundCounter: PropTypes.func.isRequired,
-    playerDefenseRoundCounter: PropTypes.number.isRequired,
-    setPlayerDefenseRoundCounter: PropTypes.func.isRequired,
-    enemyAttackRoundCounter: PropTypes.number.isRequired,
-    setEnemyAttackRoundCounter: PropTypes.func.isRequired,
-    enemyDefenseRoundCounter: PropTypes.number.isRequired,
-    setEnemyDefenseRoundCounter: PropTypes.func.isRequired,
-    lostTurnCounter: PropTypes.number.isRequired,
-    setLostTurnCounter: PropTypes.func.isRequired,
-    isBlinded: PropTypes.bool.isRequired,
-    setIsBlinded: PropTypes.func.isRequired,
     playerHp: PropTypes.number.isRequired,
     setPlayerHp: PropTypes.func.isRequired,
     enemyAttacks: PropTypes.array.isRequired,

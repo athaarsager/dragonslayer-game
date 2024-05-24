@@ -7,6 +7,7 @@ import ActionMenu from "../ActionMenu/ActionMenu";
 function BattleScreen() {
     const playRoundRef = useRef();
 
+    // maybe clean up some of these, then fix css
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacks, setClassAttacks] = useState([]);
     const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
@@ -28,17 +29,6 @@ function BattleScreen() {
     const [playerHp, setPlayerHp] = useState(NaN);
     const [playerMana, setPlayerMana] = useState(NaN);
     const [swordIsCharged, setSwordIsCharged] = useState(false);
-
-    // These variables will track when status effects wear off
-    // Tracking each stat individually in case multiple buffs/debuffs inflicted at once
-    // don't know if that's actually possible with the attacks I designed, but good for theoretical scaling
-    const [playerAttackRoundCounter, setPlayerAttackRoundCounter] = useState(0);
-    const [playerDefenseRoundCounter, setPlayerDefenseRoundCounter] = useState(0);
-    const [enemyAttackRoundCounter, setEnemyAttackRoundCounter] = useState(0);
-    const [enemyDefenseRoundCounter, setEnemyDefenseRoundCounter] = useState(0);
-
-    const [lostTurnCounter, setLostTurnCounter] = useState(0);
-    const [isBlinded, setIsBlinded] = useState(false);
 
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
@@ -181,18 +171,6 @@ function BattleScreen() {
         swordIsCharged,
         setSwordIsCharged,
         setBattleText,
-        playerAttackRoundCounter,
-        setPlayerAttackRoundCounter,
-        playerDefenseRoundCounter,
-        setPlayerDefenseRoundCounter,
-        enemyAttackRoundCounter,
-        setEnemyAttackRoundCounter,
-        enemyDefenseRoundCounter,
-        setEnemyDefenseRoundCounter,
-        lostTurnCounter,
-        setLostTurnCounter,
-        isBlinded,
-        setIsBlinded,
         playerHp,
         setPlayerHp,
         enemyAttacks,
