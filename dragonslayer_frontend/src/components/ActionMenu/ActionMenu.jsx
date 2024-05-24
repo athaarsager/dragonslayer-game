@@ -31,6 +31,7 @@ function ActionMenu({ classAttacksToDisplay, selectedOption, attackOptionChosen,
                         <div className="action">
                             {attackOptionChosen ? classAttacksToDisplay[1].attack.name : "Defend"}</div>
                     </div>
+                    <div></div>
                     <div className={"option-three selector-container left-option"}>
                         <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
                         <div className="action">
@@ -41,6 +42,7 @@ function ActionMenu({ classAttacksToDisplay, selectedOption, attackOptionChosen,
                         <div className="action">
                             {attackOptionChosen ? classAttacksToDisplay[3].attack.name : "Run"}</div>
                     </div>
+                    <div></div>
                 </>
             }
         </>
