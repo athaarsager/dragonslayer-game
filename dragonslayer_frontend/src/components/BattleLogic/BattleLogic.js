@@ -308,7 +308,12 @@ function BattleLogic(props) {
                 await progressRound();
                 document.removeEventListener("keydown", resolveUserInput);
                 console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
-                const damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
+                let damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
+                // use the actual action name here because the state update is behind and I don't want to deal with that
+                if (action === "defend") {
+                    damageEnemyDealt *= 0.5;
+                    console.log("Enemy damage decreased by half:", damageEnemyDealt);
+                }
                 if (enemyAttack.extra_Effect) {
                     const statAffected = enemyAttack.extra_Effect.targetStat;
                     let originalStatValue;
