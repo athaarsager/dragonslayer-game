@@ -204,7 +204,7 @@ function BattleLogic(props) {
                     });
                     console.log("This is the value of playerRoundStats:", playerRoundStats);
                     setCurrentPlayerStats(playerRoundStats);
-                    if (statAffected === "attack") {
+                    if (statAffected === "attack" && action.attack.name !== "Charge Sword") {
                         setPlayerAttackRoundCounter(3);
                         // need to ensure below if does not apply if player is just drawing near to dragon for one turn
                     } else if (statAffected === "defense" && action.attack.name !== "Fetch Pitchfork" && action.attack.name !== "Fetch Chicken") {
