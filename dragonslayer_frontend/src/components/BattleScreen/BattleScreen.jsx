@@ -5,6 +5,7 @@ import "./BattleScreen.css";
 import BattleLogic from "../BattleLogic/BattleLogic";
 import ActionMenu from "../ActionMenu/ActionMenu";
 function BattleScreen() {
+   
     const playRoundRef = useRef();
 
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
@@ -197,7 +198,7 @@ function BattleScreen() {
         defendOptionChosen,
         setDefendOptionChosen,
         setOnActionMenu,
-        playRoundRef
+        playRoundRef,
     };
 
     useEffect(() => {
@@ -210,9 +211,12 @@ function BattleScreen() {
     }, []);
 
     useEffect(() => {
-        console.log("This is the value of defendOptionChosen:", defendOptionChosen);
+        console.log("Adding menu event listeners");
+        console.log(`These are the states: attackOptionChosen: ${attackOptionChosen},
+        defendOptionChosen: ${defendOptionChosen}, classAttacks: ${classAttacks}`);
         addMenuEventListeners();
         return () => {
+            console.log("Removing menu event listeners");
             removeMenuEventListeners();
         }
     }, [attackOptionChosen, defendOptionChosen, classAttacks]);

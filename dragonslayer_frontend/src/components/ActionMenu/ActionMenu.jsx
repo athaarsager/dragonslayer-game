@@ -4,7 +4,7 @@ function ActionMenu({ classAttacksToDisplay, selectedOption, attackOptionChosen,
 
     // will need to update this for other menus
     const returnToFirstMenu = (e) => {
-        if (e.key === "Backspace" || e.key === "Shift") {
+        if ((e.key === "Backspace" || e.key === "Shift") && battleMenuOpen) {
             setAttackOptionChosen(false);
             setOnActionMenu(true);
         }

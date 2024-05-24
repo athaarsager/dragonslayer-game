@@ -26,7 +26,8 @@ function BattleLogic(props) {
         defendOptionChosen,
         setDefendOptionChosen,
         setOnActionMenu,
-        playRoundRef
+        playRoundRef,
+        removeEventListeners
     } = props;
 
     // These variables will track when status effects wear off
@@ -408,7 +409,7 @@ BattleLogic.propTypes = {
     defendOptionChosen: PropTypes.bool.isRequired,
     setDefendOptionChosen: PropTypes.func.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
-    playRoundRef: PropTypes.object.isRequired,
+    playRoundRef: PropTypes.object.isRequired
 };
 
 export default BattleLogic;
