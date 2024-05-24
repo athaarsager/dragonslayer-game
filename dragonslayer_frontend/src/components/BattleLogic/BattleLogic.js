@@ -23,6 +23,8 @@ function BattleLogic(props) {
         setBattleMenuOpen,
         attackOptionChosen,
         setAttackOptionChosen,
+        defendOptionChosen,
+        setDefendOptionChosen,
         setOnActionMenu,
         playRoundRef
     } = props;
@@ -121,6 +123,7 @@ function BattleLogic(props) {
         setBattleMenuOpen(true);
         setBattleText("Default");
         setAttackOptionChosen(false);
+        setDefendOptionChosen(false);
         setOnActionMenu(true);
         // need to account for mana usage at some point
         return;
@@ -129,7 +132,16 @@ function BattleLogic(props) {
     async function playerActs(enemy, action, playerRoundStats) {
         if (attackOptionChosen) {
             await playerAttacks(enemy, action, playerRoundStats);
+        } else if (action === "defend") {
+            await playerDefends();
         }
+    }
+
+    async function playerDefends() {
+        setBattleMenuOpen(false);
+        setBattleText("You hold your weak arms up in self-defense!");
+        // increase player defense for one turn here
+        await pauseOnText();
     }
 
     async function playerAttacks(enemy, action, playerRoundStats) {
@@ -274,13 +286,15 @@ function BattleLogic(props) {
             }
             return;
         }
-        if (action.attack.name === "Throw Pitchfork") {
-            setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
-            return;
-        } else if (action.attack.name === "Throw Chicken") {
-            setBattleText(`The ${enemy} swallows your chicken in one gulp!`);
-            chickenEaten = true;
-            return;
+        if (attackOptionChosen) {
+            if (action.attack.name === "Throw Pitchfork") {
+                setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
+                return;
+            } else if (action.attack.name === "Throw Chicken") {
+                setBattleText(`The ${enemy} swallows your chicken in one gulp!`);
+                chickenEaten = true;
+                return;
+            }
         }
         const randomNumber = Math.floor(Math.random() * 3);
         console.log("This is the random number the enemy has chosen:", randomNumber);
@@ -386,6 +400,8 @@ BattleLogic.propTypes = {
     setBattleMenuOpen: PropTypes.func.isRequired,
     attackOptionChosen: PropTypes.bool.isRequired,
     setAttackOptionChosen: PropTypes.func.isRequired,
+    defendOptionChosen: PropTypes.bool.isRequired,
+    setDefendOptionChosen: PropTypes.func.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     playRoundRef: PropTypes.object.isRequired,
 };

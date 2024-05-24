@@ -10,6 +10,7 @@ function BattleScreen() {
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
+    const [defendOptionChosen, setDefendOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
 
     const [classAttacks, setClassAttacks] = useState([]);
@@ -103,7 +104,11 @@ function BattleScreen() {
         }
     }
 
-    const renderBattleText = () => {
+    const renderMenuBattleText = () => {
+        // Need this here to ensure the menu text does not override the playRound text
+        if (defendOptionChosen) {
+            return;
+        }
         if (!attackOptionChosen) {
             setBattleText("Default");
             return;
@@ -139,8 +144,10 @@ function BattleScreen() {
                     return;
                 } else if (currentSelectedOption === 1) {
                     removeMenuEventListeners();
-                    setBattleText("You hold your weak arms up in self-defense!");
+                    setOnActionMenu(false);
+                    setDefendOptionChosen(true);
                     await playRoundRef.current(enemyName, "defend");
+                    return;
                 }
             } else if (attackOptionChosen) { // runs when on attack menu, not action menu
                 if (classAttacksToDisplay[currentSelectedOption].attack.name === "Charge Sword" && swordIsCharged) {
@@ -186,6 +193,8 @@ function BattleScreen() {
         setBattleMenuOpen,
         attackOptionChosen,
         setAttackOptionChosen,
+        defendOptionChosen,
+        setDefendOptionChosen,
         setOnActionMenu,
         playRoundRef
     };
@@ -200,14 +209,15 @@ function BattleScreen() {
     }, []);
 
     useEffect(() => {
+        console.log("This is the value of defendOptionChosen:", defendOptionChosen);
         addMenuEventListeners();
         return () => {
             removeMenuEventListeners();
         }
-    }, [attackOptionChosen, classAttacks, swordIsCharged]); // may need to add onActionMenu here later?
+    }, [attackOptionChosen, defendOptionChosen, classAttacks]);
 
     useEffect(() => {
-        renderBattleText();
+        renderMenuBattleText();
     }, [onActionMenu, selectedOption]);
 
     // this asynchronously updates the display for the dragon's hp whenever the value of dragonHp changes
