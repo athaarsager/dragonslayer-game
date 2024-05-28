@@ -263,7 +263,6 @@ function BattleScreen() {
     }, [playerHp]);
 
     useEffect(() => {
-        console.log("This is the dragon's hp:", dragonHp);
         if (dragonHp <= 0) {
             setDragonHp(0);
         }

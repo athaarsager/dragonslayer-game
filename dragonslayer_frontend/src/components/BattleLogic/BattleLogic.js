@@ -149,8 +149,6 @@ function BattleLogic(props) {
     }
 
     async function playerPrays(playerRoundStats) {
-        console.log("This is the value of playerRoundStats.hp:", playerRoundStats.hp);
-        console.log("This is the value of playerHp:", playerHp);
         setBattleMenuOpen(false);
         setBattleText("You offer a prayer of desperation to the heavens!");
         await pauseOnText();
@@ -158,8 +156,7 @@ function BattleLogic(props) {
         if (playerRoundStats.hp <= 60) {
             // This if statement seems to be the culprit...
             playerRoundStats.hp += 40;
-            console.log("Hp was below 60 prior to healing. Here is the new value of playerRoundStats.hp:", playerRoundStats.hp);
-            setPlayerHp(playerRoundStats.hp + 40);
+            setPlayerHp(playerRoundStats.hp);
         } else {
             playerRoundStats.hp = 100;
             setPlayerHp(100);
@@ -373,7 +370,6 @@ function BattleLogic(props) {
                     }
                     setPlayerHp(playerRoundStats.hp);
                     setCurrentPlayerStats(playerRoundStats);
-                    console.log("This is the player's hp:", playerHp);
                     return;
                 } else {
                     setBattleText(`You take ${damageEnemyDealt} damage!`);
@@ -383,7 +379,6 @@ function BattleLogic(props) {
                     }
                     setPlayerHp(playerRoundStats.hp);
                     setCurrentPlayerStats(playerRoundStats);
-                    console.log("This is the player's hp:", playerHp);
                     return;
                 }
             }
