@@ -290,9 +290,9 @@ function BattleLogic(props) {
             const enemyAttack = enemyAttacks[6];
             setBattleText(enemyAttack.attack.attackText);
             // Text box says "The Dragon attempts to persuade you with logic and reason!"
-            pauseOnText();
+            await pauseOnText();
             setBattleText("Son of man...what do you stand to gain from my demise?");
-            pauseOnText();
+            await pauseOnText();
             logicAndReasonUsed = true;
             return;
         }
