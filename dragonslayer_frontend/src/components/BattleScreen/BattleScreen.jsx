@@ -131,7 +131,7 @@ function BattleScreen() {
 
     const executeAction = async (e) => {
         if ((e.key === " " || e.key === "Enter")) {
-            if (classAttacksToDisplay.length === 0) return;
+            if (classAttacksToDisplay.length === 0 || !battleMenuOpen) return;
             console.log("In execute action. this is the value of onActionMenu:", onActionMenu);
 
             // use the ref so that we're always using the most recent value

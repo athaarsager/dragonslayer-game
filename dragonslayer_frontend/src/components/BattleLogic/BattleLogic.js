@@ -150,6 +150,7 @@ function BattleLogic(props) {
 
     async function playerPrays(playerRoundStats) {
         setBattleMenuOpen(false);
+        // Now need to make this text change work
         setBattleText("You offer a prayer of desperation to the heavens!");
         await pauseOnText();
         setBattleText("You heal 40 HP!");
