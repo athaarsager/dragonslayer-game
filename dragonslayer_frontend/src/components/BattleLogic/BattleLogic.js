@@ -57,7 +57,7 @@ function BattleLogic(props) {
         // Paused on damage dealt to player
         await pauseOnText();
         // account for any buffs/debuffs wearing off
-        await determineBuffsAndDebuffs(enemy);
+        await adjustBuffAndDebuffCounters(enemy);
         // did the dragon eat the chicken on his turn?
         // if so, replace "throw chicken" with "do nothing"
         // Does not update correctly if stored directly in enemyActs function
@@ -332,7 +332,7 @@ function BattleLogic(props) {
         }
     }
 
-    async function determineBuffsAndDebuffs(enemy) {
+    async function adjustBuffAndDebuffCounters(enemy) {
         if (playerAttackRoundCounter > 1) {
             setPlayerAttackRoundCounter(playerAttackRoundCounter - 1);
         } else if (playerAttackRoundCounter === 1) {
