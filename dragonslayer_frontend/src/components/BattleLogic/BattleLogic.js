@@ -59,6 +59,8 @@ function BattleLogic(props) {
         // account for any buffs/debuffs wearing off
         await determineBuffsAndDebuffs(enemy);
         // did the dragon eat the chicken on his turn?
+        // if so, replace "throw chicken" with "do nothing"
+        // Does not update correctly if stored directly in enemyActs function
         if (chickenEaten) {
             const newClassAttacksToDisplay = [...classAttacksToDisplay];
             newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
