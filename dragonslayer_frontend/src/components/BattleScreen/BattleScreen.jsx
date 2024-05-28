@@ -111,7 +111,7 @@ function BattleScreen() {
         if (defendOptionChosen) {
             return;
         }
-        if (onActionMenu) {
+        if (onActionMenu && !attackOptionChosen) {
             // This will be changed to random flavor text later on
             // e.g. "The dragon is lounging about"
             setBattleText("Default");
@@ -206,8 +206,8 @@ function BattleScreen() {
         setBattleMenuOpen,
         attackOptionChosen,
         setAttackOptionChosen,
-        defendOptionChosen,
         setDefendOptionChosen,
+        setPrayOptionChosen,
         setOnActionMenu,
         playRoundRef,
     };
@@ -227,7 +227,7 @@ function BattleScreen() {
             console.log("Removing menu event listeners");
             removeMenuEventListeners();
         }
-    }, [attackOptionChosen, defendOptionChosen, classAttacks]);
+    }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks]);
 
     useEffect(() => {
         renderMenuBattleText();

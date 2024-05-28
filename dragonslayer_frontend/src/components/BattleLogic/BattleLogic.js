@@ -23,11 +23,10 @@ function BattleLogic(props) {
         setBattleMenuOpen,
         attackOptionChosen,
         setAttackOptionChosen,
-        defendOptionChosen,
         setDefendOptionChosen,
+        setPrayOptionChosen,
         setOnActionMenu,
         playRoundRef,
-        removeEventListeners
     } = props;
 
     // These variables will track when status effects wear off
@@ -125,6 +124,7 @@ function BattleLogic(props) {
         setBattleText("Default");
         setAttackOptionChosen(false);
         setDefendOptionChosen(false);
+        setPrayOptionChosen(false);
         setOnActionMenu(true);
         // need to account for mana usage at some point
         return;
@@ -135,13 +135,27 @@ function BattleLogic(props) {
             await playerAttacks(enemy, action, playerRoundStats);
         } else if (action === "defend") {
             await playerDefends();
+        } else if (action === "pray") {
+            await playerPrays();
         }
     }
 
     async function playerDefends() {
         setBattleMenuOpen(false);
         setBattleText("You hold your weak arms up in self-defense!");
-        // increase player defense for one turn here
+        await pauseOnText();
+    }
+
+    async function playerPrays() {
+        setBattleMenuOpen(false);
+        setBattleText("You offer a prayer of desperation to the heavens!");
+        await pauseOnText();
+        setBattleText("You heal 40 HP!");
+        if (playerHp <= 60) {
+            setPlayerHp(playerHp + 40);
+        } else {
+            setPlayerHp(100);
+        }
         await pauseOnText();
     }
 
@@ -406,8 +420,8 @@ BattleLogic.propTypes = {
     setBattleMenuOpen: PropTypes.func.isRequired,
     attackOptionChosen: PropTypes.bool.isRequired,
     setAttackOptionChosen: PropTypes.func.isRequired,
-    defendOptionChosen: PropTypes.bool.isRequired,
     setDefendOptionChosen: PropTypes.func.isRequired,
+    setPrayOptionChosen: PropTypes.func.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     playRoundRef: PropTypes.object.isRequired
 };
