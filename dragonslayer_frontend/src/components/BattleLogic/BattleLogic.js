@@ -131,13 +131,15 @@ function BattleLogic(props) {
     }
 
     async function playerActs(enemy, action, playerRoundStats) {
+        console.log("These are the playerRoundStats:", playerRoundStats);
         if (attackOptionChosen) {
             await playerAttacks(enemy, action, playerRoundStats);
         } else if (action === "defend") {
             await playerDefends();
         } else if (action === "pray") {
-            await playerPrays();
+            await playerPrays(playerRoundStats);
         }
+        console.log("These are the playerRoundStats at the end of the player's turn:", playerRoundStats);
     }
 
     async function playerDefends() {
@@ -146,14 +148,20 @@ function BattleLogic(props) {
         await pauseOnText();
     }
 
-    async function playerPrays() {
+    async function playerPrays(playerRoundStats) {
+        console.log("This is the value of playerRoundStats.hp:", playerRoundStats.hp);
+        console.log("This is the value of playerHp:", playerHp);
         setBattleMenuOpen(false);
         setBattleText("You offer a prayer of desperation to the heavens!");
         await pauseOnText();
         setBattleText("You heal 40 HP!");
-        if (playerHp <= 60) {
-            setPlayerHp(playerHp + 40);
+        if (playerRoundStats.hp <= 60) {
+            // This if statement seems to be the culprit...
+            playerRoundStats.hp += 40;
+            console.log("Hp was below 60 prior to healing. Here is the new value of playerRoundStats.hp:", playerRoundStats.hp);
+            setPlayerHp(playerRoundStats.hp + 40);
         } else {
+            playerRoundStats.hp = 100;
             setPlayerHp(100);
         }
         await pauseOnText();
@@ -347,7 +355,6 @@ function BattleLogic(props) {
                         }
                     });
                     // Adjust round counter for player buffs/debuffs
-                    setCurrentPlayerStats(playerRoundStats);
                     if (statAffected === "attack") {
                         setPlayerAttackRoundCounter(3);
                     } else if (statAffected === "defense") {
@@ -359,12 +366,23 @@ function BattleLogic(props) {
                     } else {
                         setBattleText(`You take ${damageEnemyDealt} damage and your ${statAffected} has been lowered!`);
                     }
-                    setPlayerHp(playerHp - damageEnemyDealt);
+                    console.log("About to set currentPlayerStats. These are the playerRoundStats:", playerRoundStats);
+                    playerRoundStats.hp -= damageEnemyDealt;
+                    if (playerRoundStats.hp < 0) {
+                        playerRoundStats.hp = 0;
+                    }
+                    setPlayerHp(playerRoundStats.hp);
+                    setCurrentPlayerStats(playerRoundStats);
                     console.log("This is the player's hp:", playerHp);
                     return;
                 } else {
                     setBattleText(`You take ${damageEnemyDealt} damage!`);
-                    setPlayerHp(playerHp - damageEnemyDealt);
+                    playerRoundStats.hp -= damageEnemyDealt;
+                    if (playerRoundStats.hp < 0) {
+                        playerRoundStats.hp = 0;
+                    }
+                    setPlayerHp(playerRoundStats.hp);
+                    setCurrentPlayerStats(playerRoundStats);
                     console.log("This is the player's hp:", playerHp);
                     return;
                 }
