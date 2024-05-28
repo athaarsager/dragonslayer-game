@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-function ActionMenu({ classAttacksToDisplay, selectedOption, attackOptionChosen, setAttackOptionChosen, setOnActionMenu, battleMenuOpen }) {
+function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attackOptionChosen, setAttackOptionChosen, setOnActionMenu, battleMenuOpen, dragonIsAwaitingPlayerResponse }) {
 
     // will need to update this for other menus
     const returnToFirstMenu = (e) => {
@@ -50,10 +50,12 @@ function ActionMenu({ classAttacksToDisplay, selectedOption, attackOptionChosen,
 }
 // This is to avoid a linting error
 ActionMenu.propTypes = {
+    classAttacks: PropTypes.array.isRequired,
     classAttacksToDisplay: PropTypes.array.isRequired,
     selectedOption: PropTypes.number.isRequired,
     attackOptionChosen: PropTypes.bool.isRequired,
     setAttackOptionChosen: PropTypes.func.isRequired,
+    dragonIsAwaitingPlayerResponse: PropTypes.bool.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired
 };

@@ -275,7 +275,6 @@ function BattleScreen() {
 
     // This updates the selectedOptionRef whenever the selectedOption is updated
     useEffect(() => {
-        console.log("This is the current selected option:", selectedOption);
         selectedOptionRef.current = selectedOption;
     }, [selectedOption]);
 
@@ -302,10 +301,12 @@ function BattleScreen() {
             </div>
             <div id="battle-menu" className="text-box">
                 <ActionMenu
+                    classAttacks={classAttacks}
                     classAttacksToDisplay={classAttacksToDisplay}
                     selectedOption={selectedOption}
                     attackOptionChosen={attackOptionChosen}
                     setAttackOptionChosen={setAttackOptionChosen}
+                    dragonIsAwaitingPlayerResponse={dragonIsAwaitingPlayerResponse}
                     setOnActionMenu={setOnActionMenu}
                     battleMenuOpen={battleMenuOpen} />
             </div>

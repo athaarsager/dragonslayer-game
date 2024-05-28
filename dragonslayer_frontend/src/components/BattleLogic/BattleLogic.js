@@ -46,6 +46,7 @@ function BattleLogic(props) {
     let resolveKeyPress = null;
 
     let chickenEaten = false;
+    let logicAndReasonUsed = false;
 
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {
@@ -59,7 +60,9 @@ function BattleLogic(props) {
         await enemyActs(enemy, action, playerRoundStats, enemyRoundStats);
         // user needs to progress the text again
         // Paused on damage dealt to player
-        if (!dragonIsAwaitingPlayerResponse) {
+        // may need to check this if statement later...
+        if (!logicAndReasonUsed && !dragonIsAwaitingPlayerResponse) {
+            console.log("This is the value of dragonIsAwaitingPlayerResponse:", dragonIsAwaitingPlayerResponse);
             await pauseOnText();
         }
         // account for any buffs/debuffs wearing off
@@ -72,13 +75,16 @@ function BattleLogic(props) {
             newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
             setClassAttacksToDisplay(newClassAttacksToDisplay);
         }
-        if (dragonIsAwaitingPlayerResponse) {
+        // Use the logicAndReasonUsed variable because dragonIsAwaitingPlayerResponse
+        // is one behind on the first time
+        if (logicAndReasonUsed || dragonIsAwaitingPlayerResponse) {
             // going to replace the chargeSword action with "Listen"
             // since you don't do anything if you choose that option anyway
             // may need to account for if player "does nothing instead"... same result or not?
             const newClassAttacksToDisplay = [...classAttacksToDisplay];
             newClassAttacksToDisplay.splice(1, 1, classAttacks[9]);
             setClassAttacksToDisplay(newClassAttacksToDisplay);
+            logicAndReasonUsed = false;
         }
         // return to main action menu
         setBattleMenuOpen(true);
@@ -296,6 +302,11 @@ function BattleLogic(props) {
             await pauseOnText();
             setBattleText("Son of man...what do you stand to gain from my demise?");
             await pauseOnText();
+            // preventative measure to see if I can get logicAndReasonUsed to be set true
+            // only on the first time
+            if (!dragonIsAwaitingPlayerResponse) {
+                logicAndReasonUsed = true;
+            }
             setDragonIsAwaitingPlayerResponse(true);
             return;
         }
