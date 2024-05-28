@@ -108,7 +108,9 @@ function BattleScreen() {
 
     const renderMenuBattleText = () => {
         // Need this here to ensure the menu text does not override the playRound text
-        if (defendOptionChosen) {
+        // This function triggers asynchronously when stuff happens in playRound()
+        // However, I don't want it to activate if player is not attacking
+        if (defendOptionChosen || prayOptionChosen) {
             return;
         }
         if (onActionMenu && !attackOptionChosen) {
@@ -270,6 +272,7 @@ function BattleScreen() {
 
     // This updates the selectedOptionRef whenever the selectedOption is updated
     useEffect(() => {
+        console.log("This is the current selected option:", selectedOption);
         selectedOptionRef.current = selectedOption;
     }, [selectedOption]);
 
