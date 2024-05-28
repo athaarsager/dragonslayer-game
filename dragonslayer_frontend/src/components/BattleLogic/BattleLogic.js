@@ -49,10 +49,11 @@ function BattleLogic(props) {
         // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
         // to prevent, I had already fully integretated it into the function
         let playerRoundStats = { ...currentPlayerStats };
-        await playerActs(enemy, action, playerRoundStats);
+        let enemyRoundStats = { ...currentEnemyStats };
+        await playerActs(enemy, action, playerRoundStats, enemyRoundStats);
         // enemy attacks
         // await ensures the program pauses on the async function
-        await enemyActs(enemy, action, playerRoundStats);
+        await enemyActs(enemy, action, playerRoundStats, enemyRoundStats);
         // user needs to progress the text again
         // Paused on damage dealt to player
         await pauseOnText();
@@ -77,10 +78,10 @@ function BattleLogic(props) {
         return;
     }
 
-    async function playerActs(enemy, action, playerRoundStats) {
+    async function playerActs(enemy, action, playerRoundStats, enemyRoundStats) {
         console.log("These are the playerRoundStats:", playerRoundStats);
         if (attackOptionChosen) {
-            await playerAttacks(enemy, action, playerRoundStats);
+            await playerAttacks(enemy, action, playerRoundStats, enemyRoundStats);
         } else if (action === "defend") {
             await playerDefends();
         } else if (action === "pray") {
@@ -111,7 +112,7 @@ function BattleLogic(props) {
         await pauseOnText();
     }
 
-    async function playerAttacks(enemy, action, playerRoundStats) {
+    async function playerAttacks(enemy, action, playerRoundStats, enemyRoundStats) {
         // need to ensure action is the correct object in the character attacks array
         setBattleMenuOpen(false);
         setBattleText(action.attack.attackText);
@@ -136,9 +137,11 @@ function BattleLogic(props) {
             }
             setBattleText(`The ${enemy} takes ${playerDamageDealt} damage!`);
             // change dragon hp here
+            
+            enemyRoundStats.hp -= playerDamageDealt; 
             // The display will update based on a useEffect asynchronously
-            setDragonHp(dragonHp - playerDamageDealt);
-
+            setDragonHp(enemyRoundStats.hp);
+            setCurrentEnemyStats(enemyRoundStats);
             // Paused on damage dealt by player
             await pauseOnText();
         }
@@ -148,7 +151,7 @@ function BattleLogic(props) {
             const targetCharacter = action.extra_Effect.targetCharacter;
             let originalStatValue;
             if (targetCharacter === "dragon") {
-                const currentEnemyStatsCopy = { ...currentEnemyStats };
+                const currentEnemyStatsCopy = { ...enemyRoundStats };
                 Object.entries(currentEnemyStatsCopy).forEach(([key, value]) => {
                     if (key === statAffected) {
                         originalStatValue = currentEnemyStatsCopy[key];
@@ -157,8 +160,10 @@ function BattleLogic(props) {
                     ${currentEnemyStatsCopy[key]}`);
                     }
                 });
-                console.log("This is the value of currentEnemyStats:", currentEnemyStats);
+                console.log("Checking for player's attack extra effect. This is the value of currentEnemyStats:", currentEnemyStats);
                 setCurrentEnemyStats(currentEnemyStatsCopy);
+                // make sure enemyRoundStats stays updated with the status effects inflicted
+                enemyRoundStats = { ...currentEnemyStatsCopy };
                 // set the counter for how long the status effect will last
                 if (statAffected === "defense") {
                     setEnemyDefenseRoundCounter(3);
@@ -242,7 +247,8 @@ function BattleLogic(props) {
         }
     }
 
-    async function enemyActs(enemy, action, playerRoundStats) {
+    async function enemyActs(enemy, action, playerRoundStats, enemyRoundStats) {
+        console.log("This is the enemy:", enemy);
         if (lostTurnCounter > 0) {
             if (isBlinded) {
                 if (lostTurnCounter === 2) {
@@ -253,6 +259,7 @@ function BattleLogic(props) {
             }
             return;
         }
+        // account for attacks that have very specific responses from the dragon
         if (attackOptionChosen) {
             if (action.attack.name === "Throw Pitchfork") {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
@@ -263,8 +270,21 @@ function BattleLogic(props) {
                 return;
             }
         }
-        const randomNumber = Math.floor(Math.random() * 3);
-        console.log("This is the random number the enemy has chosen:", randomNumber);
+        // account for if we are in the second half of the dragon fight
+        // Appears to be working
+        console.log("This is the value of enemyRoundStats:", enemyRoundStats);
+        if (enemyRoundStats.hp <= 500) {
+            alert("Dragon is below half of hp");
+        }
+        // calculate which attack the enemy uses
+        // number of attacks changes based on enemy name
+        let randomNumber;
+        if (enemy === "Dragon") {
+            randomNumber = Math.floor(Math.random() * 3);
+        } else {
+            randomNumber = Math.floor(Math.random() * 4);
+        }
+        // Do all the calculations and progress the fight based on what attack the enemy used
         for (let i = 0; i < 3; i++) {
             if (i === randomNumber) {
                 const enemyAttack = enemyAttacks[i];
