@@ -42,7 +42,9 @@ function BattleLogic(props) {
 
     //This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
+
     let chickenEaten = false;
+    let logicAndReasonUsed = false;
 
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {
@@ -65,6 +67,14 @@ function BattleLogic(props) {
         if (chickenEaten) {
             const newClassAttacksToDisplay = [...classAttacksToDisplay];
             newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
+            setClassAttacksToDisplay(newClassAttacksToDisplay);
+        }
+        if (logicAndReasonUsed) {
+            // going to replace the chargeSword action with "Listen"
+            // since you don't do anything if you choose that option anyway
+            // may need to account for if player "does nothing instead"... same result or not?
+            const newClassAttacksToDisplay = [...classAttacksToDisplay];
+            newClassAttacksToDisplay.splice(1, 1, classAttacks[9]);
             setClassAttacksToDisplay(newClassAttacksToDisplay);
         }
         // return to main action menu
@@ -273,8 +283,18 @@ function BattleLogic(props) {
         // account for if we are in the second half of the dragon fight
         // Appears to be working
         console.log("This is the value of enemyRoundStats:", enemyRoundStats);
-        if (enemyRoundStats.hp <= 500) {
-            alert("Dragon is below half of hp");
+        // may need to adjust the condition so game isn't stuck endlessly just doing this
+        // once dragon is below half health
+        if (enemyRoundStats.hp <= 500 && enemy === "Dragon") {
+            // Dragon needs to use logic and reason
+            const enemyAttack = enemyAttacks[6];
+            setBattleText(enemyAttack.attack.attackText);
+            // Text box says "The Dragon attempts to persuade you with logic and reason!"
+            pauseOnText();
+            setBattleText("Son of man...what do you stand to gain from my demise?");
+            pauseOnText();
+            logicAndReasonUsed = true;
+            return;
         }
         // calculate which attack the enemy uses
         // number of attacks changes based on enemy name
@@ -289,11 +309,10 @@ function BattleLogic(props) {
             if (i === randomNumber) {
                 const enemyAttack = enemyAttacks[i];
                 setBattleText(enemyAttack.attack.attackText);
-                document.addEventListener("keydown", resolveUserInput);
                 // need user input to progress the textbox
                 // Paused on dragon's attack text
+                document.addEventListener("keydown", resolveUserInput);
                 await progressRound();
-                document.removeEventListener("keydown", resolveUserInput);
                 console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
                 let damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
                 // use the actual action name here because the state update is behind and I don't want to deal with that
