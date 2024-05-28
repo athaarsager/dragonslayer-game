@@ -150,6 +150,7 @@ function BattleScreen() {
                     setBattleText(classAttacksToDisplay[0].attack.description);
                     setOnActionMenu(false);
                     return;
+                    // need to adjust the below block of code to account for the "listen" option
                 } else if (currentSelectedOption === 1) {
                     removeMenuEventListeners();
                     setOnActionMenu(false);

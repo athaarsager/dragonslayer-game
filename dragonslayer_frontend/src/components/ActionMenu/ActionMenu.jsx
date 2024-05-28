@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attackOptionChosen, setAttackOptionChosen, setOnActionMenu, battleMenuOpen, dragonIsAwaitingPlayerResponse }) {
 
+    const [secondOptionText, setSecondOptionText] = useState("Defend");    
     // will need to update this for other menus
     const returnToFirstMenu = (e) => {
         if ((e.key === "Backspace" || e.key === "Shift") && battleMenuOpen) {
@@ -17,6 +18,13 @@ function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attac
         }
     });
 
+    useEffect(() => {
+        if (dragonIsAwaitingPlayerResponse) {
+            setSecondOptionText(classAttacks[9].attack.name);
+        }
+        // including classAttacks in the dependency array because the linter told me to
+    }, [dragonIsAwaitingPlayerResponse, classAttacks]);
+
     return (
         <>
             {battleMenuOpen &&
@@ -29,7 +37,7 @@ function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attac
                     <div className={"option-two selector-container right-option"}>
                         <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
                         <div className="action">
-                            {attackOptionChosen ? classAttacksToDisplay[1].attack.name : "Defend"}</div>
+                            {attackOptionChosen ? classAttacksToDisplay[1].attack.name : secondOptionText}</div>
                     </div>
                     <div></div>
                     <div className={"option-three selector-container left-option"}>
