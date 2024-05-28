@@ -40,7 +40,7 @@ function ActionMenu({ classAttacksToDisplay, selectedOption, attackOptionChosen,
                     <div className={"option-four selector-container right-option"}>
                         <div className={selectedOption === 3 ? "selector" : "selector unselected"}>&#9659;</div>
                         <div className="action">
-                            {attackOptionChosen ? classAttacksToDisplay[3].attack.name : "Run"}</div>
+                            {attackOptionChosen ? classAttacksToDisplay[3].attack.name : "Pray"}</div>
                     </div>
                     <div></div>
                 </>

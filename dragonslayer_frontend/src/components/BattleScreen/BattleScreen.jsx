@@ -211,9 +211,6 @@ function BattleScreen() {
     }, []);
 
     useEffect(() => {
-        console.log("Adding menu event listeners");
-        console.log(`These are the states: attackOptionChosen: ${attackOptionChosen},
-        defendOptionChosen: ${defendOptionChosen}, classAttacks: ${classAttacks}`);
         addMenuEventListeners();
         return () => {
             console.log("Removing menu event listeners");
