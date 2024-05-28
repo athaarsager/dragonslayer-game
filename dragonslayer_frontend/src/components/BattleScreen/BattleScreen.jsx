@@ -12,6 +12,7 @@ function BattleScreen() {
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [defendOptionChosen, setDefendOptionChosen] = useState(false);
+    const [prayOptionChosen, setPrayOptionChosen] = useState(false);
     const [battleText, setBattleText] = useState("Default");
 
     const [classAttacks, setClassAttacks] = useState([]);
@@ -140,6 +141,7 @@ function BattleScreen() {
             const currentSelectedOption = selectedOptionRef.current;
             // if selectedOption is 0, then "attack" was selected. Open attack menu and set the battle text
             if (onActionMenu) {
+                // take care of the actions that execute directly from the action menu
                 if (currentSelectedOption === 0) {
                     setAttackOptionChosen(true);
                     setBattleText(classAttacksToDisplay[0].attack.description);
@@ -150,6 +152,13 @@ function BattleScreen() {
                     setOnActionMenu(false);
                     setDefendOptionChosen(true);
                     await playRoundRef.current(enemyName, "defend");
+                    setSelectedOption(0);
+                    return;
+                } else if (currentSelectedOption === 3) {
+                    removeMenuEventListeners();
+                    setOnActionMenu(false);
+                    setPrayOptionChosen(true);
+                    await playRoundRef.current(enemyName, "pray");
                     setSelectedOption(0);
                     return;
                 }
