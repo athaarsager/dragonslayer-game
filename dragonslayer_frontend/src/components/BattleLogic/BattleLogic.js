@@ -57,64 +57,9 @@ function BattleLogic(props) {
         // Paused on damage dealt to player
         await pauseOnText();
         // account for any buffs/debuffs wearing off
-        if (playerAttackRoundCounter > 1) {
-            setPlayerAttackRoundCounter(playerAttackRoundCounter - 1);
-        } else if (playerAttackRoundCounter === 1) {
-            setPlayerAttackRoundCounter(0);
-            setBattleText("Your attack returns to normal.");
-            // adjust player attack here. Is there a way to access a key in a useState variable?
-            setCurrentPlayerStats(prevState => ({
-                ...prevState,
-                attack: 1
-            }));
-            await pauseOnText();
-        }
-        if (playerDefenseRoundCounter > 1) {
-            setPlayerDefenseRoundCounter(playerDefenseRoundCounter - 1);
-        } else if (playerDefenseRoundCounter === 1) {
-            setPlayerDefenseRoundCounter(0);
-            setBattleText("Your defense returns to normal.");
-            setCurrentPlayerStats(prevState => ({
-                ...prevState,
-                defense: 1
-            }));
-            await pauseOnText();
-        }
-        if (enemyAttackRoundCounter > 1) {
-            setEnemyAttackRoundCounter(enemyAttackRoundCounter - 1);
-        } else if (enemyAttackRoundCounter === 1) {
-            setEnemyAttackRoundCounter(0);
-            setBattleText(`The ${enemy}'s attack returns to normal.`);
-            setCurrentEnemyStats(prevState => ({
-                ...prevState,
-                attack: 1
-            }));
-            await pauseOnText();
-        }
-        if (enemyDefenseRoundCounter > 1) {
-            setEnemyDefenseRoundCounter(enemyDefenseRoundCounter - 1);
-        } else if (enemyDefenseRoundCounter === 1) {
-            setEnemyDefenseRoundCounter(0);
-            setBattleText(`The ${enemy}'s defense returns to normal.`);
-            setCurrentEnemyStats(prevState => ({
-                ...prevState,
-                defense: 1
-            }));
-            await pauseOnText();
-        }
-        if (lostTurnCounter > 0) {
-            if (lostTurnCounter === 1 && isBlinded) {
-                setLostTurnCounter(0);
-                setBattleText(`The ${enemy}'s eye has recovered!`);
-                await pauseOnText();
-            } else {
-                setLostTurnCounter(lostTurnCounter - 1);
-            }
-        }
+        await determineBuffsAndDebuffs(enemy);
         // did the dragon eat the chicken on his turn?
-        console.log("This is the value of chickenEaten:", chickenEaten);
         if (chickenEaten) {
-            // appears to be one behind
             const newClassAttacksToDisplay = [...classAttacksToDisplay];
             newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
             setClassAttacksToDisplay(newClassAttacksToDisplay);
@@ -381,6 +326,63 @@ function BattleLogic(props) {
                     setCurrentPlayerStats(playerRoundStats);
                     return;
                 }
+            }
+        }
+    }
+
+    async function determineBuffsAndDebuffs(enemy) {
+        if (playerAttackRoundCounter > 1) {
+            setPlayerAttackRoundCounter(playerAttackRoundCounter - 1);
+        } else if (playerAttackRoundCounter === 1) {
+            setPlayerAttackRoundCounter(0);
+            setBattleText("Your attack returns to normal.");
+            // adjust player attack here. Is there a way to access a key in a useState variable?
+            setCurrentPlayerStats(prevState => ({
+                ...prevState,
+                attack: 1
+            }));
+            await pauseOnText();
+        }
+        if (playerDefenseRoundCounter > 1) {
+            setPlayerDefenseRoundCounter(playerDefenseRoundCounter - 1);
+        } else if (playerDefenseRoundCounter === 1) {
+            setPlayerDefenseRoundCounter(0);
+            setBattleText("Your defense returns to normal.");
+            setCurrentPlayerStats(prevState => ({
+                ...prevState,
+                defense: 1
+            }));
+            await pauseOnText();
+        }
+        if (enemyAttackRoundCounter > 1) {
+            setEnemyAttackRoundCounter(enemyAttackRoundCounter - 1);
+        } else if (enemyAttackRoundCounter === 1) {
+            setEnemyAttackRoundCounter(0);
+            setBattleText(`The ${enemy}'s attack returns to normal.`);
+            setCurrentEnemyStats(prevState => ({
+                ...prevState,
+                attack: 1
+            }));
+            await pauseOnText();
+        }
+        if (enemyDefenseRoundCounter > 1) {
+            setEnemyDefenseRoundCounter(enemyDefenseRoundCounter - 1);
+        } else if (enemyDefenseRoundCounter === 1) {
+            setEnemyDefenseRoundCounter(0);
+            setBattleText(`The ${enemy}'s defense returns to normal.`);
+            setCurrentEnemyStats(prevState => ({
+                ...prevState,
+                defense: 1
+            }));
+            await pauseOnText();
+        }
+        if (lostTurnCounter > 0) {
+            if (lostTurnCounter === 1 && isBlinded) {
+                setLostTurnCounter(0);
+                setBattleText(`The ${enemy}'s eye has recovered!`);
+                await pauseOnText();
+            } else {
+                setLostTurnCounter(lostTurnCounter - 1);
             }
         }
     }
