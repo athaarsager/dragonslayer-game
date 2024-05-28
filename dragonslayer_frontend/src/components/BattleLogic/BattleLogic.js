@@ -58,7 +58,9 @@ function BattleLogic(props) {
         await enemyActs(enemy, action, playerRoundStats, enemyRoundStats);
         // user needs to progress the text again
         // Paused on damage dealt to player
-        await pauseOnText();
+        if (!logicAndReasonUsed) {
+            await pauseOnText();
+        }
         // account for any buffs/debuffs wearing off
         await adjustBuffAndDebuffCounters(enemy);
         // did the dragon eat the chicken on his turn?
@@ -147,8 +149,8 @@ function BattleLogic(props) {
             }
             setBattleText(`The ${enemy} takes ${playerDamageDealt} damage!`);
             // change dragon hp here
-            
-            enemyRoundStats.hp -= playerDamageDealt; 
+
+            enemyRoundStats.hp -= playerDamageDealt;
             // The display will update based on a useEffect asynchronously
             setDragonHp(enemyRoundStats.hp);
             setCurrentEnemyStats(enemyRoundStats);
