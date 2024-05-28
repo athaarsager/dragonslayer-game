@@ -25,6 +25,8 @@ function BattleLogic(props) {
         setAttackOptionChosen,
         setDefendOptionChosen,
         setPrayOptionChosen,
+        dragonIsAwaitingPlayerResponse,
+        setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         playRoundRef,
     } = props;
@@ -44,7 +46,6 @@ function BattleLogic(props) {
     let resolveKeyPress = null;
 
     let chickenEaten = false;
-    let logicAndReasonUsed = false;
 
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {
@@ -58,7 +59,7 @@ function BattleLogic(props) {
         await enemyActs(enemy, action, playerRoundStats, enemyRoundStats);
         // user needs to progress the text again
         // Paused on damage dealt to player
-        if (!logicAndReasonUsed) {
+        if (!dragonIsAwaitingPlayerResponse) {
             await pauseOnText();
         }
         // account for any buffs/debuffs wearing off
@@ -71,7 +72,7 @@ function BattleLogic(props) {
             newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
             setClassAttacksToDisplay(newClassAttacksToDisplay);
         }
-        if (logicAndReasonUsed) {
+        if (dragonIsAwaitingPlayerResponse) {
             // going to replace the chargeSword action with "Listen"
             // since you don't do anything if you choose that option anyway
             // may need to account for if player "does nothing instead"... same result or not?
@@ -295,7 +296,7 @@ function BattleLogic(props) {
             await pauseOnText();
             setBattleText("Son of man...what do you stand to gain from my demise?");
             await pauseOnText();
-            logicAndReasonUsed = true;
+            setDragonIsAwaitingPlayerResponse(true);
             return;
         }
         // calculate which attack the enemy uses
@@ -480,6 +481,8 @@ BattleLogic.propTypes = {
     setAttackOptionChosen: PropTypes.func.isRequired,
     setDefendOptionChosen: PropTypes.func.isRequired,
     setPrayOptionChosen: PropTypes.func.isRequired,
+    dragonIsAwaitingPlayerResponse: PropTypes.bool.isRequired,
+    setDragonIsAwaitingPlayerResponse: PropTypes.func.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     playRoundRef: PropTypes.object.isRequired
 };

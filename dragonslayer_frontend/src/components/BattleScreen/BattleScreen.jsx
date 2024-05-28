@@ -28,6 +28,7 @@ function BattleScreen() {
     const [dragonHp, setDragonHp] = useState(NaN);
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
     const [dragonMana, setDragonMana] = useState(NaN);
+    const [dragonIsAwaitingPlayerResponse, setDragonIsAwaitingPlayerResponse] = useState(false);
 
     const [enemyName, setEnemyName] = useState("");
     const [enemyAttacks, setEnemyAttacks] = useState([]);
@@ -210,6 +211,8 @@ function BattleScreen() {
         setAttackOptionChosen,
         setDefendOptionChosen,
         setPrayOptionChosen,
+        dragonIsAwaitingPlayerResponse,
+        setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         playRoundRef,
     };
