@@ -42,11 +42,16 @@ function BattleLogic(props) {
     const [lostTurnCounter, setLostTurnCounter] = useState(0);
     const [isBlinded, setIsBlinded] = useState(false);
 
+    const [logicAndReasonUsed, setLogicAndReasonUsed] = useState(false);
+
     //This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
 
     let chickenEaten = false;
-    let logicAndReasonUsed = false;
+    // Need a useState variable to go along with this. Otherwise, will just be reset to false
+    // each time this component mounts
+    // Use normal variables only for things that can be reset each time
+    let logicAndReasonUsedThisTurn = false;
 
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {
@@ -62,8 +67,8 @@ function BattleLogic(props) {
         // Paused on damage dealt to player
         // The below if surrounding the pause prevents an extra input from being needed
         // by the user after the dragon uses logic and reason
-        // may need to check this if statement later...
-        if (!logicAndReasonUsed && !dragonIsAwaitingPlayerResponse) {
+        // Not entirely sure why it works, but it does
+        if (!logicAndReasonUsedThisTurn && !dragonIsAwaitingPlayerResponse) {
             await pauseOnText();
         }
         // account for any buffs/debuffs wearing off
@@ -75,17 +80,6 @@ function BattleLogic(props) {
             const newClassAttacksToDisplay = [...classAttacksToDisplay];
             newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
             setClassAttacksToDisplay(newClassAttacksToDisplay);
-        }
-        // Use the logicAndReasonUsed variable because dragonIsAwaitingPlayerResponse
-        // is one behind on the first time
-        if (logicAndReasonUsed || dragonIsAwaitingPlayerResponse) {
-            // going to replace the chargeSword action with "Listen"
-            // since you don't do anything if you choose that option anyway
-            // may need to account for if player "does nothing instead"... same result or not?
-            const newClassAttacksToDisplay = [...classAttacksToDisplay];
-            newClassAttacksToDisplay.splice(1, 1, classAttacks[9]);
-            setClassAttacksToDisplay(newClassAttacksToDisplay);
-            logicAndReasonUsed = false;
         }
         // return to main action menu
         setBattleMenuOpen(true);
@@ -278,6 +272,7 @@ function BattleLogic(props) {
             }
             return;
         }
+        console.log("In enemy acts. this is the value of logicAndReasonUsed:", logicAndReasonUsed);
         // account for attacks that have very specific responses from the dragon
         if (attackOptionChosen && dragonIsAwaitingPlayerResponse) {
             setBattleText(`...I see you won't listen to reason. Typical human.
@@ -285,12 +280,10 @@ function BattleLogic(props) {
             await pauseOnText();
             setBattleText("Very well. Know then that you have chosen this fate for yourself.");
             setDragonIsAwaitingPlayerResponse(false);
-            // need to reset this variable too so functionality returns to normal
-            logicAndReasonUsed = false;
             // Alternatively have the charge up text here, but want to give player a full turn to prepare
             await pauseOnText();
             return;
-        } else  if (attackOptionChosen) {
+        } else if (attackOptionChosen) {
             if (action.attack.name === "Throw Pitchfork") {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
                 return;
@@ -305,19 +298,18 @@ function BattleLogic(props) {
         console.log("This is the value of enemyRoundStats:", enemyRoundStats);
         // may need to adjust the condition so game isn't stuck endlessly just doing this
         // once dragon is below half health
-        if (enemyRoundStats.hp <= 500 && enemy === "Dragon") {
+        if (enemyRoundStats.hp <= 500 && enemy === "Dragon" && !logicAndReasonUsed) {
             // Dragon needs to use logic and reason
             const enemyAttack = enemyAttacks[6];
             setBattleText(enemyAttack.attack.attackText);
             // Text box says "The Dragon attempts to persuade you with logic and reason!"
             await pauseOnText();
-            setBattleText("Son of man...what do you stand to gain from my demise?");
+            setBattleText(`Son of man...what do you stand to gain from my demise?
+            Continue on this path, and only Death awaits.`);
             await pauseOnText();
-            // preventative measure to see if I can get logicAndReasonUsed to be set true
-            // only on the first time
-            if (!dragonIsAwaitingPlayerResponse) {
-                logicAndReasonUsed = true;
-            }
+
+            logicAndReasonUsedThisTurn = true;
+            setLogicAndReasonUsed(true);
             setDragonIsAwaitingPlayerResponse(true);
             return;
         }
