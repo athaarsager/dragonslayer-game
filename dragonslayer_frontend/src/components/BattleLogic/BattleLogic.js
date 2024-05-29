@@ -48,6 +48,7 @@ function BattleLogic(props) {
     //This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
     // This variable can be normal because it only matter for the turn it happens in
+    let chickenThrown = false;
     let chickenEaten = false;
     // Need a useState variable to go along with this. Otherwise, will just be reset to false
     // each time this component mounts
@@ -251,6 +252,9 @@ function BattleLogic(props) {
             setClassAttacksToDisplay(newClassAttacksToDisplay);
         }
         if (action.attack.name === "Throw Chicken") {
+            // This variable is only checked to see if the chicken is burnt
+            // to a crisp by the dragon's breath attack
+            chickenThrown = true;
             const newClassAttacksToDisplay = [...classAttacksToDisplay];
             newClassAttacksToDisplay.splice(3, 1, classAttacks[5]);
             setClassAttacksToDisplay(newClassAttacksToDisplay);
@@ -319,7 +323,15 @@ function BattleLogic(props) {
             return;
         } else if (enemyRoundStats.hp <= 500 && enemy === "Dragon" && dragonIsChargedUp) {
             // Dragon needs to use breath attack
-            await enemyUsesAttack(enemyAttacks[4], action, playerRoundStats);
+            if (chickenThrown) {
+                setBattleText(enemyAttacks[4].attack.attackText);
+                await pauseOnText();
+                setBattleText("With a mightly cluck, your lucky chicken flies in front of the flames, shielding you from the blast!");
+                // Somewhere include the text: "The smell of dragon-fried chicken fills your nostrils"
+                // Probably on main battle screen textbox
+            } else {
+                await enemyUsesAttack(enemyAttacks[4], action, playerRoundStats);
+            }
             // reset charge
             setDragonIsChargedUp(false);
             return;
