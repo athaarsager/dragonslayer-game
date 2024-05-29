@@ -329,6 +329,10 @@ function BattleLogic(props) {
                 setBattleText("With a mightly cluck, your lucky chicken flies in front of the flames, shielding you from the blast!");
                 // Somewhere include the text: "The smell of dragon-fried chicken fills your nostrils"
                 // Probably on main battle screen textbox
+                // Replace fetch chicken with eat chicken nuggets
+                const newClassAttacksToDisplay = [...classAttacksToDisplay];
+                newClassAttacksToDisplay.splice(3, 1, classAttacks[7]);
+                setClassAttacksToDisplay(newClassAttacksToDisplay);
             } else {
                 await enemyUsesAttack(enemyAttacks[4], action, playerRoundStats);
             }
