@@ -43,6 +43,7 @@ function BattleLogic(props) {
     const [isBlinded, setIsBlinded] = useState(false);
 
     const [logicAndReasonUsed, setLogicAndReasonUsed] = useState(false);
+    const [dragonIsChargedUp, setDragonIsChargedUp] = useState(false);
 
     //This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
@@ -272,8 +273,8 @@ function BattleLogic(props) {
             }
             return;
         }
-        console.log("In enemy acts. this is the value of logicAndReasonUsed:", logicAndReasonUsed);
         // account for attacks that have very specific responses from the dragon
+        // First, see if dragon used logic and reason last turn and is awaiting response from player
         if (attackOptionChosen && dragonIsAwaitingPlayerResponse) {
             setBattleText(`...I see you won't listen to reason. Typical human.
              Your kind never was wont to do so.`);
@@ -283,6 +284,7 @@ function BattleLogic(props) {
             // Alternatively have the charge up text here, but want to give player a full turn to prepare
             await pauseOnText();
             return;
+        // Other attacks with specific responses from the dragon
         } else if (attackOptionChosen) {
             if (action.attack.name === "Throw Pitchfork") {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
@@ -294,10 +296,6 @@ function BattleLogic(props) {
             }
         }
         // account for if we are in the second half of the dragon fight
-        // Appears to be working
-        console.log("This is the value of enemyRoundStats:", enemyRoundStats);
-        // may need to adjust the condition so game isn't stuck endlessly just doing this
-        // once dragon is below half health
         if (enemyRoundStats.hp <= 500 && enemy === "Dragon" && !logicAndReasonUsed) {
             // Dragon needs to use logic and reason
             const enemyAttack = enemyAttacks[6];
@@ -311,6 +309,20 @@ function BattleLogic(props) {
             logicAndReasonUsedThisTurn = true;
             setLogicAndReasonUsed(true);
             setDragonIsAwaitingPlayerResponse(true);
+            return;
+        } else if (enemyRoundStats.hp <= 500 && enemy === "Dragon" && logicAndReasonUsed && !dragonIsChargedUp) {
+            // Dragon needs to charge breath attack
+            const enemyAttack = enemyAttacks[3];
+            setBattleText(enemyAttack.attack.attackText);
+            // Indicate that the dragon is charged up and should use fire breath next turn
+            setDragonIsChargedUp(true);
+            return;
+        } else if (enemyRoundStats.hp <= 500 && enemy === "Dragon" && dragonIsChargedUp) {
+            // Dragon needs to use breath attack
+            const enemyAttack = enemyAttacks[4];
+            setBattleText(enemyAttack.attack.attackText);
+            // reset charge
+            setDragonIsChargedUp(false);
             return;
         }
         // calculate which attack the enemy uses
