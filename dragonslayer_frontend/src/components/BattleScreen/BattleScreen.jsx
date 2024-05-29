@@ -154,10 +154,17 @@ function BattleScreen() {
                 } else if (currentSelectedOption === 1) {
                     removeMenuEventListeners();
                     setOnActionMenu(false);
+                    if (dragonIsAwaitingPlayerResponse) {
+                        // Will probably need to write entirely different function
+                        // to account for dialogue exchange with dragon
+                        // This will do for now, though it does entirely break the program
+                        await playRoundRef.current(enemyName, classAttacks[9]);
+                    } else {
                     setDefendOptionChosen(true);
                     await playRoundRef.current(enemyName, "defend");
                     setSelectedOption(0);
                     return;
+                    }
                 } else if (currentSelectedOption === 3) {
                     removeMenuEventListeners();
                     setOnActionMenu(false);
