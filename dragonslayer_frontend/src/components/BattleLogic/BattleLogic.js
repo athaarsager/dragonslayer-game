@@ -47,7 +47,7 @@ function BattleLogic(props) {
 
     //This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
-
+    // This variable can be normal because it only matter for the turn it happens in
     let chickenEaten = false;
     // Need a useState variable to go along with this. Otherwise, will just be reset to false
     // each time this component mounts
@@ -289,7 +289,7 @@ function BattleLogic(props) {
             if (action.attack.name === "Throw Pitchfork") {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
                 return;
-            } else if (action.attack.name === "Throw Chicken") {
+            } else if (action.attack.name === "Throw Chicken" && !dragonIsChargedUp) {
                 setBattleText(`The ${enemy} swallows your chicken in one gulp!`);
                 chickenEaten = true;
                 return;
