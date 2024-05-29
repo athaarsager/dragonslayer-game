@@ -319,8 +319,7 @@ function BattleLogic(props) {
             return;
         } else if (enemyRoundStats.hp <= 500 && enemy === "Dragon" && dragonIsChargedUp) {
             // Dragon needs to use breath attack
-            const enemyAttack = enemyAttacks[4];
-            setBattleText(enemyAttack.attack.attackText);
+            await enemyUsesAttack(enemyAttacks[4], action, playerRoundStats);
             // reset charge
             setDragonIsChargedUp(false);
             return;
