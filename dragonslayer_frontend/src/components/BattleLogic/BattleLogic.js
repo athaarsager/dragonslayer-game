@@ -284,7 +284,7 @@ function BattleLogic(props) {
             // Alternatively have the charge up text here, but want to give player a full turn to prepare
             await pauseOnText();
             return;
-        // Other attacks with specific responses from the dragon
+            // Other attacks with specific responses from the dragon
         } else if (attackOptionChosen) {
             if (action.attack.name === "Throw Pitchfork") {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
@@ -336,67 +336,70 @@ function BattleLogic(props) {
         // Do all the calculations and progress the fight based on what attack the enemy used
         for (let i = 0; i < 3; i++) {
             if (i === randomNumber) {
-                const enemyAttack = enemyAttacks[i];
-                setBattleText(enemyAttack.attack.attackText);
-                // need user input to progress the textbox
-                // Paused on dragon's attack text
-                document.addEventListener("keydown", resolveUserInput);
-                await progressRound();
-                console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
-                let damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
-                // use the actual action name here because the state update is behind and I don't want to deal with that
-                if (action === "defend") {
-                    damageEnemyDealt *= 0.5;
-                    console.log("Enemy damage decreased by half:", damageEnemyDealt);
-                }
-                if (enemyAttack.extra_Effect) {
-                    const statAffected = enemyAttack.extra_Effect.targetStat;
-                    let originalStatValue;
-                    console.log("dragon's attack has an extra effect. This is the stat affected:", statAffected);
-                    if (Object.keys(playerRoundStats).length === 0) {
-                        playerRoundStats = { ...currentPlayerStats };
-                    }
-                    Object.entries(playerRoundStats).forEach(([key, value]) => {
-                        if (key === statAffected) {
-                            console.log("In enemy's attack's debuff. This is the value of currentPlayerStats:", currentPlayerStats);
-                            console.log("In same spot, this is the value of the playerRoundStats:", playerRoundStats);
-                            originalStatValue = playerRoundStats[key];
-                            playerRoundStats[key] = enemyAttack.extra_Effect.effectMultiplier;
-                            console.log(`Player received a debuff. This is the stat that was affected
-                             and its current value: ${playerRoundStats[key]}`);
-                        }
-                    });
-                    // Adjust round counter for player buffs/debuffs
-                    if (statAffected === "attack") {
-                        setPlayerAttackRoundCounter(3);
-                    } else if (statAffected === "defense") {
-                        setPlayerDefenseRoundCounter(3);
-                    }
-                    // add if here to account for any special text with the status effect?
-                    if (originalStatValue < 1) {
-                        setBattleText(`You take ${damageEnemyDealt} damage, but your ${statAffected} will not go any lower!`);
-                    } else {
-                        setBattleText(`You take ${damageEnemyDealt} damage and your ${statAffected} has been lowered!`);
-                    }
-                    console.log("About to set currentPlayerStats. These are the playerRoundStats:", playerRoundStats);
-                    playerRoundStats.hp -= damageEnemyDealt;
-                    if (playerRoundStats.hp < 0) {
-                        playerRoundStats.hp = 0;
-                    }
-                    setPlayerHp(playerRoundStats.hp);
-                    setCurrentPlayerStats(playerRoundStats);
-                    return;
-                } else {
-                    setBattleText(`You take ${damageEnemyDealt} damage!`);
-                    playerRoundStats.hp -= damageEnemyDealt;
-                    if (playerRoundStats.hp < 0) {
-                        playerRoundStats.hp = 0;
-                    }
-                    setPlayerHp(playerRoundStats.hp);
-                    setCurrentPlayerStats(playerRoundStats);
-                    return;
-                }
+                await enemyUsesAttack(enemyAttacks[i], action, playerRoundStats);
             }
+        }
+    }
+
+    async function enemyUsesAttack(enemyAttack, action, playerRoundStats) {
+        setBattleText(enemyAttack.attack.attackText);
+        // need user input to progress the textbox
+        // Paused on dragon's attack text
+        document.addEventListener("keydown", resolveUserInput);
+        await progressRound();
+        console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
+        let damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
+        // use the actual action name here because the state update is behind and I don't want to deal with that
+        if (action === "defend") {
+            damageEnemyDealt *= 0.5;
+            console.log("Enemy damage decreased by half:", damageEnemyDealt);
+        }
+        if (enemyAttack.extra_Effect) {
+            const statAffected = enemyAttack.extra_Effect.targetStat;
+            let originalStatValue;
+            console.log("dragon's attack has an extra effect. This is the stat affected:", statAffected);
+            if (Object.keys(playerRoundStats).length === 0) {
+                playerRoundStats = { ...currentPlayerStats };
+            }
+            Object.entries(playerRoundStats).forEach(([key, value]) => {
+                if (key === statAffected) {
+                    console.log("In enemy's attack's debuff. This is the value of currentPlayerStats:", currentPlayerStats);
+                    console.log("In same spot, this is the value of the playerRoundStats:", playerRoundStats);
+                    originalStatValue = playerRoundStats[key];
+                    playerRoundStats[key] = enemyAttack.extra_Effect.effectMultiplier;
+                    console.log(`Player received a debuff. This is the stat that was affected
+                             and its current value: ${playerRoundStats[key]}`);
+                }
+            });
+            // Adjust round counter for player buffs/debuffs
+            if (statAffected === "attack") {
+                setPlayerAttackRoundCounter(3);
+            } else if (statAffected === "defense") {
+                setPlayerDefenseRoundCounter(3);
+            }
+            // add if here to account for any special text with the status effect?
+            if (originalStatValue < 1) {
+                setBattleText(`You take ${damageEnemyDealt} damage, but your ${statAffected} will not go any lower!`);
+            } else {
+                setBattleText(`You take ${damageEnemyDealt} damage and your ${statAffected} has been lowered!`);
+            }
+            console.log("About to set currentPlayerStats. These are the playerRoundStats:", playerRoundStats);
+            playerRoundStats.hp -= damageEnemyDealt;
+            if (playerRoundStats.hp < 0) {
+                playerRoundStats.hp = 0;
+            }
+            setPlayerHp(playerRoundStats.hp);
+            setCurrentPlayerStats(playerRoundStats);
+            return;
+        } else {
+            setBattleText(`You take ${damageEnemyDealt} damage!`);
+            playerRoundStats.hp -= damageEnemyDealt;
+            if (playerRoundStats.hp < 0) {
+                playerRoundStats.hp = 0;
+            }
+            setPlayerHp(playerRoundStats.hp);
+            setCurrentPlayerStats(playerRoundStats);
+            return;
         }
     }
 
