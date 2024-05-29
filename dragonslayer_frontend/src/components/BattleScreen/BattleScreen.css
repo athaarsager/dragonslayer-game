@@ -73,9 +73,10 @@ img {
 }
 
 #battle-menu {
-    height: 8.5rem;
+    height: 7.5rem;
     width: 99.7%;
     padding-top: 2rem;
+    padding-bottom: 1rem;
     display: grid;
     /* Create grid with 5 columns and 2 rows */
     grid-template-columns: 25% 15% 20% 25% 15%;
