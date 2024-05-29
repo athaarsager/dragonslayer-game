@@ -60,9 +60,10 @@ function BattleLogic(props) {
         await enemyActs(enemy, action, playerRoundStats, enemyRoundStats);
         // user needs to progress the text again
         // Paused on damage dealt to player
+        // The below if surrounding the pause prevents an extra input from being needed
+        // by the user after the dragon uses logic and reason
         // may need to check this if statement later...
         if (!logicAndReasonUsed && !dragonIsAwaitingPlayerResponse) {
-            console.log("This is the value of dragonIsAwaitingPlayerResponse:", dragonIsAwaitingPlayerResponse);
             await pauseOnText();
         }
         // account for any buffs/debuffs wearing off
@@ -267,7 +268,6 @@ function BattleLogic(props) {
     }
 
     async function enemyActs(enemy, action, playerRoundStats, enemyRoundStats) {
-        console.log("This is the enemy:", enemy);
         if (lostTurnCounter > 0) {
             if (isBlinded) {
                 if (lostTurnCounter === 2) {
@@ -279,7 +279,18 @@ function BattleLogic(props) {
             return;
         }
         // account for attacks that have very specific responses from the dragon
-        if (attackOptionChosen) {
+        if (attackOptionChosen && dragonIsAwaitingPlayerResponse) {
+            setBattleText(`...I see you won't listen to reason. Typical human.
+             Your kind never was wont to do so.`);
+            await pauseOnText();
+            setBattleText("Very well. Know then that you have chosen this fate for yourself.");
+            setDragonIsAwaitingPlayerResponse(false);
+            // need to reset this variable too so functionality returns to normal
+            logicAndReasonUsed = false;
+            // Alternatively have the charge up text here, but want to give player a full turn to prepare
+            await pauseOnText();
+            return;
+        } else  if (attackOptionChosen) {
             if (action.attack.name === "Throw Pitchfork") {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
                 return;
