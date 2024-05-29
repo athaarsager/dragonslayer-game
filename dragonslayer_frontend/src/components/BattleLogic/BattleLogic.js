@@ -95,11 +95,16 @@ function BattleLogic(props) {
     async function playerActs(enemy, action, playerRoundStats, enemyRoundStats) {
         console.log("These are the playerRoundStats:", playerRoundStats);
         if (attackOptionChosen) {
-            await playerAttacks(enemy, action, playerRoundStats, enemyRoundStats);
+            if (action.attack.name === "Eat Chicken Nuggets") {
+                await playerHeals(playerRoundStats, action);
+                updateClassAttacksToDisplay(3, 8);
+            } else {
+                await playerAttacks(enemy, action, playerRoundStats, enemyRoundStats);
+            }
         } else if (action === "defend") {
             await playerDefends();
         } else if (action === "pray") {
-            await playerPrays(playerRoundStats);
+            await playerHeals(playerRoundStats, action);
         }
         console.log("These are the playerRoundStats at the end of the player's turn:", playerRoundStats);
     }
@@ -110,17 +115,23 @@ function BattleLogic(props) {
         await pauseOnText();
     }
 
-    async function playerPrays(playerRoundStats) {
+    async function playerHeals(playerRoundStats, action) {
         setBattleMenuOpen(false);
-        setBattleText("You offer a prayer of desperation to the heavens!");
-        await pauseOnText();
-        setBattleText("You heal 40 HP!");
-        if (playerRoundStats.hp <= 60) {
-            // This if statement seems to be the culprit...
-            playerRoundStats.hp += 40;
-            setPlayerHp(playerRoundStats.hp);
+        if (action === "pray") {
+            setBattleText("You offer a prayer of desperation to the heavens!");
+            await pauseOnText();
+            setBattleText("You heal 40 HP!");
+            if (playerRoundStats.hp <= 60) {
+                playerRoundStats.hp += 40;
+                setPlayerHp(playerRoundStats.hp);
+            } else {
+                playerRoundStats.hp = 100;
+                setPlayerHp(100);
+            }
         } else {
-            playerRoundStats.hp = 100;
+            setBattleText(action.attack.attackText);
+            await pauseOnText();
+            setBattleText("The tenderness of your friend's love (and flesh) restores you to full health!");
             setPlayerHp(100);
         }
         await pauseOnText();
