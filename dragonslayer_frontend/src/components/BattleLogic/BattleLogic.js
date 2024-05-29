@@ -79,9 +79,7 @@ function BattleLogic(props) {
         // if so, replace "throw chicken" with "do nothing"
         // Does not update correctly if stored directly in enemyActs function
         if (chickenEaten) {
-            const newClassAttacksToDisplay = [...classAttacksToDisplay];
-            newClassAttacksToDisplay.splice(3, 1, classAttacks[6]);
-            setClassAttacksToDisplay(newClassAttacksToDisplay);
+            updateClassAttacksToDisplay(3, 6);
         }
         // return to main action menu
         setBattleMenuOpen(true);
@@ -240,29 +238,20 @@ function BattleLogic(props) {
             await pauseOnText();
         }
         if (action.attack.name === "Throw Pitchfork") {
-            const newClassAttacksToDisplay = [...classAttacksToDisplay];
-            newClassAttacksToDisplay.splice(2, 1, classAttacks[4]);
-            console.log("These are the new class attacks to display:", newClassAttacksToDisplay);
-            setClassAttacksToDisplay(newClassAttacksToDisplay);
+            updateClassAttacksToDisplay(2, 4);
             setIsBlinded(true);
         }
         if (action.attack.name === "Fetch Pitchfork") {
-            const newClassAttacksToDisplay = [...classAttacksToDisplay];
-            newClassAttacksToDisplay.splice(2, 1, classAttacks[2]);
-            setClassAttacksToDisplay(newClassAttacksToDisplay);
+            updateClassAttacksToDisplay(2, 2);
         }
         if (action.attack.name === "Throw Chicken") {
+            updateClassAttacksToDisplay(3, 5);
             // This variable is only checked to see if the chicken is burnt
             // to a crisp by the dragon's breath attack
             chickenThrown = true;
-            const newClassAttacksToDisplay = [...classAttacksToDisplay];
-            newClassAttacksToDisplay.splice(3, 1, classAttacks[5]);
-            setClassAttacksToDisplay(newClassAttacksToDisplay);
         }
         if (action.attack.name === "Fetch Chicken") {
-            const newClassAttacksToDisplay = [...classAttacksToDisplay];
-            newClassAttacksToDisplay.splice(3, 1, classAttacks[3]);
-            setClassAttacksToDisplay(newClassAttacksToDisplay);
+            updateClassAttacksToDisplay(3, 3);
         }
     }
 
@@ -330,9 +319,7 @@ function BattleLogic(props) {
                 // Somewhere include the text: "The smell of dragon-fried chicken fills your nostrils"
                 // Probably on main battle screen textbox
                 // Replace fetch chicken with eat chicken nuggets
-                const newClassAttacksToDisplay = [...classAttacksToDisplay];
-                newClassAttacksToDisplay.splice(3, 1, classAttacks[7]);
-                setClassAttacksToDisplay(newClassAttacksToDisplay);
+                updateClassAttacksToDisplay(3, 7);
             } else {
                 await enemyUsesAttack(enemyAttacks[4], action, playerRoundStats);
             }
@@ -480,6 +467,12 @@ function BattleLogic(props) {
         document.addEventListener("keydown", resolveUserInput);
         await progressRound();
         document.removeEventListener("keydown", resolveUserInput);
+    }
+
+    function updateClassAttacksToDisplay(currentIndex, newAttackIndex) {
+        const newClassAttacksToDisplay = [...classAttacksToDisplay];
+        newClassAttacksToDisplay.splice(currentIndex, 1, classAttacks[newAttackIndex]);
+        setClassAttacksToDisplay(newClassAttacksToDisplay);
     }
 
     // function's sole purpose is to wait for user input and prevent playRound from continuing
