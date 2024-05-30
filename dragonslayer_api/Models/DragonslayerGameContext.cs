@@ -111,6 +111,7 @@ public partial class DragonslayerGameContext : DbContext
         modelBuilder.Entity<GameText>(entity => 
         {
             entity.HasKey(e => e.Id).HasName("game_text_pkey");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.IsStartText).HasColumnName("is_start_text");
             entity.Property(e => e.IsFlavorText).HasColumnName("is_flavor_text");
