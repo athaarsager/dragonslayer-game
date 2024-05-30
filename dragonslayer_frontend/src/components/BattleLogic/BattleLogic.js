@@ -75,7 +75,10 @@ function BattleLogic(props) {
             await pauseOnText();
         }
         // account for any buffs/debuffs wearing off
-        await adjustBuffAndDebuffCounters(enemy);
+        // Make sure debuff wearing off message only displays if player still alive
+        if (playerRoundStats.hp > 0) {
+            await adjustBuffAndDebuffCounters(enemy);
+        }
         // did the dragon eat the chicken on his turn?
         // if so, replace "throw chicken" with "do nothing"
         // Does not update correctly if stored directly in enemyActs function
@@ -407,6 +410,10 @@ function BattleLogic(props) {
             }
             setPlayerHp(playerRoundStats.hp);
             setCurrentPlayerStats(playerRoundStats);
+            // Need this here so that hp updates on screen before message displays
+            if (playerRoundStats.hp <= 0) {
+                setBattleText("You crumple to the ground in agony as you die. Disappointing. So much for you being the hero.");
+            }
             return;
         } else {
             setBattleText(`You take ${damageEnemyDealt} damage!`);
@@ -416,6 +423,10 @@ function BattleLogic(props) {
             }
             setPlayerHp(playerRoundStats.hp);
             setCurrentPlayerStats(playerRoundStats);
+            // Need this here so that hp updates on screen before message displays
+            if (playerRoundStats.hp <= 0) {
+                setBattleText("You crumple to the ground in agony as you die. Disappointing. So much for you being the hero.");
+            }
             return;
         }
     }
