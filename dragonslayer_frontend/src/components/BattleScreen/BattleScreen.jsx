@@ -98,13 +98,29 @@ function BattleScreen() {
         // right options are represented by 1 and 3
         // using 0 indexing to fit with array locations
         if (e.key === "ArrowLeft") {
-            setSelectedOption((prev) => (prev % 2 === 1 ? prev - 1 : prev));
+            if (gameOver) {
+                setSelectedOption(0);
+            } else {
+                setSelectedOption((prev) => (prev % 2 === 1 ? prev - 1 : prev));
+            }
         } else if (e.key === "ArrowRight") {
-            setSelectedOption((prev) => (prev % 2 === 0 ? prev + 1 : prev));
+            if (gameOver) {
+                setSelectedOption(1);
+            } else {
+                setSelectedOption((prev) => (prev % 2 === 0 ? prev + 1 : prev));
+            }
         } else if (e.key === "ArrowUp") {
-            setSelectedOption((prev) => (prev > 1 ? prev - 2 : prev));
+            if (gameOver) {
+                return;
+            } else {
+                setSelectedOption((prev) => (prev > 1 ? prev - 2 : prev));
+            }
         } else if (e.key === "ArrowDown") {
-            setSelectedOption((prev) => (prev < 2 ? prev + 2 : prev));
+            if (gameOver) {
+                return;
+            } else {
+                setSelectedOption((prev) => (prev < 2 ? prev + 2 : prev));
+            }
         }
     }
 
