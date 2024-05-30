@@ -94,3 +94,6 @@ VALUES
 (11, 'dragon', NULL, NULL, 1, 5, 'The dragon is distracted by the prospect of a delicious snack...'),
 (12, 'player', 'defense', 0.5, NULL, 2, NULL),
 (13, 'player', 'defense', 0.5, NULL, 3, NULL);
+
+--Insert Statemest for Bad Ending Text
+INSERT INTO 
