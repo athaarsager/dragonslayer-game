@@ -325,7 +325,7 @@ function BattleScreen() {
             <div id="battle-text" className="text-box">
                 <p>{battleText}</p>
             </div>
-            <div id="battle-menu" className="text-box">
+            <div id={gameOver ? "game-over-menu" : "battle-menu"} className="text-box">
                 <ActionMenu
                     classAttacks={classAttacks}
                     classAttacksToDisplay={classAttacksToDisplay}

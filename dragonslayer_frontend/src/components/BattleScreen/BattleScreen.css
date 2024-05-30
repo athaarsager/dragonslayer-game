@@ -84,6 +84,15 @@ img {
     margin-bottom: 1rem;
 }
 
+#game-over-menu {
+    height: 5rem;
+    width: 99.7%;
+    padding-top: 2rem;
+    display: grid;
+    /* create grid with 5 columns and 1 row */
+    grid-template-columns: 25% 15% 20% 25% 15%;
+}
+
 .selector-container {
     display: grid;
     grid-template-columns: 50% 50%;
