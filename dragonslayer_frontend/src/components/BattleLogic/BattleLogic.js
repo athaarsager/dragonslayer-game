@@ -28,6 +28,7 @@ function BattleLogic(props) {
         dragonIsAwaitingPlayerResponse,
         setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
+        setGameOver,
         playRoundRef,
     } = props;
 
@@ -80,6 +81,9 @@ function BattleLogic(props) {
         // Does not update correctly if stored directly in enemyActs function
         if (chickenEaten) {
             updateClassAttacksToDisplay(3, 6);
+        }
+        if (playerRoundStats.hp <= 0) {
+            setGameOver(true);
         }
         // return to main action menu
         setBattleMenuOpen(true);
@@ -532,6 +536,7 @@ BattleLogic.propTypes = {
     dragonIsAwaitingPlayerResponse: PropTypes.bool.isRequired,
     setDragonIsAwaitingPlayerResponse: PropTypes.func.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
+    setGameOver: PropTypes.func.isRequired,
     playRoundRef: PropTypes.object.isRequired
 };
 

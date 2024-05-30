@@ -243,7 +243,8 @@ function BattleScreen() {
         dragonIsAwaitingPlayerResponse,
         setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
-        playRoundRef,
+        setGameOver,
+        playRoundRef
     };
 
     useEffect(() => {
@@ -292,8 +293,6 @@ function BattleScreen() {
     useEffect(() => {
         if (playerHp <= 0) {
             setPlayerHp(0);
-            setGameOver(true);
-            //alert("Game Over!");
         }
     }, [playerHp]);
 
