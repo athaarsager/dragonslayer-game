@@ -131,6 +131,10 @@ function BattleScreen() {
         if (defendOptionChosen || prayOptionChosen) {
             return;
         }
+        if (gameOver) {
+            setBattleText("Game Over");
+            return;
+        }
         if (onActionMenu && !attackOptionChosen) {
             // This will be changed to random flavor text later on
             // e.g. "The dragon is lounging about"
@@ -322,7 +326,7 @@ function BattleScreen() {
                 <p>Hp: {playerHp}</p>
                 <p>Mana: {playerMana}</p>
             </div>
-            <div id="battle-text" className="text-box">
+            <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
                 <p>{battleText}</p>
             </div>
             <div id={gameOver ? "game-over-menu" : "battle-menu"} className="text-box">

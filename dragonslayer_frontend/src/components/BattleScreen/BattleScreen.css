@@ -72,6 +72,18 @@ img {
     margin: 0px;
 }
 
+#game-over-text {
+    border-bottom: none;
+    height: 4rem;
+    width: 100vh;
+    padding: 10px;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+}
+
 #battle-menu {
     height: 7.5rem;
     width: 99.7%;
