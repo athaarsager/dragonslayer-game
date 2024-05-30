@@ -25,6 +25,7 @@ function BattleScreen() {
     const [playerMana, setPlayerMana] = useState(NaN);
     const [swordIsCharged, setSwordIsCharged] = useState(false);
 
+    const [maxDragonStats, setMaxDragonStats] = useState({});
     const [dragonHp, setDragonHp] = useState(NaN);
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
     const [dragonMana, setDragonMana] = useState(NaN);
@@ -75,11 +76,13 @@ function BattleScreen() {
     async function fetchDragonStats() {
         const response = await axios.get("/api/stats/5");
         console.log("These are the dragon's stats:", response.data[0]);
+        setMaxDragonStats(response.data[0]);
         setCurrentEnemyStats(response.data[0]);
         // This might be problematic if page refreshed or component remounts several times
         // don't want to reset hp values accidentally
         setDragonHp(response.data[0].hp);
         setDragonMaxHp(response.data[0].hp);
+        // I never actually used this...maybe just delete?
         setDragonMana(response.data[0].mana);
     }
 
@@ -164,7 +167,28 @@ function BattleScreen() {
             // since its value was only captured when the event listener was initially added
             const currentSelectedOption = selectedOptionRef.current;
             // if selectedOption is 0, then "attack" was selected. Open attack menu and set the battle text
-            if (onActionMenu) {
+            if (gameOver) {
+                if (currentSelectedOption === 0) {
+                    // Logic for re-setting battle to beginning
+                    // Will need to decide if player dies during final boss
+                    // which battle they reset to
+                    setGameOver(false);
+                    setBattleMenuOpen(true);
+                    setOnActionMenu(true);
+                    // This one will need to change to "A dragon draw near!" or something
+                    setBattleText("Default");
+                    setCurrentPlayerStats(maxPlayerStats);
+                    setPlayerHp(maxPlayerStats.hp);
+                    // This would change if just reloading final boss fight
+                    setCurrentEnemyStats(maxDragonStats);
+                    setDragonHp(maxDragonStats.hp);
+
+                    return;
+                } else if (currentSelectedOption === 1) {
+                    // Need logic to bring player to title screen here
+                    return;
+                }
+            } else if (onActionMenu && !gameOver) {
                 // take care of the actions that execute directly from the action menu
                 if (currentSelectedOption === 0) {
                     setAttackOptionChosen(true);
@@ -306,6 +330,10 @@ function BattleScreen() {
     useEffect(() => {
         selectedOptionRef.current = selectedOption;
     }, [selectedOption]);
+
+    useEffect(() => {
+        console.log("This is the value of gameOver:", gameOver);
+    }, [gameOver]);
 
     return (
         <>

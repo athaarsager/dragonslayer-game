@@ -36,6 +36,11 @@ function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attac
             setSecondOptionText("Return to Title");
             setThirdOptionText("");
             setFourthOptionText("");
+        } else if (!gameOver) {
+            setFirstOptionText("Attack");
+            setSecondOptionText("Defend");
+            setThirdOptionText("Magic");
+            setFourthOptionText("Pray");
         }
     }, [gameOver]);
 
