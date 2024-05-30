@@ -5,7 +5,7 @@ import "./BattleScreen.css";
 import BattleLogic from "../BattleLogic/BattleLogic";
 import ActionMenu from "../ActionMenu/ActionMenu";
 function BattleScreen() {
-   
+
     const playRoundRef = useRef();
 
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
@@ -34,6 +34,7 @@ function BattleScreen() {
     const [enemyAttacks, setEnemyAttacks] = useState([]);
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
 
+    const [gameOver, setGameOver] = useState(false);
 
 
     // state variable for evaluating where the selector arrow is
@@ -160,10 +161,10 @@ function BattleScreen() {
                         // This will do for now, though it does entirely break the program
                         await playRoundRef.current(enemyName, classAttacks[9]);
                     } else {
-                    setDefendOptionChosen(true);
-                    await playRoundRef.current(enemyName, "defend");
-                    setSelectedOption(0);
-                    return;
+                        setDefendOptionChosen(true);
+                        await playRoundRef.current(enemyName, "defend");
+                        setSelectedOption(0);
+                        return;
                     }
                 } else if (currentSelectedOption === 3) {
                     removeMenuEventListeners();
@@ -271,6 +272,7 @@ function BattleScreen() {
     useEffect(() => {
         if (playerHp <= 0) {
             setPlayerHp(0);
+            setGameOver(true);
             //alert("Game Over!");
         }
     }, [playerHp]);
@@ -316,7 +318,9 @@ function BattleScreen() {
                     setAttackOptionChosen={setAttackOptionChosen}
                     dragonIsAwaitingPlayerResponse={dragonIsAwaitingPlayerResponse}
                     setOnActionMenu={setOnActionMenu}
-                    battleMenuOpen={battleMenuOpen} />
+                    battleMenuOpen={battleMenuOpen}
+                    gameOver={gameOver}
+                />
             </div>
         </>
     )

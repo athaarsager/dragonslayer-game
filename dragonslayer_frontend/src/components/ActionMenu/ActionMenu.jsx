@@ -1,8 +1,12 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attackOptionChosen, setAttackOptionChosen, setOnActionMenu, battleMenuOpen, dragonIsAwaitingPlayerResponse }) {
+function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attackOptionChosen, setAttackOptionChosen, setOnActionMenu, battleMenuOpen, dragonIsAwaitingPlayerResponse, gameOver }) {
 
-    const [secondOptionText, setSecondOptionText] = useState("Defend");    
+    const [firstOptionText, setFirstOptionText] = useState("Attack");
+    const [secondOptionText, setSecondOptionText] = useState("Defend");
+    const [thirdOptionText, setThirdOptionText] = useState("Magic");
+    const [fourthOptionText, setFourthOptionText] = useState("Pray");
+
     // will need to update this for other menus
     const returnToFirstMenu = (e) => {
         if ((e.key === "Backspace" || e.key === "Shift") && battleMenuOpen) {
@@ -25,6 +29,16 @@ function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attac
         // including classAttacks in the dependency array because the linter told me to
     }, [dragonIsAwaitingPlayerResponse, classAttacks]);
 
+    // Toggles options when game over state reached
+    useEffect(() => {
+        if (gameOver) {
+            setFirstOptionText("Restart Battle");
+            setSecondOptionText("Return to Title");
+            setThirdOptionText("");
+            setFourthOptionText("");
+        }
+    }, [gameOver]);
+
     return (
         <>
             {battleMenuOpen &&
@@ -32,7 +46,7 @@ function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attac
                     <div className={"option-one selector-container left-option"}>
                         <div className={selectedOption === 0 ? "selector" : "selector unselected"}>&#9659;</div>
                         <div className="action">
-                            {attackOptionChosen ? classAttacksToDisplay[0].attack.name : "Attack"}</div>
+                            {attackOptionChosen ? classAttacksToDisplay[0].attack.name : firstOptionText}</div>
                     </div>
                     <div className={"option-two selector-container right-option"}>
                         <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
@@ -40,17 +54,21 @@ function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attac
                             {attackOptionChosen ? classAttacksToDisplay[1].attack.name : secondOptionText}</div>
                     </div>
                     <div></div>
-                    <div className={"option-three selector-container left-option"}>
-                        <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
-                        <div className="action">
-                            {attackOptionChosen ? classAttacksToDisplay[2].attack.name : "Magic"}</div>
-                    </div>
-                    <div className={"option-four selector-container right-option"}>
-                        <div className={selectedOption === 3 ? "selector" : "selector unselected"}>&#9659;</div>
-                        <div className="action">
-                            {attackOptionChosen ? classAttacksToDisplay[3].attack.name : "Pray"}</div>
-                    </div>
-                    <div></div>
+                    {!gameOver &&
+                        <>
+                            <div className={"option-three selector-container left-option"}>
+                                <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
+                                <div className="action">
+                                    {attackOptionChosen ? classAttacksToDisplay[2].attack.name : thirdOptionText}</div>
+                            </div>
+                            <div className={"option-four selector-container right-option"}>
+                                <div className={selectedOption === 3 ? "selector" : "selector unselected"}>&#9659;</div>
+                                <div className="action">
+                                    {attackOptionChosen ? classAttacksToDisplay[3].attack.name : fourthOptionText}</div>
+                            </div>
+                            <div></div>
+                        </>
+                    }
                 </>
             }
         </>
@@ -65,6 +83,7 @@ ActionMenu.propTypes = {
     setAttackOptionChosen: PropTypes.func.isRequired,
     dragonIsAwaitingPlayerResponse: PropTypes.bool.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
-    battleMenuOpen: PropTypes.bool.isRequired
+    battleMenuOpen: PropTypes.bool.isRequired,
+    gameOver: PropTypes.bool.isRequired
 };
 export default ActionMenu;
