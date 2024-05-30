@@ -30,6 +30,7 @@ function BattleLogic(props) {
         setOnActionMenu,
         setGameOver,
         playRoundRef,
+        resetBattleStatsRef
     } = props;
 
     // These variables will track when status effects wear off
@@ -45,6 +46,18 @@ function BattleLogic(props) {
 
     const [logicAndReasonUsed, setLogicAndReasonUsed] = useState(false);
     const [dragonIsChargedUp, setDragonIsChargedUp] = useState(false);
+
+    // resets states stored specifically in BattleLogic.js
+    resetBattleStatsRef.current = () => {
+        setPlayerAttackRoundCounter(0);
+        setPlayerDefenseRoundCounter(0);
+        setEnemyAttackRoundCounter(0);
+        setEnemyDefenseRoundCounter(0);
+        setLostTurnCounter(0);
+        setIsBlinded(false);
+        setLogicAndReasonUsed(false);
+        setDragonIsChargedUp(false);
+    }
 
     //This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
@@ -548,7 +561,8 @@ BattleLogic.propTypes = {
     setDragonIsAwaitingPlayerResponse: PropTypes.func.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     setGameOver: PropTypes.func.isRequired,
-    playRoundRef: PropTypes.object.isRequired
+    playRoundRef: PropTypes.object.isRequired,
+    resetBattleStatsRef: PropTypes.object.isRequired
 };
 
 export default BattleLogic;

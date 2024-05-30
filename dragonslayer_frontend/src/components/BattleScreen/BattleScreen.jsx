@@ -7,6 +7,7 @@ import ActionMenu from "../ActionMenu/ActionMenu";
 function BattleScreen() {
 
     const playRoundRef = useRef();
+    const resetBattleStatsRef = useRef();
 
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
     const [onActionMenu, setOnActionMenu] = useState(true);
@@ -16,6 +17,7 @@ function BattleScreen() {
     const [battleText, setBattleText] = useState("Default");
 
     const [classAttacks, setClassAttacks] = useState([]);
+    const [originalClassAttacksToDisplay, setOriginalClassAttacksToDisplay] = useState([]);
     const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
 
     const [maxPlayerStats, setMaxPlayerStats] = useState({});
@@ -54,6 +56,7 @@ function BattleScreen() {
     async function fetchClassAttacksToDisplay() {
         const response = await axios.get("/api/attacks/4/display");
         console.log("These are the attacks to display:", response.data);
+        setOriginalClassAttacksToDisplay(response.data);
         setClassAttacksToDisplay(response.data);
     }
 
@@ -172,17 +175,9 @@ function BattleScreen() {
                     // Logic for re-setting battle to beginning
                     // Will need to decide if player dies during final boss
                     // which battle they reset to
-                    setGameOver(false);
-                    setBattleMenuOpen(true);
-                    setOnActionMenu(true);
-                    // This one will need to change to "A dragon draw near!" or something
-                    setBattleText("Default");
-                    setCurrentPlayerStats(maxPlayerStats);
-                    setPlayerHp(maxPlayerStats.hp);
-                    // This would change if just reloading final boss fight
-                    setCurrentEnemyStats(maxDragonStats);
-                    setDragonHp(maxDragonStats.hp);
-
+                    resetDisplayStateVariables();
+                    // This function resets the useState variables stored specifically in battleLogic.js
+                    resetBattleStatsRef.current();
                     return;
                 } else if (currentSelectedOption === 1) {
                     // Need logic to bring player to title screen here
@@ -232,6 +227,24 @@ function BattleScreen() {
         }
     }
 
+    function resetDisplayStateVariables() {
+        setGameOver(false);
+        setBattleMenuOpen(true);
+        setOnActionMenu(true);
+        setClassAttacksToDisplay(originalClassAttacksToDisplay);
+        // This one will need to change to "A dragon draw near!" or something
+        setBattleText("Default");
+        setCurrentPlayerStats(maxPlayerStats);
+        setPlayerHp(maxPlayerStats.hp);
+        // This would change if just reloading final boss fight
+        setCurrentEnemyStats(maxDragonStats);
+        setDragonHp(maxDragonStats.hp);
+        setSwordIsCharged(false);
+        setDragonIsAwaitingPlayerResponse(false);
+        // This would also change if just reloading final boss fight
+        setEnemyName("Dragon");
+    }
+
     function removeMenuEventListeners() {
         document.removeEventListener("keydown", executeAction);
         document.removeEventListener("keydown", displaySelector);
@@ -268,7 +281,8 @@ function BattleScreen() {
         setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         setGameOver,
-        playRoundRef
+        playRoundRef,
+        resetBattleStatsRef
     };
 
     useEffect(() => {
@@ -286,7 +300,7 @@ function BattleScreen() {
             console.log("Removing menu event listeners");
             removeMenuEventListeners();
         }
-    }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks]);
+    }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks, gameOver]);
 
     useEffect(() => {
         renderMenuBattleText();
@@ -330,10 +344,6 @@ function BattleScreen() {
     useEffect(() => {
         selectedOptionRef.current = selectedOption;
     }, [selectedOption]);
-
-    useEffect(() => {
-        console.log("This is the value of gameOver:", gameOver);
-    }, [gameOver]);
 
     return (
         <>
