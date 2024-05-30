@@ -23,6 +23,8 @@ public partial class DragonslayerGameContext : DbContext
 
     public virtual DbSet<Stat> Stats { get; set; }
 
+    public virtual DbSet<GameText> GameText { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Attack>(entity =>
@@ -104,6 +106,18 @@ public partial class DragonslayerGameContext : DbContext
             entity.HasOne(d => d.CharacterClass).WithMany(p => p.Stats)
                 .HasForeignKey(d => d.CharacterClassId)
                 .HasConstraintName("stat_character_class_id_fkey");
+        });
+
+        modelBuilder.Entity<GameText>(entity => 
+        {
+            entity.HasKey(e => e.Id).HasName("game_text_pkey");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IsStartText).HasColumnName("is_start_text");
+            entity.Property(e => e.IsFlavorText).HasColumnName("is_flavor_text");
+            entity.Property(e => e.IsNarrativeText).HasColumnName("is_narrative_text");
+            entity.Property(e => e.IsGoodEndText).HasColumnName("is_good_end_text");
+            entity.Property(e => e.IsBadEndText).HasColumnName("is_bad_end_text");
+            entity.Property(e => e.TextContent).HasColumnName("text_content");
         });
 
         OnModelCreatingPartial(modelBuilder);
