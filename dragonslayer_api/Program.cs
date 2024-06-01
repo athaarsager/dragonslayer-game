@@ -102,4 +102,13 @@ app.MapGet("/attacks/{characterClassId}/display", async (DragonslayerGameContext
 .OrderBy(a => a.Attack.Id) // order by id
 .ToListAsync());
 
+// Grab text for normal/bad ending
+app.MapGet("/game_text/bad_end", async (DragonslayerGameContext db) => await db.GameText
+.Where(t => t.IsBadEndText)
+.Select((t) => new
+{
+    id = t.Id,
+    text = t.TextContent,
+}).ToListAsync());
+
 app.Run($"http://localhost:{port}");
