@@ -70,8 +70,8 @@ function BattleLogic(props) {
     // Use normal variables only for things that can be reset each time
     let logicAndReasonUsedThisTurn = false;
 
-     // variable for triggering the bad ending
-     let dragonIsDead = false;
+    // variable for triggering the bad ending
+    let dragonIsDead = false;
 
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {
@@ -105,15 +105,19 @@ function BattleLogic(props) {
         if (playerRoundStats.hp <= 0) {
             setGameOver(true);
         }
-        // return to main action menu
-        setBattleMenuOpen(true);
-        setBattleText("Default");
-        setAttackOptionChosen(false);
-        setDefendOptionChosen(false);
-        setPrayOptionChosen(false);
-        setOnActionMenu(true);
-        // need to account for mana usage at some point
-        return;
+        // return to main action menu if dragon isn't dead
+        if (!dragonIsDead) {
+            setBattleMenuOpen(true);
+            setBattleText("Default");
+            setAttackOptionChosen(false);
+            setDefendOptionChosen(false);
+            setPrayOptionChosen(false);
+            setOnActionMenu(true);
+            // need to account for mana usage at some point
+            return;
+        } else {
+            // insert function for playing bad ending here
+        }
     }
 
     async function playerActs(enemy, action, playerRoundStats, enemyRoundStats) {
@@ -186,8 +190,11 @@ function BattleLogic(props) {
             }
             setBattleText(`The ${enemy} takes ${playerDamageDealt} damage!`);
             // change dragon hp here
-
             enemyRoundStats.hp -= playerDamageDealt;
+            // The use effect takes care of making sure hp does not show below 0 on screen, so don't need to worry about that here
+            if (enemyRoundStats.hp <= 0) {
+                dragonIsDead = true;
+            }
             // The display will update based on a useEffect asynchronously
             setDragonHp(enemyRoundStats.hp);
             setCurrentEnemyStats(enemyRoundStats);
@@ -291,6 +298,9 @@ function BattleLogic(props) {
     }
 
     async function enemyActs(enemy, action, playerRoundStats, enemyRoundStats) {
+        if (dragonIsDead) {
+            return;
+        }
         if (lostTurnCounter > 0) {
             if (isBlinded) {
                 if (lostTurnCounter === 2) {
