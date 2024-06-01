@@ -69,6 +69,9 @@ function BattleLogic(props) {
     // Use normal variables only for things that can be reset each time
     let logicAndReasonUsedThisTurn = false;
 
+     // variable for triggering the bad ending
+     let dragonIsDead = false;
+
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {
         // Adding this variable wasn't strictly necessary, but by the time I found the real bug I created this
