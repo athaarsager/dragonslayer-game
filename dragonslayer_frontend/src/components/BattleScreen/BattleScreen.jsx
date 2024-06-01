@@ -38,7 +38,7 @@ function BattleScreen() {
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
 
     const [gameOver, setGameOver] = useState(false);
-
+    const [badEndingText, setBadEndingText] = useState([]);
 
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
@@ -95,6 +95,12 @@ function BattleScreen() {
         console.log("These are the character classes:", response.data);
         // set the enemy's name to "dragon" right off the bat
         setEnemyName(response.data[4].name);
+    }
+
+    async function fetchBadEndingText() {
+        const response = await axios.get("/api/game_text/bad_end");
+        console.log("This is the bad ending text array:", response.data);
+        setBadEndingText(response.data);
     }
 
     // function manually determines which item should be selected in the battle action menu
@@ -281,6 +287,7 @@ function BattleScreen() {
         setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         setGameOver,
+        badEndingText,
         playRoundRef,
         resetBattleStatsRef
     };
@@ -292,6 +299,7 @@ function BattleScreen() {
         fetchCharacterStats();
         fetchDragonAttacks();
         fetchDragonStats();
+        fetchBadEndingText();
     }, []);
 
     useEffect(() => {

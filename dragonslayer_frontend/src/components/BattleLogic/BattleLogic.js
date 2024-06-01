@@ -29,6 +29,7 @@ function BattleLogic(props) {
         setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         setGameOver,
+        badEndingText,
         playRoundRef,
         resetBattleStatsRef
     } = props;
@@ -564,6 +565,7 @@ BattleLogic.propTypes = {
     setDragonIsAwaitingPlayerResponse: PropTypes.func.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     setGameOver: PropTypes.func.isRequired,
+    badEndingText: PropTypes.array.isRequired,
     playRoundRef: PropTypes.object.isRequired,
     resetBattleStatsRef: PropTypes.object.isRequired
 };
