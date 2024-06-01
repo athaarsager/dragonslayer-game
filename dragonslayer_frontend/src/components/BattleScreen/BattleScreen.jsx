@@ -59,6 +59,10 @@ function BattleScreen() {
         }
     });
 
+    function fadeDragon(dragon) {
+        gsap.effects.fade(dragon);
+    }
+
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         const response = await axios.get("/api/attacks/4");
@@ -366,6 +370,14 @@ function BattleScreen() {
     useEffect(() => {
         selectedOptionRef.current = selectedOption;
     }, [selectedOption]);
+
+    // I think there is a more react-friendly way to do this...will have to figure it out
+    useEffect(() => {
+        if (timeForDragonToFade) {
+        const dragon = document.querySelector("img");
+        fadeDragon(dragon);
+        }
+    }, [timeForDragonToFade]);
 
     return (
         <>

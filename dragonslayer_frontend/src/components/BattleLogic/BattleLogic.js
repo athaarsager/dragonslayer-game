@@ -104,7 +104,7 @@ function BattleLogic(props) {
             updateClassAttacksToDisplay(3, 6);
         }
         if (playerRoundStats.hp <= 0) {
-            setGameOver(true);
+            //setGameOver(true);
         }
         // return to main action menu if dragon isn't dead
         if (!dragonIsDead) {
@@ -117,7 +117,7 @@ function BattleLogic(props) {
             // need to account for mana usage at some point
             return;
         } else {
-            // insert function for playing bad ending here
+            playBadEnding();
         }
     }
 
@@ -527,7 +527,7 @@ function BattleLogic(props) {
     // Plays through the lines the dragon says for the bad ending. These will just be in the battle text textbox
     async function playBadEndDragonDialog() {
         for (let i = 0; i < 4; i++) {
-            setBattleText(badEndingText[i]);
+            setBattleText(badEndingText[i].text);
             await pauseOnText();
         }
     }
