@@ -301,6 +301,7 @@ function BattleScreen() {
         setOnActionMenu,
         setGameOver,
         badEndingText,
+        setTimeForDragonToFade,
         playRoundRef,
         resetBattleStatsRef
     };

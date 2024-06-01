@@ -30,6 +30,7 @@ function BattleLogic(props) {
         setOnActionMenu,
         setGameOver,
         badEndingText,
+        setTimeForDragonToFade,
         playRoundRef,
         resetBattleStatsRef
     } = props;
@@ -517,6 +518,7 @@ function BattleLogic(props) {
 
     async function playBadEnding() {
         playBadEndDragonDialog();
+        setTimeForDragonToFade(true);
         // Now need to play fade-out animation and have the narrator's text be on the main screen. I think...
         // I believe this will need to set a useState variable to true, which will then trigger a function
         // included in the jsx on the BattleScreen page
@@ -590,6 +592,7 @@ BattleLogic.propTypes = {
     setOnActionMenu: PropTypes.func.isRequired,
     setGameOver: PropTypes.func.isRequired,
     badEndingText: PropTypes.array.isRequired,
+    setTimeForDragonToFade: PropTypes.func.isRequired,
     playRoundRef: PropTypes.object.isRequired,
     resetBattleStatsRef: PropTypes.object.isRequired
 };
