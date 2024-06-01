@@ -515,6 +515,18 @@ function BattleLogic(props) {
         }
     }
 
+    async function playBadEnding() {
+        playBadEndDragonDialog();
+        // Now need to play fade-out animation and have the narrator's text be on the main screen. I think...
+    }
+
+    // Plays through the lines the dragon says for the bad ending. These will just be in the battle text textbox
+    async function playBadEndDragonDialog() {
+        for (let i = 0; i < 4; i++) {
+            setBattleText(badEndingText[i]);
+            await pauseOnText();
+        }
+    }
     // adds event listeners for progressing text box and progresses the round 
     async function pauseOnText() {
         document.addEventListener("keydown", resolveUserInput);
