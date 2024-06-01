@@ -4,6 +4,8 @@ import axios from "axios";
 import "./BattleScreen.css";
 import BattleLogic from "../BattleLogic/BattleLogic";
 import ActionMenu from "../ActionMenu/ActionMenu";
+import { gsap } from "gsap";
+
 function BattleScreen() {
 
     const playRoundRef = useRef();
@@ -45,6 +47,17 @@ function BattleScreen() {
 
     // need to use ref to ensure an old value is not captured when an event listener is added
     const selectedOptionRef = useRef(selectedOption);
+
+    const [timeForDragonToFade, setTimeForDragonToFade] = useState(false);
+    // Registering fade effect. Just copied from example in the docs
+    gsap.registerEffect({
+        name: "fade",
+        defaults: {duration: 2}, /* Defaults  get applied to the "config"
+        object passed to the effect below */
+        effect: (targets, config) => {
+            return gsap.to(targets, {duration: config.duration, opacity: 0});
+        }
+    });
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
