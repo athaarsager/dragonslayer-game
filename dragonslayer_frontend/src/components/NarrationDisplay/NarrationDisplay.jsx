@@ -1,7 +1,13 @@
+import PropTypes from "prop-types";
 import "./NarrationDisplay.css";
 import { gsap } from "gsap";
 
-function NarrationDisplay() {
+function NarrationDisplay(props) {
+    const {
+        badEndingText,
+        setBadEndingText
+    } = props;
+    
     let resolveKeyPress = null;
     // Okay, I technically should have just defined these functions on the battleScreen and passed them as props
     // to BattleLogic.js and this screen, but that felt like a pain with the resolveKeyPress variable, so I didn't...
@@ -37,5 +43,10 @@ function NarrationDisplay() {
         </div>
     )
 }
+
+NarrationDisplay.propTypes = {
+badEndingText: PropTypes.array.isRequired,
+setBadEndingText: PropTypes.func.isRequired
+};
 
 export default NarrationDisplay;
