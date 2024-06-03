@@ -47,7 +47,7 @@ function BattleScreen() {
     const [selectedOption, setSelectedOption] = useState(0);
     // This ensures the menu battle text does not re-appear after bad ending reached
     const [badEndingReached, setBadEndingReached] = useState(false);
-    const [displayNarrationText, setDisplayNarrationText] = useState(false);
+    const [displayNarrationText, setDisplayNarrationText] = useState(true);
 
     // need to use ref to ensure an old value is not captured when an event listener is added
     const selectedOptionRef = useRef(selectedOption);
@@ -402,13 +402,10 @@ function BattleScreen() {
                     <div id="dragon-hp"></div>
                 </div>
             </div>
-
-
             {!displayNarrationText ?
                 <>
                     {/* Credit for dragon image: Image by Artie Blur from Pixabay 
-                Granted, it is AI generated, so do I need to credit him? Probablys still should...*/}
-
+                    Granted, it is AI generated, so do I need to credit him? Probablys still should...*/}
                     <div id="dragon-display">
                         <img src="/public/images/dragon.jpg"
                             alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />

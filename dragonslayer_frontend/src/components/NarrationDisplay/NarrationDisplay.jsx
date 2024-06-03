@@ -1,8 +1,10 @@
+import "./NarrationDisplay.css";
+
 function NarrationDisplay() {
     return (
-        <>
-        <p>Test Text</p>
-        </>
+        <div id="narration-container">
+            <p className="narration-text">Test Text.</p>
+        </div>
     )
 }
 
