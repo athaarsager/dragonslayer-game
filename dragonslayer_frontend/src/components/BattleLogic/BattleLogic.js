@@ -91,7 +91,7 @@ function BattleLogic(props) {
         // The below if surrounding the pause prevents an extra input from being needed
         // by the user after the dragon uses logic and reason
         // Not entirely sure why it works, but it does
-        if (!logicAndReasonUsedThisTurn && !dragonIsAwaitingPlayerResponse) {
+        if (!logicAndReasonUsedThisTurn && !dragonIsAwaitingPlayerResponse && !dragonIsDead) {
             await pauseOnText();
         }
         // account for any buffs/debuffs wearing off
