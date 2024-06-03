@@ -547,20 +547,23 @@ function BattleLogic(props) {
         setClassAttacksToDisplay(newClassAttacksToDisplay);
     }
 
-    // function's sole purpose is to wait for user input and prevent playRound from continuing
+    // function's sole purpose is to wait for user input and prevent pauseOnText from continuing
     // until that user input is received
     function progressRound() {
         return new Promise((resolve) => {
             // This is what changes resolveKeyPress from null to truthy
             // when it is resolved in the below function, it resolves it here as well
+            // resolve is a function that is assigned to a variable here so it can be accessed
+            // outside of the promise
             resolveKeyPress = resolve;
         });
     }
 
-    // This function uses
+    // This function is added via event listener and executes when a key is pressed
     function resolveUserInput(e) {
+        // resolveKeyPress is set to a value whenever progressRound is called
         if (resolveKeyPress && (e.key === " " || e.key === "Enter")) {
-            resolveKeyPress(); // Resolve the Promise when the desired key is pressed
+            resolveKeyPress(); // Resolve the Promise when the desired key is pressed thanks to the resolve function stored in this variable
             resolveKeyPress = null; // Reset the resolveKeyPress variable
         }
     }

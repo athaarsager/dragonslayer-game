@@ -290,39 +290,6 @@ function BattleScreen() {
         document.addEventListener("keydown", displaySelector);
     }
 
-    const battleLogicProps = {
-        currentPlayerStats,
-        setCurrentPlayerStats,
-        currentEnemyStats,
-        setCurrentEnemyStats,
-        dragonHp,
-        setDragonHp,
-        classAttacks,
-        classAttacksToDisplay,
-        setClassAttacksToDisplay,
-        swordIsCharged,
-        setSwordIsCharged,
-        setBattleText,
-        playerHp,
-        setPlayerHp,
-        enemyAttacks,
-        playerMana,
-        setBattleMenuOpen,
-        attackOptionChosen,
-        setAttackOptionChosen,
-        setDefendOptionChosen,
-        setPrayOptionChosen,
-        dragonIsAwaitingPlayerResponse,
-        setDragonIsAwaitingPlayerResponse,
-        setOnActionMenu,
-        setGameOver,
-        badEndingText,
-        setTimeForDragonToFade,
-        setBadEndingReached,
-        playRoundRef,
-        resetBattleStatsRef
-    };
-
     useEffect(() => {
         fetchClasses();
         fetchClassAttacks();
@@ -394,6 +361,44 @@ function BattleScreen() {
         }
     }, [timeForDragonToFade]);
 
+    const battleLogicProps = {
+        currentPlayerStats,
+        setCurrentPlayerStats,
+        currentEnemyStats,
+        setCurrentEnemyStats,
+        dragonHp,
+        setDragonHp,
+        classAttacks,
+        classAttacksToDisplay,
+        setClassAttacksToDisplay,
+        swordIsCharged,
+        setSwordIsCharged,
+        setBattleText,
+        playerHp,
+        setPlayerHp,
+        enemyAttacks,
+        playerMana,
+        setBattleMenuOpen,
+        attackOptionChosen,
+        setAttackOptionChosen,
+        setDefendOptionChosen,
+        setPrayOptionChosen,
+        dragonIsAwaitingPlayerResponse,
+        setDragonIsAwaitingPlayerResponse,
+        setOnActionMenu,
+        setGameOver,
+        badEndingText,
+        setTimeForDragonToFade,
+        setBadEndingReached,
+        playRoundRef,
+        resetBattleStatsRef
+    };
+
+    const narrationDisplayProps = {
+        badEndingText,
+        setBadEndingText,
+    };
+
     return (
         <>
             <BattleLogic {...battleLogicProps} />
@@ -411,7 +416,7 @@ function BattleScreen() {
                             alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
                     </div>
                 </> :
-                <NarrationDisplay />}
+                <NarrationDisplay {...narrationDisplayProps} />}
 
             <div id="character-stat-display">
                 <p>Hp: {playerHp}</p>
