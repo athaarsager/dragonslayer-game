@@ -117,7 +117,7 @@ function BattleLogic(props) {
             // need to account for mana usage at some point
             return;
         } else {
-            playBadEnding();
+            await playBadEnding();
         }
     }
 
