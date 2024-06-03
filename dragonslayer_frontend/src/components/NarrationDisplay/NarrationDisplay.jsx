@@ -11,12 +11,20 @@ function NarrationDisplay(props) {
         setBadEndingText
     } = props;
     const [narrationText, setNarrationText] = useState("");
-
-    function progressNarration() {
-
-    }
+    // This is for tracking when new text is added so it can be animated separately
+    const [newText, setNewText] = useState("");
 
     let resolveKeyPress = null;
+
+    async function progressNarration() {
+        if (badEndingReached) {
+            await pauseOnText();
+        }
+    }
+
+    function appendText(newText) {
+        setNarrationText(currentText => currentText + newText);
+    }
     // Okay, I technically should have just defined these functions on the battleScreen and passed them as props
     // to BattleLogic.js and this screen, but that felt like a pain with the resolveKeyPress variable, so I didn't...
     // These functions allow the text to pause and wait for user input
@@ -49,15 +57,15 @@ function NarrationDisplay(props) {
     useEffect(() => {
         if (badEndingReached) {
             setNarrationText(badEndingText[4].text);
-            // Set this immediately to false because I only want this to execute once
-            // progressNarration will take care of the text from here
-            setBadEndingReached(false);
         }
     }, [badEndingReached, setBadEndingReached, badEndingText]);
 
     return (
         <div id="narration-container">
-            <p className="narration-text">{narrationText}</p>
+            <p className="narration-text">
+                {narrationText}
+                <span className={newText ? "text-to-animate" : ""}>{newText}</span>
+                </p>
         </div>
     )
 }
