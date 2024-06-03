@@ -517,7 +517,7 @@ function BattleLogic(props) {
     }
 
     async function playBadEnding() {
-        playBadEndDragonDialog();
+        await playBadEndDragonDialog();
         setTimeForDragonToFade(true);
         // Now need to play fade-out animation and have the narrator's text be on the main screen. I think...
         // I believe this will need to set a useState variable to true, which will then trigger a function
@@ -564,7 +564,6 @@ function BattleLogic(props) {
     return null;
 }
 
-// This is apparently deprecated. Do this differently in the future
 BattleLogic.propTypes = {
     currentPlayerStats: PropTypes.object.isRequired,
     setCurrentPlayerStats: PropTypes.func.isRequired,
