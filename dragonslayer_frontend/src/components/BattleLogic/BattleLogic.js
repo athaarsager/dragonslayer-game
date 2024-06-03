@@ -31,7 +31,7 @@ function BattleLogic(props) {
         setGameOver,
         badEndingText,
         setTimeForDragonToFade,
-        setRoundIsOver,
+        setBadEndingReached,
         playRoundRef,
         resetBattleStatsRef
     } = props;
@@ -81,7 +81,6 @@ function BattleLogic(props) {
         // to prevent, I had already fully integretated it into the function
         let playerRoundStats = { ...currentPlayerStats };
         let enemyRoundStats = { ...currentEnemyStats };
-        setRoundIsOver(false);
         await playerActs(enemy, action, playerRoundStats, enemyRoundStats);
         // enemy attacks
         // await ensures the program pauses on the async function
@@ -116,7 +115,6 @@ function BattleLogic(props) {
             setDefendOptionChosen(false);
             setPrayOptionChosen(false);
             setOnActionMenu(true);
-            setRoundIsOver(true);
             // need to account for mana usage at some point
             return;
         } else {
@@ -522,6 +520,7 @@ function BattleLogic(props) {
     async function playBadEnding() {
         await playBadEndDragonDialog();
         setTimeForDragonToFade(true);
+        setBadEndingReached(true);
         setBattleText("");
         // Now need to play fade-out animation and have the narrator's text be on the main screen. I think...
         // I believe this will need to set a useState variable to true, which will then trigger a function
@@ -596,7 +595,7 @@ BattleLogic.propTypes = {
     setGameOver: PropTypes.func.isRequired,
     badEndingText: PropTypes.array.isRequired,
     setTimeForDragonToFade: PropTypes.func.isRequired,
-    setRoundIsOver: PropTypes.func.isRequired,
+    setBadEndingReached: PropTypes.func.isRequired,
     playRoundRef: PropTypes.object.isRequired,
     resetBattleStatsRef: PropTypes.object.isRequired
 };

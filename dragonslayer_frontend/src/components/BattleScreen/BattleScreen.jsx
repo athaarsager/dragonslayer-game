@@ -4,6 +4,7 @@ import axios from "axios";
 import "./BattleScreen.css";
 import BattleLogic from "../BattleLogic/BattleLogic";
 import ActionMenu from "../ActionMenu/ActionMenu";
+import NarrationDisplay from "../NarrationDisplay/NarrationDisplay";
 import { gsap } from "gsap";
 
 function BattleScreen() {
@@ -44,7 +45,9 @@ function BattleScreen() {
 
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
-    const [roundIsOver, setRoundIsOver] = useState(true);
+    // This ensures the menu battle text does not re-appear after bad ending reached
+    const [badEndingReached, setBadEndingReached] = useState(false);
+    const [displayNarrationText, setDisplayNarrationText] = useState(false);
 
     // need to use ref to ensure an old value is not captured when an event listener is added
     const selectedOptionRef = useRef(selectedOption);
@@ -65,6 +68,7 @@ function BattleScreen() {
         // Wait for the promise to resolve before proceeding with the rest of the function
         await delay(2000);
         // insert function for displaying the rest of the ending narration here
+        setDisplayNarrationText(true);
     }
     // This creates a new promise that resolves after the input amount of time (milliseconds) passes
     function delay(ms) {
@@ -314,7 +318,7 @@ function BattleScreen() {
         setGameOver,
         badEndingText,
         setTimeForDragonToFade,
-        setRoundIsOver,
+        setBadEndingReached,
         playRoundRef,
         resetBattleStatsRef
     };
@@ -338,10 +342,10 @@ function BattleScreen() {
     }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks, gameOver]);
 
     useEffect(() => {
-        if (roundIsOver) {
+        if (!badEndingReached) {
             renderMenuBattleText();
         }
-    }, [onActionMenu, selectedOption, roundIsOver]);
+    }, [onActionMenu, selectedOption, badEndingReached]);
 
     // this asynchronously updates the display for the dragon's hp whenever the value of dragonHp changes
     // do this instead of doing it directly in the playRound function
@@ -398,12 +402,20 @@ function BattleScreen() {
                     <div id="dragon-hp"></div>
                 </div>
             </div>
-            {/* Credit for dragon image: Image by Artie Blur from Pixabay 
+
+
+            {!displayNarrationText ?
+                <>
+                    {/* Credit for dragon image: Image by Artie Blur from Pixabay 
                 Granted, it is AI generated, so do I need to credit him? Probablys still should...*/}
-            <div id="dragon-display">
-                <img src="/public/images/dragon.jpg"
-                    alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
-            </div>
+
+                    <div id="dragon-display">
+                        <img src="/public/images/dragon.jpg"
+                            alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
+                    </div>
+                </> :
+                <NarrationDisplay />}
+
             <div id="character-stat-display">
                 <p>Hp: {playerHp}</p>
                 <p>Mana: {playerMana}</p>
