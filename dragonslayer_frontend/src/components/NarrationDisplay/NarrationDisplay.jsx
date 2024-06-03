@@ -1,13 +1,21 @@
 import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
 import "./NarrationDisplay.css";
 import { gsap } from "gsap";
 
 function NarrationDisplay(props) {
     const {
+        badEndingReached,
+        setBadEndingReached,
         badEndingText,
         setBadEndingText
     } = props;
-    
+    const [narrationText, setNarrationText] = useState("");
+
+    function progressNarration() {
+
+    }
+
     let resolveKeyPress = null;
     // Okay, I technically should have just defined these functions on the battleScreen and passed them as props
     // to BattleLogic.js and this screen, but that felt like a pain with the resolveKeyPress variable, so I didn't...
@@ -37,16 +45,28 @@ function NarrationDisplay(props) {
         }
     }
 
+    // This useEffect begins the badEnding narration
+    useEffect(() => {
+        if (badEndingReached) {
+            setNarrationText(badEndingText[4].text);
+            // Set this immediately to false because I only want this to execute once
+            // progressNarration will take care of the text from here
+            setBadEndingReached(false);
+        }
+    }, [badEndingReached, setBadEndingReached, badEndingText]);
+
     return (
         <div id="narration-container">
-            <p className="narration-text">Test Text.</p>
+            <p className="narration-text">{narrationText}</p>
         </div>
     )
 }
 
 NarrationDisplay.propTypes = {
-badEndingText: PropTypes.array.isRequired,
-setBadEndingText: PropTypes.func.isRequired
+    badEndingReached: PropTypes.bool.isRequired,
+    setBadEndingReached: PropTypes.func.isRequired,
+    badEndingText: PropTypes.array.isRequired,
+    setBadEndingText: PropTypes.func.isRequired
 };
 
 export default NarrationDisplay;
