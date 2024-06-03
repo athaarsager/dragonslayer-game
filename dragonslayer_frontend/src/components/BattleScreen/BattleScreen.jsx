@@ -64,7 +64,7 @@ function BattleScreen() {
         gsap.effects.fade(dragon);
         // Wait for the promise to resolve before proceeding with the rest of the function
         await delay(2000);
-        alert("Insert Ending Text here");
+        // insert function for displaying the rest of the ending narration here
     }
     // This creates a new promise that resolves after the input amount of time (milliseconds) passes
     function delay(ms) {
