@@ -60,8 +60,15 @@ function BattleScreen() {
         }
     });
 
-    function fadeDragon(dragon) {
+    async function fadeDragon(dragon) {
         gsap.effects.fade(dragon);
+        // Wait for the promise to resolve before proceeding with the rest of the function
+        await delay(2000);
+        alert("Insert Ending Text here");
+    }
+    // This creates a new promise that resolves after the input amount of time (milliseconds) passes
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
