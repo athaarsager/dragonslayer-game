@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import "./NarrationDisplay.css";
-import { gsap } from "gsap";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 function NarrationDisplay(props) {
     const {
@@ -16,14 +17,29 @@ function NarrationDisplay(props) {
 
     let resolveKeyPress = null;
 
+    // This theoretically hides the text after it is displayed?
+    useGSAP(
+        () => {
+           const text = gsap.utils.toArray(".text-to-animate");
+           text.map(char => gsap.to(char, { opacity: 0}))
+        }
+    )
+
     async function progressNarration() {
         if (badEndingReached) {
             await pauseOnText();
+            const narratorText = badEndingText.slice(5, badEndingText.length -1);
+            for (const entry of narratorText) {
+                setNewText(entry.text);
+                await pauseOnText();
+                appendText(entry.text);
+                setNewText("");
+            }
         }
     }
 
     function appendText(newText) {
-        setNarrationText(currentText => currentText + newText);
+        setNarrationText(currentText => currentText + " " + newText);
     }
     // Okay, I technically should have just defined these functions on the battleScreen and passed them as props
     // to BattleLogic.js and this screen, but that felt like a pain with the resolveKeyPress variable, so I didn't...
@@ -57,6 +73,7 @@ function NarrationDisplay(props) {
     useEffect(() => {
         if (badEndingReached) {
             setNarrationText(badEndingText[4].text);
+            progressNarration();
         }
     }, [badEndingReached, setBadEndingReached, badEndingText]);
 
@@ -64,7 +81,7 @@ function NarrationDisplay(props) {
         <div id="narration-container">
             <p className="narration-text">
                 {narrationText}
-                <span className={newText ? "text-to-animate" : ""}>{newText}</span>
+                <span className={newText ? "text-to-animate" : ""}>{ " " +  newText}</span>
                 </p>
         </div>
     )

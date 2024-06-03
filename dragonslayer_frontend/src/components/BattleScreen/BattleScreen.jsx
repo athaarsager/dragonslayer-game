@@ -46,8 +46,8 @@ function BattleScreen() {
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
     // This ensures the menu battle text does not re-appear after bad ending reached
-    const [badEndingReached, setBadEndingReached] = useState(true);
-    const [displayNarrationText, setDisplayNarrationText] = useState(true);
+    const [badEndingReached, setBadEndingReached] = useState(false);
+    const [displayNarrationText, setDisplayNarrationText] = useState(false);
 
     // need to use ref to ensure an old value is not captured when an event listener is added
     const selectedOptionRef = useRef(selectedOption);
