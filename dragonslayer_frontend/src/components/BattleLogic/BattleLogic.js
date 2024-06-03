@@ -31,6 +31,7 @@ function BattleLogic(props) {
         setGameOver,
         badEndingText,
         setTimeForDragonToFade,
+        setRoundIsOver,
         playRoundRef,
         resetBattleStatsRef
     } = props;
@@ -80,6 +81,7 @@ function BattleLogic(props) {
         // to prevent, I had already fully integretated it into the function
         let playerRoundStats = { ...currentPlayerStats };
         let enemyRoundStats = { ...currentEnemyStats };
+        setRoundIsOver(false);
         await playerActs(enemy, action, playerRoundStats, enemyRoundStats);
         // enemy attacks
         // await ensures the program pauses on the async function
@@ -114,6 +116,7 @@ function BattleLogic(props) {
             setDefendOptionChosen(false);
             setPrayOptionChosen(false);
             setOnActionMenu(true);
+            setRoundIsOver(true);
             // need to account for mana usage at some point
             return;
         } else {
@@ -592,6 +595,7 @@ BattleLogic.propTypes = {
     setGameOver: PropTypes.func.isRequired,
     badEndingText: PropTypes.array.isRequired,
     setTimeForDragonToFade: PropTypes.func.isRequired,
+    setRoundIsOver: PropTypes.func.isRequired,
     playRoundRef: PropTypes.object.isRequired,
     resetBattleStatsRef: PropTypes.object.isRequired
 };

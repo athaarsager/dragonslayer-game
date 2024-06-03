@@ -44,6 +44,7 @@ function BattleScreen() {
 
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
+    const [roundIsOver, setRoundIsOver] = useState(true);
 
     // need to use ref to ensure an old value is not captured when an event listener is added
     const selectedOptionRef = useRef(selectedOption);
@@ -52,10 +53,10 @@ function BattleScreen() {
     // Registering fade effect. Just copied from example in the docs
     gsap.registerEffect({
         name: "fade",
-        defaults: {duration: 2}, /* Defaults  get applied to the "config"
+        defaults: { duration: 2 }, /* Defaults  get applied to the "config"
         object passed to the effect below */
         effect: (targets, config) => {
-            return gsap.to(targets, {duration: config.duration, opacity: 0});
+            return gsap.to(targets, { duration: config.duration, opacity: 0 });
         }
     });
 
@@ -306,6 +307,7 @@ function BattleScreen() {
         setGameOver,
         badEndingText,
         setTimeForDragonToFade,
+        setRoundIsOver,
         playRoundRef,
         resetBattleStatsRef
     };
@@ -329,8 +331,10 @@ function BattleScreen() {
     }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks, gameOver]);
 
     useEffect(() => {
-        renderMenuBattleText();
-    }, [onActionMenu, selectedOption]);
+        if (roundIsOver) {
+            renderMenuBattleText();
+        }
+    }, [onActionMenu, selectedOption, roundIsOver]);
 
     // this asynchronously updates the display for the dragon's hp whenever the value of dragonHp changes
     // do this instead of doing it directly in the playRound function
@@ -374,8 +378,8 @@ function BattleScreen() {
     // I think there is a more react-friendly way to do this...will have to figure it out
     useEffect(() => {
         if (timeForDragonToFade) {
-        const dragon = document.querySelector("img");
-        fadeDragon(dragon);
+            const dragon = document.querySelector("img");
+            fadeDragon(dragon);
         }
     }, [timeForDragonToFade]);
 
