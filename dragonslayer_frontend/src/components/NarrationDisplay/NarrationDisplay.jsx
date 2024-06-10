@@ -1,15 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import "./NarrationDisplay.css";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 
 function NarrationDisplay(props) {
     const {
         badEndingReached,
         setBadEndingReached,
-        badEndingText,
-        setBadEndingText
+        badEndingText
     } = props;
     const [narrationText, setNarrationText] = useState("");
     // This is for tracking when new text is added so it can be animated separately
