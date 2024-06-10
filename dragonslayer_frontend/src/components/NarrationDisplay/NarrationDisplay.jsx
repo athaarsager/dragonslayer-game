@@ -18,23 +18,28 @@ function NarrationDisplay(props) {
     let resolveKeyPress = null;
 
     // This theoretically hides the text after it is displayed?
-    useGSAP(
-        () => {
-           const text = gsap.utils.toArray(".text-to-animate");
-           text.map(char => gsap.to(char, { opacity: 0}))
+    // New text is updating correctly, but this is only applying the first time
+    // and creating a glitch where the first entry also has to be progressed twice?
+    // I think the issue is with state update and/or className assignment in jsx
+
+    useEffect(() => {
+        if (newText) {
+            // set the initial state each time, otherwise it just keeps the ending state and doesn't animate
+            gsap.set(".text-to-animate", { opacity: 0 });
+            gsap.to(".text-to-animate", { duration: 1.5, opacity: 1 });
         }
-    )
+    }, [newText]);
 
     async function progressNarration() {
         if (badEndingReached) {
             await pauseOnText();
-            const narratorText = badEndingText.slice(5, badEndingText.length -1);
+            const narratorText = badEndingText.slice(5, badEndingText.length - 1);
             for (const entry of narratorText) {
                 setNewText(entry.text);
                 await pauseOnText();
                 appendText(entry.text);
-                setNewText("");
             }
+            setNewText("");
         }
     }
 
@@ -81,8 +86,8 @@ function NarrationDisplay(props) {
         <div id="narration-container">
             <p className="narration-text">
                 {narrationText}
-                <span className={newText ? "text-to-animate" : ""}>{ " " +  newText}</span>
-                </p>
+                <span className={newText ? "text-to-animate" : ""}>{" " + newText}</span>
+            </p>
         </div>
     )
 }
