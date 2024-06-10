@@ -31,16 +31,20 @@ function NarrationDisplay(props) {
             await pauseOnText();
             const narratorText = badEndingText.slice(5, badEndingText.length - 1);
             for (let i = 0; i < narratorText.length; i++) {
-                let entry = narratorText[i];
+                let entry = narratorText[i].text;
                 // Account for appending player name to text after "Congratulations"
                 if (i === 0) {
-                    entry.text += " playerNameHere!"
-                    setNewText(entry.text);
+                    entry += " playerNameHere!"
+                    setNewText(entry);
                 } else {
-                    setNewText(entry.text);
+                    setNewText(entry);
                 }
                 await pauseOnText();
-                appendText(entry.text);
+                if (i === 2 || i === 10) {
+                    setNarrationText("");
+                    continue;
+                }
+                appendText(entry);
             }
             // This just prevents "The End" from displaying twice. State update is one behind or something?
             setNewText("");
