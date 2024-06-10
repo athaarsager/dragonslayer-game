@@ -30,8 +30,15 @@ function NarrationDisplay(props) {
         if (badEndingReached) {
             await pauseOnText();
             const narratorText = badEndingText.slice(5, badEndingText.length - 1);
-            for (const entry of narratorText) {
-                setNewText(entry.text);
+            for (let i = 0; i < narratorText.length; i++) {
+                let entry = narratorText[i];
+                // Account for appending player name to text after "Congratulations"
+                if (i === 0) {
+                    entry.text += " playerNameHere!"
+                    setNewText(entry.text);
+                } else {
+                    setNewText(entry.text);
+                }
                 await pauseOnText();
                 appendText(entry.text);
             }
