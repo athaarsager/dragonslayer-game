@@ -73,7 +73,7 @@ function BattleLogic(props) {
     let logicAndReasonUsedThisTurn = false;
 
     // variable for triggering the bad ending
-    let dragonIsDead = false;
+    let dragonIsDead = true;
 
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {

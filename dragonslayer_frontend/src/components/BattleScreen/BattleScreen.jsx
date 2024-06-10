@@ -398,7 +398,6 @@ function BattleScreen() {
         badEndingReached,
         setBadEndingReached,
         badEndingText,
-        setBadEndingText,
     };
 
     return (

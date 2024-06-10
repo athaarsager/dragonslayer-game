@@ -95,7 +95,6 @@ NarrationDisplay.propTypes = {
     badEndingReached: PropTypes.bool.isRequired,
     setBadEndingReached: PropTypes.func.isRequired,
     badEndingText: PropTypes.array.isRequired,
-    setBadEndingText: PropTypes.func.isRequired
 };
 
 export default NarrationDisplay;

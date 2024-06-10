@@ -3,6 +3,7 @@
     width: 55vh;
     margin-left: 24vh;
     margin-right: 12vh;
+    margin-bottom: 1rem;
     /* Need the below property to ensure that a font-size different than default
     does not change the height of this container (that is, the contents do not overflow) */
     overflow: auto;
