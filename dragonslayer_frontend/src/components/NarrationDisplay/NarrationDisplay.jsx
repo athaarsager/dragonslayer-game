@@ -17,13 +17,10 @@ function NarrationDisplay(props) {
 
     let resolveKeyPress = null;
 
-    // This theoretically hides the text after it is displayed?
-    // New text is updating correctly, but this is only applying the first time
-    // and creating a glitch where the first entry also has to be progressed twice?
-    // I think the issue is with state update and/or className assignment in jsx
-
     useEffect(() => {
         if (newText) {
+            // cancel any prior animations so that user doesn't have to wait for prior animation to finish if they click ahead
+            gsap.killTweensOf(".text-to-animate");
             // set the initial state each time, otherwise it just keeps the ending state and doesn't animate
             gsap.set(".text-to-animate", { opacity: 0 });
             gsap.to(".text-to-animate", { duration: 1.5, opacity: 1 });
