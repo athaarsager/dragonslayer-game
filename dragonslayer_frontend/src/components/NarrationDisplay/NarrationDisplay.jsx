@@ -29,7 +29,8 @@ function NarrationDisplay(props) {
     async function progressNarration() {
         if (badEndingReached) {
             await pauseOnText();
-            const narratorText = badEndingText.slice(5, badEndingText.length - 1);
+            const narratorText = badEndingText.slice(5, badEndingText.length);
+            console.log("This is the narratorText:", narratorText);
             for (let i = 0; i < narratorText.length; i++) {
                 let entry = narratorText[i].text;
                 // Account for appending player name to text after "Congratulations"
@@ -40,7 +41,7 @@ function NarrationDisplay(props) {
                     setNewText(entry);
                 }
                 await pauseOnText();
-                if (i === 2 || i === 10) {
+                if (i === 2 || i === 7 || i === 11) {
                     setNarrationText("");
                     continue;
                 }
