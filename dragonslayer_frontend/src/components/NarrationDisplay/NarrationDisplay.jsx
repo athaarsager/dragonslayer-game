@@ -36,6 +36,7 @@ function NarrationDisplay(props) {
                 await pauseOnText();
                 appendText(entry.text);
             }
+            // This just prevents "The End" from displaying twice. State update is one behind or something?
             setNewText("");
         }
     }
@@ -74,6 +75,8 @@ function NarrationDisplay(props) {
     // This useEffect begins the badEnding narration
     useEffect(() => {
         if (badEndingReached) {
+            gsap.set(".narration-text", { opacity: 0 });
+            gsap.to(".narration-text", { duration: 1.5, opacity: 1 });
             setNarrationText(badEndingText[4].text);
             progressNarration();
         }
