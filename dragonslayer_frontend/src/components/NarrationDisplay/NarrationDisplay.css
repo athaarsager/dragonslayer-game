@@ -1,4 +1,4 @@
-#narration-container {
+.narration-container {
     height: 54vh;
     width: 55vh;
     margin-left: 24vh;
@@ -11,4 +11,15 @@
 
 .narration-text {
     font-size: 24px;
+}
+
+.final-text-container {
+    font-size: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.final-text {
+    font-size: 28px;
 }

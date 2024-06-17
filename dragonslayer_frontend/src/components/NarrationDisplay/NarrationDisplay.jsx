@@ -13,6 +13,9 @@ function NarrationDisplay(props) {
     const [narrationText, setNarrationText] = useState("");
     // This is for tracking when new text is added so it can be animated separately
     const [newText, setNewText] = useState("");
+    // This is for tracking when we hit "the end" so that its display class can be altered
+    // so that it displays in the center of the screen
+    const [onFinalText, setOnFinalText] = useState(false);
 
     let resolveKeyPress = null;
 
@@ -34,7 +37,7 @@ function NarrationDisplay(props) {
             for (let i = 0; i < narratorText.length; i++) {
                 let entry = narratorText[i].text + " ";
                 if (i === 5) {
-                entry = narratorText[i].text;
+                    entry = narratorText[i].text;
                 }
                 // Account for appending player name to text after "Congratulations"
                 if (i === 0) {
@@ -50,8 +53,9 @@ function NarrationDisplay(props) {
                 }
                 appendText(entry);
             }
-            // This just prevents "The End" from displaying twice. State update is one behind or something?
+            // This just prevents final text entry from displaying twice. State update is one behind or something?
             setNewText("");
+            setOnFinalText(true);
         }
     }
 
@@ -97,10 +101,13 @@ function NarrationDisplay(props) {
     }, [badEndingReached, setBadEndingReached, badEndingText]);
 
     return (
-        <div id="narration-container">
-            <p className="narration-text">
+        <div className={!onFinalText ? "narration-container" : "narration-container final-text-container"}>
+            <p className={!onFinalText ? "narration-text" : "final-text"}>
                 {narrationText}
-                <span className={newText ? "text-to-animate" : ""}>{newText}</span>
+                <span
+                    className={newText ? "text-to-animate" : ""}>
+                    {newText}
+                </span>
             </p>
         </div>
     )
