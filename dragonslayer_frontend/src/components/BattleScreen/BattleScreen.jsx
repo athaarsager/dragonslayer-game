@@ -269,6 +269,7 @@ function BattleScreen() {
         setBattleMenuOpen(true);
         setOnActionMenu(true);
         setClassAttacksToDisplay(originalClassAttacksToDisplay);
+        setBadEndingReached(false);
         setDisplayNarrationText(false);
         setOnFinalText(false);
         // This one will need to change to "A dragon draw near!" or something
