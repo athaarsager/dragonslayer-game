@@ -11,7 +11,7 @@ function NarrationDisplay(props) {
         badEndingText,
         setOnFinalText,
         onFinalText,
-        setBattleMenuOpen
+        setBattleMenuOpen,
     } = props;
     const [narrationText, setNarrationText] = useState("");
     // This is for tracking when new text is added so it can be animated separately
@@ -110,6 +110,7 @@ function NarrationDisplay(props) {
         } else {
             gsap.set(".final-text", { opacity: 0 });
             gsap.to(".final-text", { duration: 1.5, opacity: 1 });
+            console.log("This is the value of onFinalText:", onFinalText);
         }
     }, [badEndingReached, setBadEndingReached, badEndingText, onFinalText]);
 
@@ -132,7 +133,7 @@ NarrationDisplay.propTypes = {
     badEndingText: PropTypes.array.isRequired,
     setOnFinalText: PropTypes.func.isRequired,
     onFinalText: PropTypes.bool.isRequired,
-    setBattleMenuOpen: PropTypes.func.isRequired
+    setBattleMenuOpen: PropTypes.func.isRequired,
 };
 
 export default NarrationDisplay;

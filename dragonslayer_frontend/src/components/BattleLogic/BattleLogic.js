@@ -523,9 +523,6 @@ function BattleLogic(props) {
         setBadEndingReached(true);
         setBattleText("");
         setAttackOptionChosen(false);
-        // Now need to play fade-out animation and have the narrator's text be on the main screen. I think...
-        // I believe this will need to set a useState variable to true, which will then trigger a function
-        // included in the jsx on the BattleScreen page
     }
 
     // Plays through the lines the dragon says for the bad ending. These will just be in the battle text textbox

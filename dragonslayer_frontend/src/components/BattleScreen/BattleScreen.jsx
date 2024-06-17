@@ -197,7 +197,8 @@ function BattleScreen() {
 
     const executeAction = async (e) => {
         if ((e.key === " " || e.key === "Enter")) {
-            if (classAttacksToDisplay.length === 0 || !battleMenuOpen) return;
+            console.log("In execute action. This is the value of onFinalText:", onFinalText);
+            if ((classAttacksToDisplay.length === 0 || !battleMenuOpen) && !onFinalText) return;
             console.log("In execute action. this is the value of onActionMenu:", onActionMenu);
 
             // use the ref so that we're always using the most recent value
@@ -206,7 +207,7 @@ function BattleScreen() {
             // since its value was only captured when the event listener was initially added
             const currentSelectedOption = selectedOptionRef.current;
             // if selectedOption is 0, then "attack" was selected. Open attack menu and set the battle text
-            if (gameOver) {
+            if (gameOver || onFinalText) {
                 if (currentSelectedOption === 0) {
                     // Logic for re-setting battle to beginning
                     // Will need to decide if player dies during final boss
@@ -268,6 +269,8 @@ function BattleScreen() {
         setBattleMenuOpen(true);
         setOnActionMenu(true);
         setClassAttacksToDisplay(originalClassAttacksToDisplay);
+        setDisplayNarrationText(false);
+        setOnFinalText(false);
         // This one will need to change to "A dragon draw near!" or something
         setBattleText("Default");
         setCurrentPlayerStats(maxPlayerStats);
@@ -279,6 +282,7 @@ function BattleScreen() {
         setDragonIsAwaitingPlayerResponse(false);
         // This would also change if just reloading final boss fight
         setEnemyName("Dragon");
+        
     }
 
     function removeMenuEventListeners() {
@@ -307,7 +311,7 @@ function BattleScreen() {
             console.log("Removing menu event listeners");
             removeMenuEventListeners();
         }
-    }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks, gameOver]);
+    }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks, gameOver, onFinalText]);
 
     useEffect(() => {
         if (!badEndingReached) {
@@ -401,7 +405,7 @@ function BattleScreen() {
         badEndingText,
         setOnFinalText,
         onFinalText,
-        setBattleMenuOpen
+        setBattleMenuOpen,
     };
 
     const actionMenuProps = {

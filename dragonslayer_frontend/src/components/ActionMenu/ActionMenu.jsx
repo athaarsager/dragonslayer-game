@@ -45,7 +45,6 @@ function ActionMenu(props) {
     // Toggles options when game over state reached
     useEffect(() => {
         if (gameOver || onFinalText) {
-            console.log("In ActionMenu useEffect. This is the value of onFinalText:", onFinalText);
             setFirstOptionText("Restart Battle");
             setSecondOptionText("Return to Title");
             setThirdOptionText("");
