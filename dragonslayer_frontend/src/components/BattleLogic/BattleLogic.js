@@ -60,6 +60,7 @@ function BattleLogic(props) {
         setIsBlinded(false);
         setLogicAndReasonUsed(false);
         setDragonIsChargedUp(false);
+        setTimeForDragonToFade(false);
     }
 
     //This variable will be used to resolve the promise in playRound();
@@ -73,7 +74,7 @@ function BattleLogic(props) {
     let logicAndReasonUsedThisTurn = false;
 
     // variable for triggering the bad ending
-    let dragonIsDead = true;
+    let dragonIsDead = false;
 
     // create the playRound function as a ref so it can be passed to and called from the parent component
     playRoundRef.current = async (enemy, action) => {
