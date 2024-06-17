@@ -48,6 +48,7 @@ function BattleScreen() {
     // This ensures the menu battle text does not re-appear after bad ending reached
     const [badEndingReached, setBadEndingReached] = useState(false);
     const [displayNarrationText, setDisplayNarrationText] = useState(false);
+    const [onFinalText, setOnFinalText] = useState(false);
 
     // need to use ref to ensure an old value is not captured when an event listener is added
     const selectedOptionRef = useRef(selectedOption);
@@ -398,7 +399,23 @@ function BattleScreen() {
         badEndingReached,
         setBadEndingReached,
         badEndingText,
+        setOnFinalText,
+        onFinalText,
+        setBattleMenuOpen
     };
+
+    const actionMenuProps = {
+        classAttacks,
+        classAttacksToDisplay,
+        selectedOption,
+        attackOptionChosen,
+        setAttackOptionChosen,
+        dragonIsAwaitingPlayerResponse,
+        setOnActionMenu,
+        battleMenuOpen,
+        onFinalText,
+        gameOver
+    }
 
     return (
         <>
@@ -416,7 +433,7 @@ function BattleScreen() {
                         <img src="/public/images/dragon.jpg"
                             alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
                     </div>
-                </> : badEndingText.length > 0 && /* This component will only render if badEndingText is populated*/
+                </> : badEndingText.length > 0 && /* This component will only render if badEndingText is populated */
                 <NarrationDisplay {...narrationDisplayProps} />}
 
             <div id="character-stat-display">
@@ -426,18 +443,8 @@ function BattleScreen() {
             <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
                 <p>{battleText}</p>
             </div>
-            <div id={gameOver ? "game-over-menu" : "battle-menu"} className="text-box">
-                <ActionMenu
-                    classAttacks={classAttacks}
-                    classAttacksToDisplay={classAttacksToDisplay}
-                    selectedOption={selectedOption}
-                    attackOptionChosen={attackOptionChosen}
-                    setAttackOptionChosen={setAttackOptionChosen}
-                    dragonIsAwaitingPlayerResponse={dragonIsAwaitingPlayerResponse}
-                    setOnActionMenu={setOnActionMenu}
-                    battleMenuOpen={battleMenuOpen}
-                    gameOver={gameOver}
-                />
+            <div id={gameOver || onFinalText ? "game-over-menu" : "battle-menu"} className="text-box">
+                <ActionMenu {...actionMenuProps} />
             </div>
         </>
     )

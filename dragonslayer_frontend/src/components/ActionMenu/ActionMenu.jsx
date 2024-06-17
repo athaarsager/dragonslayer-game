@@ -1,6 +1,19 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attackOptionChosen, setAttackOptionChosen, setOnActionMenu, battleMenuOpen, dragonIsAwaitingPlayerResponse, gameOver }) {
+function ActionMenu(props) {
+
+    const {
+        classAttacks,
+        classAttacksToDisplay,
+        selectedOption,
+        attackOptionChosen,
+        setAttackOptionChosen,
+        dragonIsAwaitingPlayerResponse,
+        setOnActionMenu,
+        battleMenuOpen,
+        onFinalText,
+        gameOver
+    } = props
 
     const [firstOptionText, setFirstOptionText] = useState("Attack");
     const [secondOptionText, setSecondOptionText] = useState("Defend");
@@ -31,7 +44,8 @@ function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attac
 
     // Toggles options when game over state reached
     useEffect(() => {
-        if (gameOver) {
+        if (gameOver || onFinalText) {
+            console.log("In ActionMenu useEffect. This is the value of onFinalText:", onFinalText);
             setFirstOptionText("Restart Battle");
             setSecondOptionText("Return to Title");
             setThirdOptionText("");
@@ -42,7 +56,7 @@ function ActionMenu({ classAttacks, classAttacksToDisplay, selectedOption, attac
             setThirdOptionText("Magic");
             setFourthOptionText("Pray");
         }
-    }, [gameOver]);
+    }, [gameOver, onFinalText]);
 
     return (
         <>
@@ -89,6 +103,7 @@ ActionMenu.propTypes = {
     dragonIsAwaitingPlayerResponse: PropTypes.bool.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired,
+    onFinalText: PropTypes.bool.isRequired,
     gameOver: PropTypes.bool.isRequired
 };
 export default ActionMenu;

@@ -8,14 +8,17 @@ function NarrationDisplay(props) {
     const {
         badEndingReached,
         setBadEndingReached,
-        badEndingText
+        badEndingText,
+        setOnFinalText,
+        onFinalText,
+        setBattleMenuOpen
     } = props;
     const [narrationText, setNarrationText] = useState("");
     // This is for tracking when new text is added so it can be animated separately
     const [newText, setNewText] = useState("");
     // This is for tracking when we hit "the end" so that its display class can be altered
     // so that it displays in the center of the screen
-    const [onFinalText, setOnFinalText] = useState(false);
+    // const [onFinalText, setOnFinalText] = useState(false);
 
     let resolveKeyPress = null;
 
@@ -66,6 +69,8 @@ function NarrationDisplay(props) {
     function displayEnding(narratorText) {
         setOnFinalText(true);
         setNarrationText(narratorText[narratorText.length - 1].text);
+        // This is for displaying the menu allowing the player to return to title or restart battle
+        setBattleMenuOpen(true);
     }
     // Okay, I technically should have just defined these functions on the battleScreen and passed them as props
     // to BattleLogic.js and this screen, but that felt like a pain with the resolveKeyPress variable, so I didn't...
@@ -125,6 +130,9 @@ NarrationDisplay.propTypes = {
     badEndingReached: PropTypes.bool.isRequired,
     setBadEndingReached: PropTypes.func.isRequired,
     badEndingText: PropTypes.array.isRequired,
+    setOnFinalText: PropTypes.func.isRequired,
+    onFinalText: PropTypes.bool.isRequired,
+    setBattleMenuOpen: PropTypes.func.isRequired
 };
 
 export default NarrationDisplay;
