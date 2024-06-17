@@ -50,7 +50,7 @@ function ActionMenu(props) {
             setSecondOptionText("Return to Title");
             setThirdOptionText("");
             setFourthOptionText("");
-        } else if (!gameOver) {
+        } else if (!gameOver && !onFinalText) {
             setFirstOptionText("Attack");
             setSecondOptionText("Defend");
             setThirdOptionText("Magic");
@@ -73,7 +73,7 @@ function ActionMenu(props) {
                             {attackOptionChosen ? classAttacksToDisplay[1].attack.name : secondOptionText}</div>
                     </div>
                     <div></div>
-                    {!gameOver &&
+                    {!gameOver && !onFinalText &&
                         <>
                             <div className={"option-three selector-container left-option"}>
                                 <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
