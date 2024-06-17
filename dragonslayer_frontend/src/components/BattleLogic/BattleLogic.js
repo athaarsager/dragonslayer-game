@@ -106,7 +106,7 @@ function BattleLogic(props) {
             updateClassAttacksToDisplay(3, 6);
         }
         if (playerRoundStats.hp <= 0) {
-            //setGameOver(true);
+            setGameOver(true);
         }
         // return to main action menu if dragon isn't dead
         if (!dragonIsDead) {
