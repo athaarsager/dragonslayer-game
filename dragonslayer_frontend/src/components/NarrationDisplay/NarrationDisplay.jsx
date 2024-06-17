@@ -34,7 +34,7 @@ function NarrationDisplay(props) {
             await pauseOnText();
             const narratorText = badEndingText.slice(5, badEndingText.length);
             console.log("This is the narratorText:", narratorText);
-            for (let i = 0; i < narratorText.length; i++) {
+            for (let i = 0; i < narratorText.length - 1; i++) {
                 let entry = narratorText[i].text + " ";
                 if (i === 5) {
                     entry = narratorText[i].text;
@@ -55,12 +55,17 @@ function NarrationDisplay(props) {
             }
             // This just prevents final text entry from displaying twice. State update is one behind or something?
             setNewText("");
-            setOnFinalText(true);
+            displayEnding(narratorText);
         }
     }
 
     function appendText(newText) {
         setNarrationText(currentText => currentText + newText);
+    }
+
+    function displayEnding(narratorText) {
+        setOnFinalText(true);
+        setNarrationText(narratorText[narratorText.length - 1].text);
     }
     // Okay, I technically should have just defined these functions on the battleScreen and passed them as props
     // to BattleLogic.js and this screen, but that felt like a pain with the resolveKeyPress variable, so I didn't...
@@ -92,13 +97,16 @@ function NarrationDisplay(props) {
 
     // This useEffect begins the badEnding narration
     useEffect(() => {
-        if (badEndingReached) {
+        if (badEndingReached && !onFinalText) {
             gsap.set(".narration-text", { opacity: 0 });
             gsap.to(".narration-text", { duration: 1.5, opacity: 1 });
             setNarrationText(badEndingText[4].text + " ");
             progressNarration();
+        } else {
+            gsap.set(".final-text", { opacity: 0 });
+            gsap.to(".final-text", { duration: 1.5, opacity: 1 });
         }
-    }, [badEndingReached, setBadEndingReached, badEndingText]);
+    }, [badEndingReached, setBadEndingReached, badEndingText, onFinalText]);
 
     return (
         <div className={!onFinalText ? "narration-container" : "narration-container final-text-container"}>
