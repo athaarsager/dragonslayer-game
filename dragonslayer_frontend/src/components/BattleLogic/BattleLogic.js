@@ -274,12 +274,6 @@ function BattleLogic(props) {
                 // Paused on status effect inflicted on player or dragon
                 await pauseOnText();
             }
-            // evaluate if the dragon should lose turns
-            if (!(action.attack.name === "Fecth Pitchfork" && !isBlinded)) {
-                if (action.extra_Effect.turnsLost) {
-                    setLostTurnCounter(action.extra_Effect.turnsLost);
-                }
-            }
         }
         // evaluating the special effects of individual attacks below:
         // reset attack after swinging charged sword
@@ -299,6 +293,9 @@ function BattleLogic(props) {
             if (eyesBlinded <= 2) {
                 setEyesBlinded(eyesBlinded + 1);
                 setIsBlinded(true);
+                if (eyesBlinded + 1 <= 2) {
+                    setLostTurnCounter(action.extra_Effect.turnsLost);
+                }
             }
         }
         if (action.attack.name === "Fetch Pitchfork") {
