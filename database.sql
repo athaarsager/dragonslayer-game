@@ -92,8 +92,8 @@ VALUES
 (9, 'player', 'attack', 2, NULL, NULL, NULL),
 (10, 'dragon', 'defense', 0.5, 2, 4, 'The dragon is distracted by the pain in its blinded eye!'),
 (11, 'dragon', NULL, NULL, 1, 5, 'The dragon is distracted by the prospect of a delicious snack...'),
-(12, 'player', 'defense', 0.5, NULL, 2, NULL),
-(13, 'player', 'defense', 0.5, NULL, 3, NULL);
+(12, 'player', NULL, NULL, NULL, 2, NULL),
+(13, 'player', NULL, NULL, NULL, 3, NULL);
 
 --Insert Statemest for Bad Ending Text
 INSERT INTO game_text (is_start_text, is_flavor_text, is_narrative_text, is_good_end_text, is_bad_end_text, text_content)

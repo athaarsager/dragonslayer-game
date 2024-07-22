@@ -45,7 +45,9 @@ function BattleLogic(props) {
     const [enemyDefenseRoundCounter, setEnemyDefenseRoundCounter] = useState(0);
 
     const [lostTurnCounter, setLostTurnCounter] = useState(0);
+    const [eyesBlinded, setEyesBlinded] = useState(0);
     const [isBlinded, setIsBlinded] = useState(false);
+
 
     const [logicAndReasonUsed, setLogicAndReasonUsed] = useState(false);
     const [dragonIsChargedUp, setDragonIsChargedUp] = useState(false);
@@ -57,6 +59,7 @@ function BattleLogic(props) {
         setEnemyAttackRoundCounter(0);
         setEnemyDefenseRoundCounter(0);
         setLostTurnCounter(0);
+        setEyesBlinded(0);
         setIsBlinded(false);
         setLogicAndReasonUsed(false);
         setDragonIsChargedUp(false);
@@ -82,6 +85,7 @@ function BattleLogic(props) {
         // to prevent, I had already fully integretated it into the function
         let playerRoundStats = { ...currentPlayerStats };
         let enemyRoundStats = { ...currentEnemyStats };
+        console.log("At top of round. This is the value of eyesBlinded:", eyesBlinded);
         await playerActs(enemy, action, playerRoundStats, enemyRoundStats);
         // enemy attacks
         // await ensures the program pauses on the async function
@@ -136,6 +140,7 @@ function BattleLogic(props) {
             await playerDefends();
         } else if (action === "pray") {
             await playerHeals(playerRoundStats, action);
+            console.log("The player just healed. Here is their current stats:", playerRoundStats);
         }
         console.log("These are the playerRoundStats at the end of the player's turn:", playerRoundStats);
     }
@@ -159,12 +164,15 @@ function BattleLogic(props) {
                 playerRoundStats.hp = 100;
                 setPlayerHp(100);
             }
+            // This takes care of when you heal from eating the chicken
         } else {
             setBattleText(action.attack.attackText);
             await pauseOnText();
             setBattleText("The tenderness of your friend's love (and flesh) restores you to full health!");
             setPlayerHp(100);
         }
+        // ensure healing passes on to next round
+        setCurrentPlayerStats(playerRoundStats);
         await pauseOnText();
     }
 
@@ -211,6 +219,7 @@ function BattleLogic(props) {
             let originalStatValue;
             if (targetCharacter === "dragon") {
                 const currentEnemyStatsCopy = { ...enemyRoundStats };
+                // eslint-disable-next-line no-unused-vars
                 Object.entries(currentEnemyStatsCopy).forEach(([key, value]) => {
                     if (key === statAffected) {
                         originalStatValue = currentEnemyStatsCopy[key];
@@ -237,6 +246,7 @@ function BattleLogic(props) {
                     setBattleText(`The ${enemy}'s ${statAffected} has been lowered!`);
                 }
             } else if (targetCharacter === "player") {
+                // eslint-disable-next-line no-unused-vars
                 Object.entries(playerRoundStats).forEach(([key, value]) => {
                     if (key === statAffected) {
                         originalStatValue = playerRoundStats[key];
@@ -265,8 +275,10 @@ function BattleLogic(props) {
                 await pauseOnText();
             }
             // evaluate if the dragon should lose turns
-            if (action.extra_Effect.turnsLost) {
-                setLostTurnCounter(action.extra_Effect.turnsLost);
+            if (!(action.attack.name === "Fecth Pitchfork" && !isBlinded)) {
+                if (action.extra_Effect.turnsLost) {
+                    setLostTurnCounter(action.extra_Effect.turnsLost);
+                }
             }
         }
         // evaluating the special effects of individual attacks below:
@@ -284,7 +296,10 @@ function BattleLogic(props) {
         }
         if (action.attack.name === "Throw Pitchfork") {
             updateClassAttacksToDisplay(2, 4);
-            setIsBlinded(true);
+            if (eyesBlinded <= 2) {
+                setEyesBlinded(eyesBlinded + 1);
+                setIsBlinded(true);
+            }
         }
         if (action.attack.name === "Fetch Pitchfork") {
             updateClassAttacksToDisplay(2, 2);
@@ -327,9 +342,12 @@ function BattleLogic(props) {
             return;
             // Other attacks with specific responses from the dragon
         } else if (attackOptionChosen) {
-            if (action.attack.name === "Throw Pitchfork") {
+            if (action.attack.name === "Throw Pitchfork" && eyesBlinded < 2) {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
                 return;
+            } else if (action.attack.name === "Throw Pitchfork" && eyesBlinded >= 2) {
+                setBattleText(`The ${enemy} closed both eyes to avoid being blinded. It's learning!`);
+                await pauseOnText();
             } else if (action.attack.name === "Throw Chicken" && !dragonIsChargedUp) {
                 setBattleText(`The ${enemy} swallows your chicken in one gulp!`);
                 chickenEaten = true;
@@ -400,9 +418,18 @@ function BattleLogic(props) {
         console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
         let damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
         // use the actual action name here because the state update is behind and I don't want to deal with that
+        // Also prevents stat buffs/debuffs from lasting more than this one turn
         if (action === "defend") {
             damageEnemyDealt *= 0.5;
             console.log("Enemy damage decreased by half:", damageEnemyDealt);
+        }
+        if (action === "Fetch Pitchfork") {
+            damageEnemyDealt *= 2;
+            console.log("Enemy damage doubled because player drew close:", damageEnemyDealt);
+        }
+        if (action === "Fetch Chicken") {
+            damageEnemyDealt *= 2;
+            console.log("Enemy damage doubled because player drew close:", damageEnemyDealt);
         }
         if (enemyAttack.extra_Effect) {
             const statAffected = enemyAttack.extra_Effect.targetStat;
