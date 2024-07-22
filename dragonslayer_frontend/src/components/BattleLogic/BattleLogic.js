@@ -156,9 +156,9 @@ function BattleLogic(props) {
         if (action === "pray") {
             setBattleText("You offer a prayer of desperation to the heavens!");
             await pauseOnText();
-            setBattleText("You heal 40 HP!");
-            if (playerRoundStats.hp <= 60) {
-                playerRoundStats.hp += 40;
+            setBattleText("You heal 60 HP!");
+            if (playerRoundStats.hp <= 40) {
+                playerRoundStats.hp += 60;
                 setPlayerHp(playerRoundStats.hp);
             } else {
                 playerRoundStats.hp = 100;

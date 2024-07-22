@@ -59,9 +59,9 @@ VALUES
 --Dragon's attacks
 INSERT INTO attack (Character_Class_Id, Display_Id, Name, Mana_Cost, Power, Description, Attack_Text)
 VALUES
-(5, NULL, 'Chomp', 0, 70, 'The dragon''s bite attack.', 'The dragon takes a chomp out of you!'),
-(5, NULL, 'Claw', 0, 30, 'The dragon''s claw attack.', 'The dragon swipes its claws at you!'),
-(5, NULL, 'Tail Sweep', 0, 40, 'The dragon''s tail attack.', 'The dragon sweeps its tail at your legs!'),
+(5, NULL, 'Chomp', 0, 40, 'The dragon''s bite attack.', 'The dragon takes a chomp out of you!'),
+(5, NULL, 'Claw', 0, 20, 'The dragon''s claw attack.', 'The dragon swipes its claws at you!'),
+(5, NULL, 'Tail Sweep', 0, 30, 'The dragon''s tail attack.', 'The dragon sweeps its tail at your legs!'),
 (5, NULL, 'Charge-Up', 0, 0, 'The dragon stops to charge for its fire breath attack.', 'The dragon is preparing for a big attack!'),
 (5, NULL, 'Fire Breath', 100, 100, 'The dragon''s breath attack.', 'The dragon breathes white-hot flames at you!'),
 (5, NULL, 'Eat Chicken', 0, 0, 'The dragon can eat your chicken.', 'The dragon chomps down on your chicken and swallows it whole!'),
