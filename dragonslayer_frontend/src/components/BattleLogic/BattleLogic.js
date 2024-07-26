@@ -27,6 +27,7 @@ function BattleLogic(props) {
         setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         setGameOver,
+        selectRandomBattleText,
         badEndingText,
         setTimeForDragonToFade,
         setBadEndingReached,
@@ -110,7 +111,7 @@ function BattleLogic(props) {
         if (!dragonIsDead) {
             setBattleMenuOpen(true);
             // Need to update this
-            setBattleText("Default");
+            setBattleText(selectRandomBattleText);
             setAttackOptionChosen(false);
             setDefendOptionChosen(false);
             setPrayOptionChosen(false);
@@ -615,6 +616,7 @@ BattleLogic.propTypes = {
     setDragonIsAwaitingPlayerResponse: PropTypes.func.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     setGameOver: PropTypes.func.isRequired,
+    selectRandomBattleText: PropTypes.func.isRequired,
     badEndingText: PropTypes.array.isRequired,
     setTimeForDragonToFade: PropTypes.func.isRequired,
     setBadEndingReached: PropTypes.func.isRequired,

@@ -409,6 +409,7 @@ function BattleScreen() {
         setDragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         setGameOver,
+        selectRandomBattleText,
         badEndingText,
         setTimeForDragonToFade,
         setBadEndingReached,
