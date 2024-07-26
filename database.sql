@@ -96,23 +96,23 @@ VALUES
 (13, 'player', NULL, NULL, NULL, 3, NULL);
 
 --Insert Statemest for Bad Ending Text
-INSERT INTO game_text (is_start_text, is_flavor_text, is_narrative_text, is_good_end_text, is_bad_end_text, text_content)
+INSERT INTO game_text (text_content, type)
 VALUES
-(false, false, false, false, true, '......'),
-(false, false, false, false, true, 'You are indeed strong, mortal. You have exhausted my energies.'),
-(false, false, false, false, true, 'I hope your victory this day is worth the cost.'),
-(false, false, false, false, true, 'Now let me alone, that I may die in peace.'),
-(false, false, false, false, true, 'And with that, the dragon closes its eyes and breathes its last.'),
-(false, false, false, false, true, 'Congratulations'),
-(false, false, false, false, true, 'You have bested the evil dragon terrorizing this land!'),
-(false, false, false, false, true, 'Help yourself to all the gold and riches you could ever desire! And don''t forget to tell everyone so that you can become famous too!'),
-(false, false, false, false, true, '...What''s that?'),
-(false, false, false, false, true, 'Your chicken?'),
-(false, false, false, false, true, 'Who cares about a dumb chicken? You''re rich!'),
-(false, false, false, false, true, '...You''re crying? You''re seriously crying?'),
-(false, false, false, false, true, 'Look, if you REALLY care about chickens that much, you can buy as many as you want with all the GOLD you just won!'),
-(false, false, false, false, true, '(Wow, I can''t believe that such a lame hero actually slew Alduran...oh well, all the better for me!)'),
-(false, false, false, false, true, 'Thanks for killing the final guardian for me, kid!'),
-(false, false, false, false, true, 'Enjoy you''re ''hero'' status...for the short time it will last!'),
-(false, false, false, false, true, 'HAHAHAHAHAHAHAHAHAHAHAHA! I''M FREEEEEEEE!!!!!'),
-(false, false, false, false, true, 'The End...?');
+('Bad_End_Text', '......'),
+('Bad_End_Text', 'You are indeed strong, mortal. You have exhausted my energies.'),
+('Bad_End_Text', 'I hope your victory this day is worth the cost.'),
+('Bad_End_Text', 'Now let me alone, that I may die in peace.'),
+('Bad_End_Text', 'And with that, the dragon closes its eyes and breathes its last.'),
+('Bad_End_Text', 'Congratulations'),
+('Bad_End_Text', 'You have bested the evil dragon terrorizing this land!'),
+('Bad_End_Text', 'Help yourself to all the gold and riches you could ever desire! And don''t forget to tell everyone so that you can become famous too!'),
+('Bad_End_Text', '...What''s that?'),
+('Bad_End_Text', 'Your chicken?'),
+('Bad_End_Text', 'Who cares about a dumb chicken? You''re rich!'),
+('Bad_End_Text', '...You''re crying? You''re seriously crying?'),
+('Bad_End_Text', 'Look, if you REALLY care about chickens that much, you can buy as many as you want with all the GOLD you just won!'),
+('Bad_End_Text', '(Wow, I can''t believe that such a lame hero actually slew Alduran...oh well, all the better for me!)'),
+('Bad_End_Text', 'Thanks for killing the final guardian for me, kid!'),
+('Bad_End_Text', 'Enjoy you''re ''hero'' status...for the short time it will last!'),
+('Bad_End_Text', 'HAHAHAHAHAHAHAHAHAHAHAHA! I''M FREEEEEEEE!!!!!'),
+('Bad_End_Text', 'The End...?');
