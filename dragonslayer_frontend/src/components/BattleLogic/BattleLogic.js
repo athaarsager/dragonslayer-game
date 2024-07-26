@@ -85,11 +85,7 @@ function BattleLogic(props) {
         let enemyRoundStats = { ...currentEnemyStats };
         console.log("At top of round. This is the value of eyesBlinded:", eyesBlinded);
         await playerActs(enemy, action, playerRoundStats, enemyRoundStats);
-        // enemy attacks
-        // await ensures the program pauses on the async function
         await enemyActs(enemy, action, playerRoundStats, enemyRoundStats);
-        // user needs to progress the text again
-        // Paused on damage dealt to player
         // The below if surrounding the pause prevents an extra input from being needed
         // by the user after the dragon uses logic and reason
         // Not entirely sure why it works, but it does
@@ -108,7 +104,7 @@ function BattleLogic(props) {
             updateClassAttacksToDisplay(3, 6);
         }
         if (playerRoundStats.hp <= 0) {
-            setGameOver(true);
+            // setGameOver(true);
         }
         // return to main action menu if dragon isn't dead
         if (!dragonIsDead) {

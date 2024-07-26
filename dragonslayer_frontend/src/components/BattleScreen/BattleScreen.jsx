@@ -240,6 +240,10 @@ function BattleScreen() {
                         return;
                     }
                 } else if (currentSelectedOption === 3) {
+                    if (dragonIsAwaitingPlayerResponse) {
+                        setBattleText("You have an opening to attack the Dragon! Don't waste it praying!");
+                        return;
+                    }
                     removeMenuEventListeners();
                     setOnActionMenu(false);
                     setPrayOptionChosen(true);
