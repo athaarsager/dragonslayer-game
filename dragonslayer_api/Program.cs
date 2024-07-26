@@ -104,7 +104,7 @@ app.MapGet("/attacks/{characterClassId}/display", async (DragonslayerGameContext
 
 // Grab text for normal/bad ending
 app.MapGet("/game_text/bad_end", async (DragonslayerGameContext db) => await db.GameText
-.Where(t => t.IsBadEndText)
+.Where(t => t.Type == "Bad_End_Text")
 .Select((t) => new
 {
     id = t.Id,

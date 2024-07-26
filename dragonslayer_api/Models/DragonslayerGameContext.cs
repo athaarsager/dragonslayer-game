@@ -115,11 +115,7 @@ public partial class DragonslayerGameContext : DbContext
             entity.ToTable("game_text");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.IsStartText).HasColumnName("is_start_text");
-            entity.Property(e => e.IsFlavorText).HasColumnName("is_flavor_text");
-            entity.Property(e => e.IsNarrativeText).HasColumnName("is_narrative_text");
-            entity.Property(e => e.IsGoodEndText).HasColumnName("is_good_end_text");
-            entity.Property(e => e.IsBadEndText).HasColumnName("is_bad_end_text");
+            entity.Property(e => e.Type).HasColumnName("type");
             entity.Property(e => e.TextContent).HasColumnName("text_content");
         });
 
