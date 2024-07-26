@@ -33,7 +33,6 @@ function BattleScreen() {
     const [maxDragonStats, setMaxDragonStats] = useState({});
     const [dragonHp, setDragonHp] = useState(NaN);
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
-    const [dragonMana, setDragonMana] = useState(NaN);
     const [dragonIsAwaitingPlayerResponse, setDragonIsAwaitingPlayerResponse] = useState(false);
 
     const [enemyName, setEnemyName] = useState("");
@@ -115,8 +114,6 @@ function BattleScreen() {
         // don't want to reset hp values accidentally
         setDragonHp(response.data[0].hp);
         setDragonMaxHp(response.data[0].hp);
-        // I never actually used this...maybe just delete?
-        setDragonMana(response.data[0].mana);
     }
 
     // This function may need to be moved to the class display screen. Leaving it here for now
@@ -372,7 +369,6 @@ function BattleScreen() {
         setCurrentPlayerStats,
         currentEnemyStats,
         setCurrentEnemyStats,
-        dragonHp,
         setDragonHp,
         classAttacks,
         classAttacksToDisplay,
@@ -380,7 +376,6 @@ function BattleScreen() {
         swordIsCharged,
         setSwordIsCharged,
         setBattleText,
-        playerHp,
         setPlayerHp,
         enemyAttacks,
         playerMana,

@@ -8,7 +8,6 @@ function BattleLogic(props) {
         setCurrentPlayerStats,
         currentEnemyStats,
         setCurrentEnemyStats,
-        dragonHp,
         setDragonHp,
         classAttacks,
         classAttacksToDisplay,
@@ -16,7 +15,6 @@ function BattleLogic(props) {
         swordIsCharged,
         setSwordIsCharged,
         setBattleText,
-        playerHp,
         setPlayerHp,
         enemyAttacks,
         playerMana,
@@ -280,6 +278,7 @@ function BattleLogic(props) {
         // reset attack after swinging charged sword
         if (action.attack.name === "Sword Attack" && swordIsCharged) {
             setSwordIsCharged(false);
+            // eslint-disable-next-line no-unused-vars
             Object.entries(playerRoundStats).forEach(([key, value]) => {
                 if (key === "attack") {
                     playerRoundStats[key] = 1;
@@ -436,6 +435,7 @@ function BattleLogic(props) {
             if (Object.keys(playerRoundStats).length === 0) {
                 playerRoundStats = { ...currentPlayerStats };
             }
+            // eslint-disable-next-line no-unused-vars
             Object.entries(playerRoundStats).forEach(([key, value]) => {
                 if (key === statAffected) {
                     console.log("In enemy's attack's debuff. This is the value of currentPlayerStats:", currentPlayerStats);
@@ -599,7 +599,6 @@ BattleLogic.propTypes = {
     setCurrentPlayerStats: PropTypes.func.isRequired,
     currentEnemyStats: PropTypes.object.isRequired,
     setCurrentEnemyStats: PropTypes.func.isRequired,
-    dragonHp: PropTypes.number.isRequired,
     setDragonHp: PropTypes.func.isRequired,
     classAttacks: PropTypes.array.isRequired,
     classAttacksToDisplay: PropTypes.array.isRequired,
@@ -607,7 +606,6 @@ BattleLogic.propTypes = {
     swordIsCharged: PropTypes.bool.isRequired,
     setSwordIsCharged: PropTypes.func.isRequired,
     setBattleText: PropTypes.func.isRequired,
-    playerHp: PropTypes.number.isRequired,
     setPlayerHp: PropTypes.func.isRequired,
     enemyAttacks: PropTypes.array.isRequired,
     playerMana: PropTypes.number.isRequired,
