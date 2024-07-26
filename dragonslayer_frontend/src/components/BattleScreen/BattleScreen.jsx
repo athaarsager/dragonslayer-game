@@ -182,7 +182,11 @@ function BattleScreen() {
         }
     }
 
-    const renderMenuBattleText = () => {
+    const renderMenuBattleText = () => { 
+        if (battleText === battleMenuTextRef.current) {
+            // prevent re-setting state and reloading page whenever cursor moves on main menu
+            return;
+        }
         // Need this here to ensure the menu text does not override the playRound text
         // This function triggers asynchronously when stuff happens in playRound()
         // However, I don't want it to activate if player is not attacking
@@ -196,6 +200,12 @@ function BattleScreen() {
         // This ensures text switches back to main menu text
         // which was set at the end of playRound()
         if (onActionMenu && !attackOptionChosen) {
+            if (!battleMenuTextRef.current) {
+                if (battleText !== "A Dragon draws near!") {
+                    setBattleText("A Dragon draws near!");
+                }
+                return;
+            }
             setBattleText(battleMenuTextRef.current);
             return;
         } else {
@@ -337,7 +347,9 @@ function BattleScreen() {
     }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks, gameOver, onFinalText]);
 
     useEffect(() => {
+        
         if (!badEndingReached) {
+            console.log("RenderMenuBattleText fired!");
             renderMenuBattleText();
         }
     }, [onActionMenu, selectedOption, badEndingReached]);
@@ -388,6 +400,10 @@ function BattleScreen() {
             fadeDragon(dragon);
         }
     }, [timeForDragonToFade]);
+
+    useEffect(() => {
+        console.log("This is the value of battleText:", battleText);
+    }, [battleText]);
 
     const battleLogicProps = {
         currentPlayerStats,
