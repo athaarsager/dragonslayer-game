@@ -102,6 +102,17 @@ app.MapGet("/attacks/{characterClassId}/display", async (DragonslayerGameContext
 .OrderBy(a => a.Attack.Id) // order by id
 .ToListAsync());
 
+// Grab battle menu text
+app.MapGet("/game_text/battle_menu_text", async (DragonslayerGameContext db) => await db.GameText
+.Where(t => t.Type == "Battle_Menu_Text")
+.Select(t => new
+{
+    id = t.Id,
+    text = t.TextContent,
+})
+.OrderBy(t => t.id)
+.ToListAsync());
+
 // Grab text for normal/bad ending
 app.MapGet("/game_text/bad_end", async (DragonslayerGameContext db) => await db.GameText
 .Where(t => t.Type == "Bad_End_Text")

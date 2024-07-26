@@ -17,7 +17,8 @@ function BattleScreen() {
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [defendOptionChosen, setDefendOptionChosen] = useState(false);
     const [prayOptionChosen, setPrayOptionChosen] = useState(false);
-    const [battleText, setBattleText] = useState("Default");
+    const [battleTextList, setBattleTextList] = useState([]);
+    const [battleText, setBattleText] = useState("A Dragon draws near!");
 
     const [classAttacks, setClassAttacks] = useState([]);
     const [originalClassAttacksToDisplay, setOriginalClassAttacksToDisplay] = useState([]);
@@ -124,6 +125,12 @@ function BattleScreen() {
         setEnemyName(response.data[4].name);
     }
 
+    async function fetchBattleMenuText() {
+        const response = await axios.get("/api/game_text/battle_menu_text");
+        console.log("This is the battleMenuTextList:", response.data);
+        setBattleTextList(response.data);
+    }
+
     async function fetchBadEndingText() {
         const response = await axios.get("/api/game_text/bad_end");
         console.log("This is the bad ending text array:", response.data);
@@ -163,6 +170,15 @@ function BattleScreen() {
         }
     }
 
+    const selectRandomBattleText = () => {
+        const randomNumber = Math.floor(Math.random() * 4);
+        for (let i = 0; i < battleTextList.length; i++) {
+            if (i === randomNumber) {
+                setBattleText(battleTextList[i].text);
+            }
+        }
+    }
+
     const renderMenuBattleText = () => {
         // Need this here to ensure the menu text does not override the playRound text
         // This function triggers asynchronously when stuff happens in playRound()
@@ -177,7 +193,7 @@ function BattleScreen() {
         if (onActionMenu && !attackOptionChosen) {
             // This will be changed to random flavor text later on
             // e.g. "The dragon is lounging about"
-            setBattleText("Default");
+            setBattleText(selectRandomBattleText);
             return;
         } else {
             const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
@@ -274,8 +290,7 @@ function BattleScreen() {
         setBadEndingReached(false);
         setDisplayNarrationText(false);
         setOnFinalText(false);
-        // This one will need to change to "A dragon draw near!" or something
-        setBattleText("Default");
+        setBattleText("A Dragon draws near!");
         setCurrentPlayerStats(maxPlayerStats);
         setPlayerHp(maxPlayerStats.hp);
         // This would change if just reloading final boss fight
@@ -305,6 +320,7 @@ function BattleScreen() {
         fetchCharacterStats();
         fetchDragonAttacks();
         fetchDragonStats();
+        fetchBattleMenuText();
         fetchBadEndingText();
     }, []);
 

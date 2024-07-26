@@ -109,6 +109,7 @@ function BattleLogic(props) {
         // return to main action menu if dragon isn't dead
         if (!dragonIsDead) {
             setBattleMenuOpen(true);
+            // Need to update this
             setBattleText("Default");
             setAttackOptionChosen(false);
             setDefendOptionChosen(false);
