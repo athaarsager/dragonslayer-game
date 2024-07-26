@@ -19,7 +19,7 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 var Configuration = builder.Configuration;
 // connect to PostgreSQL database
 // This checks the .env file for the connection string
-string connectionString = Environment.GetEnvironmentVariable("SQLCONNSTR_dragonslayerDb");
+var connectionString = Environment.GetEnvironmentVariable("SQLCONNSTR_dragonslayerDb");
 
 // This passes the connection string to the dbContext file. 
 // Cannot access the .env file from the dbContext file directly
