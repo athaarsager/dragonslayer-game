@@ -96,7 +96,7 @@ VALUES
 (13, 'player', NULL, NULL, NULL, 3, NULL);
 
 --Insert Statemest for Bad Ending Text
-INSERT INTO game_text (text_content, type)
+INSERT INTO game_text (type, text_content)
 VALUES
 ('Bad_End_Text', '......'),
 ('Bad_End_Text', 'You are indeed strong, mortal. You have exhausted my energies.'),
@@ -116,3 +116,11 @@ VALUES
 ('Bad_End_Text', 'Enjoy you''re ''hero'' status...for the short time it will last!'),
 ('Bad_End_Text', 'HAHAHAHAHAHAHAHAHAHAHAHA! I''M FREEEEEEEE!!!!!'),
 ('Bad_End_Text', 'The End...?');
+
+--Insert Statements for Battle Menu Text
+INSERT INTO game_text (text_content, type)
+VALUES
+('The Dragon is lounging about.', 'Battle_Menu_Text'),
+('The Dragon seems bored by this pitiful fight.', 'Battle_Menu_Text'),
+('The Dragon looks at you hungrily.', 'Battle_Menu_Text'),
+('The Dragon stares into your soul.', 'Battle_Menu_Text');
