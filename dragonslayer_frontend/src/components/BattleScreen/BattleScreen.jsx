@@ -226,14 +226,14 @@ function BattleScreen() {
                     return;
                     // need to adjust the below block of code to account for the "listen" option
                 } else if (currentSelectedOption === 1) {
-                    removeMenuEventListeners();
-                    setOnActionMenu(false);
                     if (dragonIsAwaitingPlayerResponse) {
                         // Will probably need to write entirely different function
                         // to account for dialogue exchange with dragon
-                        // This will do for now, though it does entirely break the program
-                        await playRoundRef.current(enemyName, classAttacks[9]);
+                        setBattleText("Action unavailable. The dev hasn't programmed your ears yet.");
+                        return;
                     } else {
+                        removeMenuEventListeners();
+                        setOnActionMenu(false);
                         setDefendOptionChosen(true);
                         await playRoundRef.current(enemyName, "defend");
                         setSelectedOption(0);
@@ -243,13 +243,14 @@ function BattleScreen() {
                     if (dragonIsAwaitingPlayerResponse) {
                         setBattleText("You have an opening to attack the Dragon! Don't waste it praying!");
                         return;
+                    } else {
+                        removeMenuEventListeners();
+                        setOnActionMenu(false);
+                        setPrayOptionChosen(true);
+                        await playRoundRef.current(enemyName, "pray");
+                        setSelectedOption(0);
+                        return;
                     }
-                    removeMenuEventListeners();
-                    setOnActionMenu(false);
-                    setPrayOptionChosen(true);
-                    await playRoundRef.current(enemyName, "pray");
-                    setSelectedOption(0);
-                    return;
                 }
             } else if (attackOptionChosen) { // runs when on attack menu, not action menu
                 if (classAttacksToDisplay[currentSelectedOption].attack.name === "Charge Sword" && swordIsCharged) {
@@ -284,7 +285,7 @@ function BattleScreen() {
         setDragonIsAwaitingPlayerResponse(false);
         // This would also change if just reloading final boss fight
         setEnemyName("Dragon");
-        
+
     }
 
     function removeMenuEventListeners() {
