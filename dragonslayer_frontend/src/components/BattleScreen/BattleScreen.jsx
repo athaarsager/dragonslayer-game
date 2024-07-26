@@ -185,7 +185,7 @@ function BattleScreen() {
         } else {
             const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
             if (selectedOption === 1 && swordIsCharged) {
-                setBattleText("You're already gripping the sword with both hands. You can't hold it any tighter!.");
+                setBattleText("You're already gripping the sword with both hands. You can't hold it any tighter!");
             } else {
                 setBattleText(attackDescriptions[selectedOption]);
             }

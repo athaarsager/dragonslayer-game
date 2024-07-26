@@ -153,12 +153,13 @@ function BattleLogic(props) {
 
     async function playerHeals(playerRoundStats, action) {
         setBattleMenuOpen(false);
+        const healAmount = 80;
         if (action === "pray") {
             setBattleText("You offer a prayer of desperation to the heavens!");
             await pauseOnText();
-            setBattleText("You heal 60 HP!");
-            if (playerRoundStats.hp <= 40) {
-                playerRoundStats.hp += 60;
+            setBattleText(`You heal ${healAmount} HP!`);
+            if (playerRoundStats.hp <= 100 - healAmount) {
+                playerRoundStats.hp += healAmount;
                 setPlayerHp(playerRoundStats.hp);
             } else {
                 playerRoundStats.hp = 100;
