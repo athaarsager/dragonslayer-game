@@ -182,6 +182,7 @@ function BattleScreen() {
         }
     }
 
+
     const renderMenuBattleText = () => { 
         if (battleText === battleMenuTextRef.current) {
             // prevent re-setting state and reloading page whenever cursor moves on main menu
@@ -400,10 +401,6 @@ function BattleScreen() {
             fadeDragon(dragon);
         }
     }, [timeForDragonToFade]);
-
-    useEffect(() => {
-        console.log("This is the value of battleText:", battleText);
-    }, [battleText]);
 
     const battleLogicProps = {
         currentPlayerStats,
