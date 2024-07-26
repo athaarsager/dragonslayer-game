@@ -11,6 +11,7 @@ function BattleScreen() {
 
     const playRoundRef = useRef();
     const resetBattleStatsRef = useRef();
+    const battleMenuTextRef = useRef();
 
     const [battleMenuOpen, setBattleMenuOpen] = useState(true);
     const [onActionMenu, setOnActionMenu] = useState(true);
@@ -170,11 +171,13 @@ function BattleScreen() {
         }
     }
 
+    // Need to store this in a variable so it doesn't change when player moves selector arrow or moves menus
+    // Should change after each round of combat though
     const selectRandomBattleText = () => {
         const randomNumber = Math.floor(Math.random() * 4);
         for (let i = 0; i < battleTextList.length; i++) {
             if (i === randomNumber) {
-                setBattleText(battleTextList[i].text);
+                return battleTextList[i].text;
             }
         }
     }
@@ -190,10 +193,10 @@ function BattleScreen() {
             setBattleText("Game Over");
             return;
         }
+        // This ensures text switches back to main menu text
+        // which was set at the end of playRound()
         if (onActionMenu && !attackOptionChosen) {
-            // This will be changed to random flavor text later on
-            // e.g. "The dragon is lounging about"
-            setBattleText(selectRandomBattleText);
+            setBattleText(battleMenuTextRef.current);
             return;
         } else {
             const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
@@ -322,6 +325,7 @@ function BattleScreen() {
         fetchDragonStats();
         fetchBattleMenuText();
         fetchBadEndingText();
+        console.log("This is the value of BattleText:", battleText);
     }, []);
 
     useEffect(() => {
@@ -410,6 +414,7 @@ function BattleScreen() {
         setOnActionMenu,
         setGameOver,
         selectRandomBattleText,
+        battleMenuTextRef,
         badEndingText,
         setTimeForDragonToFade,
         setBadEndingReached,
