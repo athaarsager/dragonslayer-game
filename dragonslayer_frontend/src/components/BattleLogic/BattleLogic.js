@@ -77,7 +77,7 @@ function BattleLogic(props) {
     // Use normal variables only for things that can be reset each time
     let logicAndReasonUsedThisTurn = false;
     let dragonChargedUpThisTurn = false;
-
+    let dragonBlindedThisTurn = false;
     // variable for triggering the bad ending
     let dragonIsDead = false;
 
@@ -290,8 +290,9 @@ function BattleLogic(props) {
         }
         if (action.attack.name === "Throw Pitchfork") {
             updateClassAttacksToDisplay(2, 4);
-            if (eyesBlinded <= 2 && !logicAndReasonUsed) {
+            if (eyesBlinded <= 2 && !logicAndReasonUsed && !isBlinded) {
                 setEyesBlinded(eyesBlinded + 1);
+                dragonBlindedThisTurn = true;
                 setIsBlinded(true);
                 if (eyesBlinded + 1 <= 2) {
                     setLostTurnCounter(action.extra_Effect.turnsLost);
@@ -339,7 +340,7 @@ function BattleLogic(props) {
             return;
             // Other attacks with specific responses from the dragon
         } else if (attackOptionChosen) {
-            if (action.attack.name === "Throw Pitchfork" && eyesBlinded < 2 && !logicAndReasonUsed) {
+            if (action.attack.name === "Throw Pitchfork" && eyesBlinded < 2 && !logicAndReasonUsed && dragonBlindedThisTurn) {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
                 return;
             } else if (action.attack.name === "Throw Pitchfork" && eyesBlinded >= 2 && !logicAndReasonUsed) {
@@ -540,6 +541,7 @@ function BattleLogic(props) {
             if (lostTurnCounter === 1 && isBlinded) {
                 setLostTurnCounter(0);
                 setBattleText(`The ${enemy}'s eye has recovered!`);
+                setIsBlinded(false);
                 await pauseOnText();
             } else {
                 setLostTurnCounter(lostTurnCounter - 1);
