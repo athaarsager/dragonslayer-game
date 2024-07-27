@@ -68,13 +68,14 @@ function BattleLogic(props) {
 
     //This variable will be used to resolve the promise in playRound();
     let resolveKeyPress = null;
-    // This variable can be normal because it only matter for the turn it happens in
+    // This variable can be normal because it only matters for the turn it happens in
     let chickenThrown = false;
     let chickenEaten = false;
     // Need a useState variable to go along with this. Otherwise, will just be reset to false
     // each time this component mounts
     // Use normal variables only for things that can be reset each time
     let logicAndReasonUsedThisTurn = false;
+    let dragonChargedUpThisTurn = false;
 
     // variable for triggering the bad ending
     let dragonIsDead = false;
@@ -106,13 +107,12 @@ function BattleLogic(props) {
             updateClassAttacksToDisplay(3, 6);
         }
         if (playerRoundStats.hp <= 0) {
-            setGameOver(true);
+            // setGameOver(true);
         }
         // return to main action menu if dragon isn't dead
         if (!dragonIsDead) {
             setBattleMenuOpen(true);
-            // Need to update this
-            battleMenuTextRef.current = selectRandomBattleText();
+            determineBattleText();
             setBattleText(battleMenuTextRef.current);
             setAttackOptionChosen(false);
             setDefendOptionChosen(false);
@@ -372,6 +372,7 @@ function BattleLogic(props) {
             setBattleText(enemyAttack.attack.attackText);
             // Indicate that the dragon is charged up and should use fire breath next turn
             setDragonIsChargedUp(true);
+            dragonChargedUpThisTurn = true;
             return;
         } else if (enemyRoundStats.hp <= 500 && enemy === "Dragon" && dragonIsChargedUp) {
             // Dragon needs to use breath attack
@@ -431,7 +432,7 @@ function BattleLogic(props) {
         if (enemyAttack.extra_Effect) {
             const statAffected = enemyAttack.extra_Effect.targetStat;
             let originalStatValue;
-            console.log("dragon's attack has an extra effect. This is the stat affected:", statAffected);
+            console.log("Enemy's attack has an extra effect. This is the stat affected:", statAffected);
             if (Object.keys(playerRoundStats).length === 0) {
                 playerRoundStats = { ...currentPlayerStats };
             }
@@ -569,6 +570,18 @@ function BattleLogic(props) {
         const newClassAttacksToDisplay = [...classAttacksToDisplay];
         newClassAttacksToDisplay.splice(currentIndex, 1, classAttacks[newAttackIndex]);
         setClassAttacksToDisplay(newClassAttacksToDisplay);
+    }
+
+    function determineBattleText() {
+        // logic for determining when to display the hint for using you chicken
+        if(dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Do Nothing") {
+            battleMenuTextRef.current = "You wish your lucky chicken was still here so you didn't have to face this alone...";
+        } else if(dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Throw Chicken") { 
+            battleMenuTextRef.current = "Your lucky chicken looks at you meaningfully. Does he have an idea?";
+        // display normal text at end of round
+        } else {
+            battleMenuTextRef.current = selectRandomBattleText();
+        } 
     }
 
     // function's sole purpose is to wait for user input and prevent pauseOnText from continuing

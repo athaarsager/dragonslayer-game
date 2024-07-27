@@ -182,7 +182,9 @@ function BattleScreen() {
         }
     }
 
-
+    // Now just need to add the battleText for specific scenarios, mainly the hints regarding
+    // needing to use your chicken to block the fireBreath attack.
+    // Need one to display if you've already thrown the chicken, and another for if the chicken is alive still
     const renderMenuBattleText = () => { 
         if (battleText === battleMenuTextRef.current) {
             // prevent re-setting state and reloading page whenever cursor moves on main menu
