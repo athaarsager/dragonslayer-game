@@ -20,6 +20,7 @@ function BattleScreen() {
     const [prayOptionChosen, setPrayOptionChosen] = useState(false);
     const [battleTextList, setBattleTextList] = useState([]);
     const [battleText, setBattleText] = useState("A Dragon draws near!");
+    const [specialMenuBattleText, setSpecialMenuBattleText] = useState("");
 
     const [classAttacks, setClassAttacks] = useState([]);
     const [originalClassAttacksToDisplay, setOriginalClassAttacksToDisplay] = useState([]);
@@ -185,7 +186,7 @@ function BattleScreen() {
     // Now just need to add the battleText for specific scenarios, mainly the hints regarding
     // needing to use your chicken to block the fireBreath attack.
     // Need one to display if you've already thrown the chicken, and another for if the chicken is alive still
-    const renderMenuBattleText = () => { 
+    const renderMenuBattleText = () => {
         if (battleText === battleMenuTextRef.current) {
             // prevent re-setting state and reloading page whenever cursor moves on main menu
             return;
@@ -203,13 +204,17 @@ function BattleScreen() {
         // This ensures text switches back to main menu text
         // which was set at the end of playRound()
         if (onActionMenu && !attackOptionChosen) {
-            if (!battleMenuTextRef.current) {
+            if (!battleMenuTextRef.current && !specialMenuBattleText) {
                 if (battleText !== "A Dragon draws near!") {
                     setBattleText("A Dragon draws near!");
                 }
                 return;
             }
-            setBattleText(battleMenuTextRef.current);
+            if (specialMenuBattleText) {
+                setBattleText(specialMenuBattleText);
+            } else {
+                setBattleText(battleMenuTextRef.current);
+            }
             return;
         } else {
             const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
@@ -255,6 +260,7 @@ function BattleScreen() {
                     setAttackOptionChosen(true);
                     setBattleText(classAttacksToDisplay[0].attack.description);
                     setOnActionMenu(false);
+                    setSpecialMenuBattleText("");
                     return;
                     // need to adjust the below block of code to account for the "listen" option
                 } else if (currentSelectedOption === 1) {
@@ -272,7 +278,8 @@ function BattleScreen() {
                         return;
                     }
                 } else if (currentSelectedOption === 2) {
-                    setBattleText("Pfft, yeah right! As if a peasant like you could use magic! ");
+                    setSpecialMenuBattleText("Pfft, yeah right! As if a peasant like you could use magic!")
+                    setBattleText("Pfft, yeah right! As if a peasant like you could use magic!");
                     return;
                 } else if (currentSelectedOption === 3) {
                     if (dragonIsAwaitingPlayerResponse) {
@@ -353,9 +360,8 @@ function BattleScreen() {
     }, [attackOptionChosen, defendOptionChosen, prayOptionChosen, classAttacks, gameOver, onFinalText]);
 
     useEffect(() => {
-        
+
         if (!badEndingReached) {
-            console.log("RenderMenuBattleText fired!");
             renderMenuBattleText();
         }
     }, [onActionMenu, selectedOption, badEndingReached]);
