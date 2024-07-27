@@ -107,7 +107,7 @@ function BattleLogic(props) {
             updateClassAttacksToDisplay(3, 6);
         }
         if (playerRoundStats.hp <= 0) {
-            // setGameOver(true);
+            setGameOver(true);
         }
         // return to main action menu if dragon isn't dead
         if (!dragonIsDead) {
@@ -577,15 +577,15 @@ function BattleLogic(props) {
     function determineBattleText() {
         if (logicAndReasonUsedThisTurn) {
             battleMenuTextRef.current = "The Dragon is planning something! Don't listen to him!";
-        // logic for determining when to display the hint for using you chicken
-        } else if(dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Do Nothing") {
+            // logic for determining when to display the hint for using you chicken
+        } else if (dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Do Nothing") {
             battleMenuTextRef.current = "You wish your lucky chicken was still here so you didn't have to face this alone...";
-        } else if(dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Throw Chicken") { 
+        } else if (dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Throw Chicken") {
             battleMenuTextRef.current = "Your lucky chicken looks at you meaningfully. Does he have an idea?";
-        // display normal text at end of round
+            // display normal text at end of round
         } else {
             battleMenuTextRef.current = selectRandomBattleText();
-        } 
+        }
     }
 
     // function's sole purpose is to wait for user input and prevent pauseOnText from continuing

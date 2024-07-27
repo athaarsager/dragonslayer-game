@@ -496,8 +496,8 @@ function BattleScreen() {
                 <NarrationDisplay {...narrationDisplayProps} />}
 
             <div id="character-stat-display">
-                <p>Hp: {playerHp}</p>
-                <p>Mana: {playerMana}</p>
+                <p>Hp: {playerHp || playerHp >= 0 ? playerHp : ""}</p>
+                <p>Mana: {playerMana || playerMana >= 0 ? playerMana : ""}</p>
             </div>
             <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
                 <p>{battleText}</p>
