@@ -290,7 +290,7 @@ function BattleLogic(props) {
         }
         if (action.attack.name === "Throw Pitchfork") {
             updateClassAttacksToDisplay(2, 4);
-            if (eyesBlinded <= 2) {
+            if (eyesBlinded <= 2 && !logicAndReasonUsed) {
                 setEyesBlinded(eyesBlinded + 1);
                 setIsBlinded(true);
                 if (eyesBlinded + 1 <= 2) {
@@ -339,11 +339,14 @@ function BattleLogic(props) {
             return;
             // Other attacks with specific responses from the dragon
         } else if (attackOptionChosen) {
-            if (action.attack.name === "Throw Pitchfork" && eyesBlinded < 2) {
+            if (action.attack.name === "Throw Pitchfork" && eyesBlinded < 2 && !logicAndReasonUsed) {
                 setBattleText(`The ${enemy} is blinded by the pitchfork in its eye!`);
                 return;
-            } else if (action.attack.name === "Throw Pitchfork" && eyesBlinded >= 2) {
+            } else if (action.attack.name === "Throw Pitchfork" && eyesBlinded >= 2 && !logicAndReasonUsed) {
                 setBattleText(`The ${enemy} closed both eyes to avoid being blinded. It's learning!`);
+                await pauseOnText();
+            } else if (action.attack.name === "Throw Pitchfork" && logicAndReasonUsed) {
+                setBattleText(`The ${enemy} closed both eyes to avoid being blinded. It's done playing around.`);
                 await pauseOnText();
             } else if (action.attack.name === "Throw Chicken" && !dragonIsChargedUp) {
                 setBattleText(`The ${enemy} swallows your chicken in one gulp!`);
