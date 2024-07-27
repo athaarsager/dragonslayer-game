@@ -426,13 +426,17 @@ function BattleLogic(props) {
             damageEnemyDealt *= 0.5;
             console.log("Enemy damage decreased by half:", damageEnemyDealt);
         }
-        if (action.attack.name === "Fetch Pitchfork") {
-            damageEnemyDealt *= 2;
-            console.log("Enemy damage doubled because player drew close:", damageEnemyDealt);
-        }
-        if (action.attack.name === "Fetch Chicken") {
-            damageEnemyDealt *= 2;
-            console.log("Enemy damage doubled because player drew close:", damageEnemyDealt);
+        // I'm dumb for not making the action variable an object every time.
+        // Sometimes it's just a string, so need to make sure it doesn't try to access object keys when just a string
+        if (action !== "defend" && action !== "pray") {
+            if (action.attack.name === "Fetch Pitchfork") {
+                damageEnemyDealt *= 2;
+                console.log("Enemy damage doubled because player drew close:", damageEnemyDealt);
+            }
+            if (action.attack.name === "Fetch Chicken") {
+                damageEnemyDealt *= 2;
+                console.log("Enemy damage doubled because player drew close:", damageEnemyDealt);
+            }
         }
         if (enemyAttack.extra_Effect) {
             const statAffected = enemyAttack.extra_Effect.targetStat;
