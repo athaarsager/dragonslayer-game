@@ -176,7 +176,6 @@ function BattleLogic(props) {
     }
 
     async function playerAttacks(enemy, action, playerRoundStats, enemyRoundStats) {
-        // need to ensure action is the correct object in the character attacks array
         setBattleMenuOpen(false);
         setBattleText(action.attack.attackText);
         // Paused on player's attack text
@@ -576,8 +575,10 @@ function BattleLogic(props) {
     }
 
     function determineBattleText() {
+        if (logicAndReasonUsedThisTurn) {
+            battleMenuTextRef.current = "The Dragon is planning something! Don't listen to him!";
         // logic for determining when to display the hint for using you chicken
-        if(dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Do Nothing") {
+        } else if(dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Do Nothing") {
             battleMenuTextRef.current = "You wish your lucky chicken was still here so you didn't have to face this alone...";
         } else if(dragonChargedUpThisTurn && classAttacksToDisplay[3].attack.name === "Throw Chicken") { 
             battleMenuTextRef.current = "Your lucky chicken looks at you meaningfully. Does he have an idea?";

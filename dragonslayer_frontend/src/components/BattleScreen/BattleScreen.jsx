@@ -220,6 +220,10 @@ function BattleScreen() {
             const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
             if (selectedOption === 1 && swordIsCharged) {
                 setBattleText("You're already gripping the sword with both hands. You can't hold it any tighter!");
+            } else if(selectedOption === 1 && dragonIsAwaitingPlayerResponse) {
+                setBattleText("Don't waste your opportunity! Attack the Dragon now!");
+            } else if (selectedOption === 3 && classAttacksToDisplay[3].attack.name === "Do Nothing" && dragonIsAwaitingPlayerResponse) {
+                setBattleText("Don't waste your opportunity! Attack the Dragon now!");
             } else {
                 setBattleText(attackDescriptions[selectedOption]);
             }
@@ -298,6 +302,8 @@ function BattleScreen() {
                 }
             } else if (attackOptionChosen) { // runs when on attack menu, not action menu
                 if (classAttacksToDisplay[currentSelectedOption].attack.name === "Charge Sword" && swordIsCharged) {
+                    return;
+                } else if ((classAttacksToDisplay[currentSelectedOption].attack.name === "Charge Sword" || classAttacksToDisplay[currentSelectedOption].attack.name === "Do Nothing") && dragonIsAwaitingPlayerResponse) {
                     return;
                 }
                 removeMenuEventListeners();
