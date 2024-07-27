@@ -36,7 +36,9 @@ function ActionMenu(props) {
     });
 
     useEffect(() => {
-        if (dragonIsAwaitingPlayerResponse) {
+        if(!dragonIsAwaitingPlayerResponse && secondOptionText !== "Defend") {
+            setSecondOptionText("Defend");
+        } else if (dragonIsAwaitingPlayerResponse) {
             setSecondOptionText(classAttacks[9].attack.name);
         }
         // including classAttacks in the dependency array because the linter told me to

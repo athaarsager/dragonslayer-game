@@ -108,7 +108,7 @@ function BattleLogic(props) {
             updateClassAttacksToDisplay(3, 6);
         }
         if (playerRoundStats.hp <= 0) {
-            setGameOver(true);
+            // setGameOver(true);
         }
         // return to main action menu if dragon isn't dead
         if (!dragonIsDead) {
@@ -419,7 +419,7 @@ function BattleLogic(props) {
         await progressRound();
         console.log("In enemyUsesAttack. This is the action:", action);
         console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
-        let damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
+        let damageEnemyDealt = Math.floor(enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
         // use the actual action name here because the state update is behind and I don't want to deal with that
         // Also prevents stat buffs/debuffs from lasting more than this one turn
         if (action === "defend") {
