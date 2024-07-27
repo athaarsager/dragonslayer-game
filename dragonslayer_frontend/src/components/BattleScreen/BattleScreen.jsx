@@ -271,6 +271,9 @@ function BattleScreen() {
                         setSelectedOption(0);
                         return;
                     }
+                } else if (currentSelectedOption === 2) {
+                    setBattleText("Pfft, yeah right! As if a peasant like you could use magic! ");
+                    return;
                 } else if (currentSelectedOption === 3) {
                     if (dragonIsAwaitingPlayerResponse) {
                         setBattleText("You have an opening to attack the Dragon! Don't waste it praying!");
