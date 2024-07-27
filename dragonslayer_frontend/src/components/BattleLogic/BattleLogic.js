@@ -64,6 +64,7 @@ function BattleLogic(props) {
         setLogicAndReasonUsed(false);
         setDragonIsChargedUp(false);
         setTimeForDragonToFade(false);
+        battleMenuTextRef.current = "A Dragon draws near!";
     }
 
     //This variable will be used to resolve the promise in playRound();
