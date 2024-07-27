@@ -417,6 +417,7 @@ function BattleLogic(props) {
         // Paused on dragon's attack text
         document.addEventListener("keydown", resolveUserInput);
         await progressRound();
+        console.log("In enemyUsesAttack. This is the action:", action);
         console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
         let damageEnemyDealt = (enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
         // use the actual action name here because the state update is behind and I don't want to deal with that
@@ -425,11 +426,11 @@ function BattleLogic(props) {
             damageEnemyDealt *= 0.5;
             console.log("Enemy damage decreased by half:", damageEnemyDealt);
         }
-        if (action === "Fetch Pitchfork") {
+        if (action.attack.name === "Fetch Pitchfork") {
             damageEnemyDealt *= 2;
             console.log("Enemy damage doubled because player drew close:", damageEnemyDealt);
         }
-        if (action === "Fetch Chicken") {
+        if (action.attack.name === "Fetch Chicken") {
             damageEnemyDealt *= 2;
             console.log("Enemy damage doubled because player drew close:", damageEnemyDealt);
         }
