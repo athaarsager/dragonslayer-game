@@ -267,6 +267,7 @@ function BattleScreen() {
                     if (dragonIsAwaitingPlayerResponse) {
                         // Will probably need to write entirely different function
                         // to account for dialogue exchange with dragon
+                        setSpecialMenuBattleText("Action unavailable. The dev hasn't programmed your ears yet.");
                         setBattleText("Action unavailable. The dev hasn't programmed your ears yet.");
                         return;
                     } else {
@@ -278,11 +279,12 @@ function BattleScreen() {
                         return;
                     }
                 } else if (currentSelectedOption === 2) {
-                    setSpecialMenuBattleText("Pfft, yeah right! As if a peasant like you could use magic!")
+                    setSpecialMenuBattleText("Pfft, yeah right! As if a peasant like you could use magic!");
                     setBattleText("Pfft, yeah right! As if a peasant like you could use magic!");
                     return;
                 } else if (currentSelectedOption === 3) {
                     if (dragonIsAwaitingPlayerResponse) {
+                        setSpecialMenuBattleText("You have an opening to attack the Dragon! Don't waste it praying!");
                         setBattleText("You have an opening to attack the Dragon! Don't waste it praying!");
                         return;
                     } else {
