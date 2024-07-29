@@ -7,7 +7,12 @@ body {
     font-family: fantasy;
     font-size: 108px;
     color: red;
-    margin-top: 20%;
-    margin-bottom: 40%;
+    margin-top: 5%;
     display: flex;
+}
+
+#swords-image {
+    margin-top: -8%;
+    margin-bottom: 5%;
+    height: 38vh;
 }
