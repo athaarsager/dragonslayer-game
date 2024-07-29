@@ -8,16 +8,29 @@ function TitleScreen({ setOnTitleScreen }) {
     const [display, setDisplay] = useState("hide-display");
 
     useEffect(() => {
+
+
+        // startup animation
         gsap.timeline()
             .from("#left-title-text", { x: "-100vw", duration: .8 })
             .from("#right-title-text", { x: "100vw", duration: .8 })
             .to({}, { duration: 0.2 })
             .to("#screen-flash", { opacity: 1, duration: 0.25 })
-            .to("#screen-flash", { opacity: 0, duration: 0.5 });
+            .to("#screen-flash", { opacity: 0, duration: 0.5 })
+            .to({}, { duration: 0.1 })
+            // start text fade in-and-out animation
+            .to("#start-text", {
+                opacity: 0,
+                duration: 1,
+                repeat: -1,
+                yoyo: true,
+                ease: "power1.inOut"
+            });
+
         setTimeout(() => {
             setDisplay("");
         }, 2000);
-        
+
     }, []);
 
 
