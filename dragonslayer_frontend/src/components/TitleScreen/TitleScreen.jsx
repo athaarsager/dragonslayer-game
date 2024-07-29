@@ -1,23 +1,24 @@
 import PropTypes from "prop-types";
 import "./TitleScreen.css";
 import gsap from "gsap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function TitleScreen({ setOnTitleScreen }) {
 
     const [display, setDisplay] = useState("hide-display");
+    const animationRef = useRef(null);
 
     useEffect(() => {
-
-
+        // set the gsap timeline to a ref so I can change its state easily
+        animationRef.current = gsap.timeline();
         // startup animation
-        gsap.timeline()
+        animationRef.current
             .from("#left-title-text", { x: "-100vw", duration: .8 })
             .from("#right-title-text", { x: "100vw", duration: .8 })
             .to({}, { duration: 0.2 })
             .to("#screen-flash", { opacity: 1, duration: 0.25 })
             .to("#screen-flash", { opacity: 0, duration: 0.5 })
-            .to({}, { duration: 0.1 })
+            .to({}, { duration: 0.2 })
             // start text fade in-and-out animation
             .to("#start-text", {
                 opacity: 0,
@@ -26,10 +27,26 @@ function TitleScreen({ setOnTitleScreen }) {
                 yoyo: true,
                 ease: "power1.inOut"
             });
-
+        // This makes the image and start text magically appear while the screen is white
         setTimeout(() => {
             setDisplay("");
         }, 2000);
+
+        const handleKeyPress = (e) => {
+            if (e.key === " " || e.key === "Enter")
+            if (animationRef.current) {
+                // progress lets me set where I would like the animation to skip to
+                animationRef.current.progress(1);
+                setDisplay("");
+            }
+        }
+
+        document.addEventListener("keydown", handleKeyPress);
+
+        // cleanup event listeners when component unmounts
+        return () => {
+            document.removeEventListener("keydown", handleKeyPress);
+        }
 
     }, []);
 
