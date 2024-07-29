@@ -39,6 +39,7 @@ function TitleScreen({ setOnTitleScreen }) {
                     animationRef.current.progress(1);
                     setDisplay("");
                 }
+                // switch start text to new animation
                 gsap.timeline()
                     .to("#start-text", {
                         opacity: 0,
@@ -51,8 +52,14 @@ function TitleScreen({ setOnTitleScreen }) {
                         opacity: 1,
                         duration: 0.15,
                         ease: "power1.inOut"
+                        
+                    })
+                    // pause before changing to next screen
+                    .to({}, { 
+                        duration: 0.5,
+                        onComplete: () => setOnTitleScreen(false)
                     });
-
+                // remove event listener that is no longer needed
                 document.removeEventListener("keydown", handleKeyPress);
             }
         }
