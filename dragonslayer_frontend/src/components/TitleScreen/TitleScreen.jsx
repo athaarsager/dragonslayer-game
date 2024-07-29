@@ -8,6 +8,38 @@ function TitleScreen({ setOnTitleScreen }) {
     const [display, setDisplay] = useState("hide-display");
     const animationRef = useRef(null);
 
+    const handleKeyPress = (e) => {
+        if (e.key === " " || e.key === "Enter") {
+            if (animationRef.current) {
+                // progress lets me set where I would like the animation to skip to
+                animationRef.current.progress(1);
+                setDisplay("");
+            }
+            // switch start text to new animation
+            gsap.timeline()
+                .to("#start-text", {
+                    opacity: 0,
+                    duration: 0.15,
+                    repeat: 5,
+                    // yoyo: true,
+                    ease: "power1.inOut"
+                })
+                .to("#start-text", {
+                    opacity: 1,
+                    duration: 0.15,
+                    ease: "power1.inOut"
+                    
+                })
+                // pause before changing to next screen
+                .to({}, { 
+                    duration: 0.5,
+                    onComplete: () => setOnTitleScreen(false)
+                });
+            // remove event listener that is no longer needed
+            document.removeEventListener("keydown", handleKeyPress);
+        }
+    }
+
     useEffect(() => {
         // set the gsap timeline to a ref so I can change its state easily
         animationRef.current = gsap.timeline();
@@ -32,41 +64,8 @@ function TitleScreen({ setOnTitleScreen }) {
             setDisplay("");
         }, 2000);
 
-        const handleKeyPress = (e) => {
-            if (e.key === " " || e.key === "Enter") {
-                if (animationRef.current) {
-                    // progress lets me set where I would like the animation to skip to
-                    animationRef.current.progress(1);
-                    setDisplay("");
-                }
-                // switch start text to new animation
-                gsap.timeline()
-                    .to("#start-text", {
-                        opacity: 0,
-                        duration: 0.15,
-                        repeat: 5,
-                        // yoyo: true,
-                        ease: "power1.inOut"
-                    })
-                    .to("#start-text", {
-                        opacity: 1,
-                        duration: 0.15,
-                        ease: "power1.inOut"
-                        
-                    })
-                    // pause before changing to next screen
-                    .to({}, { 
-                        duration: 0.5,
-                        onComplete: () => setOnTitleScreen(false)
-                    });
-                // remove event listener that is no longer needed
-                document.removeEventListener("keydown", handleKeyPress);
-            }
-        }
-
         document.addEventListener("keydown", handleKeyPress);
-
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
