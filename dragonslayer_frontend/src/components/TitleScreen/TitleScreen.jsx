@@ -34,19 +34,30 @@ function TitleScreen({ setOnTitleScreen }) {
 
         const handleKeyPress = (e) => {
             if (e.key === " " || e.key === "Enter")
-            if (animationRef.current) {
-                // progress lets me set where I would like the animation to skip to
-                animationRef.current.progress(1);
-                setDisplay("");
-            }
+                if (animationRef.current) {
+                    // progress lets me set where I would like the animation to skip to
+                    animationRef.current.progress(1);
+                    setDisplay("");
+                }
+            gsap.timeline()
+                .to("#start-text", {
+                    opacity: 0,
+                    duration: 0.15,
+                    repeat: 5,
+                    // yoyo: true,
+                    ease: "power1.inOut"
+                })
+                .to("#start-text", {
+                    opacity: 1,
+                    duration: 0.15,
+                    ease: "power1.inOut"
+                });
+
+            document.removeEventListener("keydown", handleKeyPress);
         }
 
         document.addEventListener("keydown", handleKeyPress);
 
-        // cleanup event listeners when component unmounts
-        return () => {
-            document.removeEventListener("keydown", handleKeyPress);
-        }
 
     }, []);
 
