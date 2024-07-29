@@ -42,6 +42,7 @@ function ActionMenu(props) {
             setSecondOptionText(classAttacks[9].attack.name);
         }
         // including classAttacks in the dependency array because the linter told me to
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dragonIsAwaitingPlayerResponse, classAttacks]);
 
     // Toggles options when game over state reached

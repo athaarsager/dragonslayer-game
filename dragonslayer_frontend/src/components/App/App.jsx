@@ -11,7 +11,7 @@ export default function App() {
         <>
             {onTitleScreen &&
                 <TitleScreen
-                    setOnTitleScreen />
+                     setOnTitleScreen={setOnTitleScreen} />
             }
             {onBattleScreen &&
                 <BattleScreen />
