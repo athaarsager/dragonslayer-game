@@ -3,7 +3,7 @@ import "./TitleScreen.css";
 import gsap from "gsap";
 import { useState, useEffect, useRef } from "react";
 
-function TitleScreen({ setOnTitleScreen }) {
+function TitleScreen({ setOnTitleScreen, setOnProloguePage }) {
 
     const [display, setDisplay] = useState("hide-display");
     const animationRef = useRef(null);
@@ -28,12 +28,15 @@ function TitleScreen({ setOnTitleScreen }) {
                     opacity: 1,
                     duration: 0.15,
                     ease: "power1.inOut"
-                    
+
                 })
                 // pause before changing to next screen
-                .to({}, { 
+                .to({}, {
                     duration: 0.5,
-                    onComplete: () => setOnTitleScreen(false)
+                    onComplete: () => {
+                        setOnTitleScreen(false);
+                        setOnProloguePage(true);
+                    }
                 });
             // remove event listener that is no longer needed
             document.removeEventListener("keydown", handleKeyPress);
@@ -65,7 +68,7 @@ function TitleScreen({ setOnTitleScreen }) {
         }, 2000);
 
         document.addEventListener("keydown", handleKeyPress);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -87,7 +90,8 @@ function TitleScreen({ setOnTitleScreen }) {
 }
 
 TitleScreen.propTypes = {
-    setOnTitleScreen: PropTypes.func.isRequired
+    setOnTitleScreen: PropTypes.func.isRequired,
+    setOnProloguePage: PropTypes.func.isRequired
 }
 
 export default TitleScreen;

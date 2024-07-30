@@ -21,6 +21,9 @@ export default function App() {
             {onBattleScreen &&
                 <BattleScreen />
             }
+            {onProloguePage &&
+                <ProloguePage />
+            }
         </>
     )
 }
