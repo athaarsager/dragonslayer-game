@@ -44,11 +44,19 @@ app.UseCors("AllowSpecificOrigins");
 
 // api goes here
 
+// Route for grabbing the opening text
 app.MapGet("/game_text/opening_text", async(DragonslayerGameContext db) => await db.GameText
 .Where(t => t.Type == "Opening_Text")
 .ToListAsync());
 
+// Route for getting the list of character classes
 app.MapGet("/character_classes", async (DragonslayerGameContext db) => await db.CharacterClasses.ToListAsync());
+
+// Route for getting the actual prologue text
+app.MapGet("/game_text/prologue_text", async(DragonslayerGameContext db) => await db.GameText
+.Where(t => t.Type == "Prologue")
+.ToListAsync()); 
+
 // Only get the stats associated with the chosen class. Don't need to store the others on the front end
 app.MapGet("/stats/{characterClassId}", async (DragonslayerGameContext db, int characterClassId) =>
 {

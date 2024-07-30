@@ -12,6 +12,7 @@ export default function App() {
     const [onProloguePage, setOnProloguePage] = useState(false);
 
     const [openingText, setOpeningText] = useState([]);
+    const [prologueText, setPrologueText] = useState([]);
 
     const [playerName, setPlayerName] = useState("");
     
@@ -21,13 +22,23 @@ export default function App() {
         setOpeningText(response.data);
     }
 
+    async function fetchPrologueText() {
+        const response = await axios.get("/api/game_text/prologue_text");
+        setPrologueText(response.data);
+    }
+
     useEffect(() => {
         fetchOpeningText();
+        fetchPrologueText();
     }, []);
 
     useEffect(() => {
         console.log("This is the opening text:", openingText);
     }, [openingText]);
+
+    useEffect(() => {
+        console.log("This is the prologue text:", prologueText);
+    }, [prologueText]);
 
     return (
         <>
