@@ -44,6 +44,10 @@ app.UseCors("AllowSpecificOrigins");
 
 // api goes here
 
+app.MapGet("/game_text/opening_text", async(DragonslayerGameContext db) => await db.GameText
+.Where(t => t.Type == "Opening_Text")
+.ToListAsync());
+
 app.MapGet("/character_classes", async (DragonslayerGameContext db) => await db.CharacterClasses.ToListAsync());
 // Only get the stats associated with the chosen class. Don't need to store the others on the front end
 app.MapGet("/stats/{characterClassId}", async (DragonslayerGameContext db, int characterClassId) =>
@@ -54,6 +58,7 @@ app.MapGet("/stats/{characterClassId}", async (DragonslayerGameContext db, int c
 
     return stats;
 });
+
 // Doing a left join with this one. Gets a bit complicated
 app.MapGet("/attacks/{characterClassId}", async (DragonslayerGameContext db, int characterClassId) => await db.Attacks
 .Where(a => a.CharacterClassId == characterClassId)
