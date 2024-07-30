@@ -51,7 +51,11 @@ export default function App() {
                 <BattleScreen />
             }
             {onProloguePage &&
-                <ProloguePage />
+                <ProloguePage 
+                    openingText={openingText}
+                    prologueText={prologueText}
+                    playerName={playerName}
+                    setPlayerName={setPlayerName}/>
             }
         </>
     )
