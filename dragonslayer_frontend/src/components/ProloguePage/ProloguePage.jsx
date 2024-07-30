@@ -4,18 +4,18 @@ import "./ProloguePage.css";
 
 function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) {
 
-    const [narrationText, setNarrationText] = useState("");
+    const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
 
     return (
         <div id="narration-container">
-            <h1>On Prologue Page</h1>
+            <p className="prologue-text">{narrationText}</p>
         </div>
     );
 }
 
-ProloguePage.PropTypes = {
-    openingText: PropTypes.array.isRequired,
-    prologueText: PropTypes.array.isRequired,
+ProloguePage.propTypes = {
+    openingText: PropTypes.arrayOf(PropTypes.object).isRequired,
+    prologueText: PropTypes.arrayOf(PropTypes.object).isRequired,
     playerName: PropTypes.string.isRequired,
     setPlayerName: PropTypes.func.isRequired
 }
