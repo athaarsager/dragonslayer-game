@@ -1,10 +1,15 @@
 import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
+import "./ProloguePage.css";
 
 function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) {
+
+    const [narrationText, setNarrationText] = useState("");
+
     return (
-        <>
-        <h1>On Prologue Page</h1>
-        </>
+        <div id="narration-container">
+            <h1>On Prologue Page</h1>
+        </div>
     );
 }
 
