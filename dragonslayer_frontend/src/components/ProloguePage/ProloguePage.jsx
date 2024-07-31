@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import "./ProloguePage.css";
@@ -5,6 +6,7 @@ import "./ProloguePage.css";
 function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) {
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
+    const [displayNameBox, setDisplayNameBox] = useState(false);
 
     let resolveKeyPress = null;
 
@@ -51,27 +53,53 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
             if (letterRegex.test(e.key) && currentText.length < 8) {
                 return currentText + e.key;
             } else if (e.key === "Backspace") {
-                return currentText.slice(0, currentText.length -1);
+                return currentText.slice(0, currentText.length - 1);
             } else {
                 return currentText;
             }
         });
     }
 
+    function handleConfirm(e) {
+        if (e.key === "Enter") {
+            if (playerName === "") {
+                return;
+            }
+            console.log("This is the value of playerName:", playerName);
+            document.removeEventListener("keydown", updatePlayerName);
+            setDisplayNameBox(false);
+            setNarrationText(`${openingText[1].textContent} ${playerName} ${openingText[2].textContent}`);
+            return;
+        }
+    }
+
+    // useEffect for handling when a player confirms their name
+    // Thanks useState for being asynchronous and not letting me do this
+    // in the updatePlayerName function
+    useEffect(() => {
+        if (displayNameBox) {
+            document.addEventListener("keydown", handleConfirm)
+        }
+
+    }, [playerName, displayNameBox]);
+
     useEffect(() => {
         // Add an event listener here for user typing in their name
         // Also change state so component where user types their name displays
         // These should not happen until after the text scroll animation plays
         document.addEventListener("keydown", updatePlayerName);
+        setDisplayNameBox(true);
     }, []);
 
     return (
         <div id="narration-container">
             <p className="prologue-text">{narrationText}</p>
-            <div id="name-container">
-                <div id="name-line">{playerName}</div>
-                <div id="type-block"></div>
-            </div>
+            {displayNameBox &&
+                <div id="name-container">
+                    <div id="name-line">{playerName}</div>
+                    <div id="type-block"></div>
+                </div>
+            }
         </div>
     );
 }
