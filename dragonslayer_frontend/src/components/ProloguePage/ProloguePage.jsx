@@ -50,6 +50,8 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         setPlayerName(currentText => {
             if (letterRegex.test(e.key) && currentText.length < 8) {
                 return currentText + e.key;
+            } else if (e.key === "Backspace") {
+                return currentText.slice(0, currentText.length -1);
             } else {
                 return currentText;
             }

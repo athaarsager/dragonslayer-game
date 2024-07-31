@@ -9,6 +9,7 @@
 #name-container {
     display: flex;
     align-items: center;
+    height: 28px;
 }
 
 #type-block {
