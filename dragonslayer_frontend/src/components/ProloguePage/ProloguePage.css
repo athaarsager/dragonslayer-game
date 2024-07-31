@@ -5,3 +5,13 @@
 .prologue-text {
     font-size: 28px;
 }
+
+#name-container {
+    display: flex;
+}
+
+#type-block {
+    width: 12px;
+    height: 28px;
+    background-color: white;
+}

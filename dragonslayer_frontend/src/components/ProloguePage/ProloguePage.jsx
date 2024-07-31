@@ -6,10 +6,11 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
 
-    let resolveKeyPress =  null;
+    let resolveKeyPress = null;
 
     // Re-using some functionality I wrote for the other narration page below.
-    // There's probably a more efficient way for me to do this aside from copy-pasting. Oh well
+    // There's probably a more efficient way for me to do this aside from copy-pasting.
+    // Oh well, can fix later if I'm feeling motivated
     function appendText(newText) {
         setNarrationText(currentText => currentText + newText);
     }
@@ -33,9 +34,25 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         }
     }
 
+    async function pauseOnText() {
+        document.addEventListener("keydown", resolveUserInput);
+        await progressText();
+        document.removeEventListener("keydown", resolveUserInput);
+    }
+
+    useEffect(() => {
+        // Add an event listener here for user typing in their name
+        // Also change state so component where user types their name displays
+        // These should not happen until after the text scroll animation plays
+    }, []);
+
     return (
         <div id="narration-container">
             <p className="prologue-text">{narrationText}</p>
+            <div id="name-container">
+                <div id="name-line">{playerName}</div>
+                <div id="type-block"></div>
+            </div>
         </div>
     );
 }
