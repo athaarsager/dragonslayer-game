@@ -2,16 +2,18 @@
     margin-top: 25%;
 }
 
-.prologue-text {
+.prologue-text, #name-line {
     font-size: 28px;
 }
 
 #name-container {
     display: flex;
+    align-items: center;
 }
 
 #type-block {
     width: 12px;
     height: 28px;
     background-color: white;
+    margin-left: 2px;
 }

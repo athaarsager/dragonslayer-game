@@ -40,10 +40,27 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         document.removeEventListener("keydown", resolveUserInput);
     }
 
+    // Logic for player typing in their name. Limit 8 characters
+    function updatePlayerName(e) {
+        // using regex for determining a pattern. Thanks ChatGPT
+        // The caret indicates the start of the line, 
+        // The $ indicates the end
+        // We then test the input against the regex
+        const letterRegex = /^[a-zA-Z]$/;
+        setPlayerName(currentText => {
+            if (letterRegex.test(e.key) && currentText.length < 8) {
+                return currentText + e.key;
+            } else {
+                return currentText;
+            }
+        });
+    }
+
     useEffect(() => {
         // Add an event listener here for user typing in their name
         // Also change state so component where user types their name displays
         // These should not happen until after the text scroll animation plays
+        document.addEventListener("keydown", updatePlayerName);
     }, []);
 
     return (
