@@ -30,6 +30,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* This is so the title flies in from off screen correctly. Could cause problems later... */
+  overflow: hidden;
 }
 
 h1 {

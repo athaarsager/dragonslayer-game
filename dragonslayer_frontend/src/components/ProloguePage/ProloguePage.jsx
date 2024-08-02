@@ -9,7 +9,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
     const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
-    const [selectedOption, setSelectedOption] = useState(1);
+    const [selectedOption, setSelectedOption] = useState(0);
 
     // Ref for evaluating the selectedOption
     const selectedOptionRef = useRef(selectedOption);
@@ -102,12 +102,13 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         if (e.key !== " " && e.key !== "Enter") {
             return;
         }
+        document.removeEventListener("keydown", changeSelection);
+        document.removeEventListener("keydown", makeSelection);
+        console.log("In makeSelection. This is the selectedOptionRef.current:", selectedOptionRef.current);
         if (yesNoBoxNumber === 1) {
             if (selectedOptionRef.current === 1) {
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[3].textContent);
-                document.removeEventListener("keydown", changeSelection());
-                document.removeEventListener("keydown", makeSelection("FirstYesNoBox"));
             } else {
                 // return player to input for name selection
                 // may need to edit logic again to account for text animation
@@ -116,7 +117,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
                 setPlayerName("");
                 setDisplayNameBox(true);
             }
-        } else if(yesNoBoxNumber === 2) {
+        } else if (yesNoBoxNumber === 2) {
             if (selectedOptionRef.current === 1) {
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[4].textContent);
@@ -139,8 +140,12 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
     // in the updatePlayerName function
     useEffect(() => {
         if (displayNameBox) {
-            document.addEventListener("keydown", handleNameConfirm)
+            document.addEventListener("keydown", handleNameConfirm);
         }
+
+        return () => {
+            document.removeEventListener("keydown", handleNameConfirm);
+        };
 
     }, [playerName, displayNameBox]);
 
@@ -154,25 +159,34 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
 
     useEffect(() => {
         if (displayYesNoBox) {
+            console.log("displayYesNoBox is truthy. Adding changeSelection and makeSelection event listeners");
             document.addEventListener("keydown", changeSelection);
             document.addEventListener("keydown", makeSelection);
         }
+        return () => {
+            document.removeEventListener("keydown", changeSelection);
+            document.removeEventListener("keydown", makeSelection);
+        };
     }, [displayYesNoBox]);
 
     // This updates the selectedOptionRef whenever the selectedOption is updated
     useEffect(() => {
         selectedOptionRef.current = selectedOption;
+        console.log("In use effect. This is the selectedOption:", selectedOption);
+        console.log("In use effect. This is the selectedOptionRef.current:", selectedOptionRef.current);
     }, [selectedOption]);
 
     return (
         <div id="narration-container">
-            <p className="prologue-text">{narrationText}</p>
-            {displayNameBox &&
-                <div id="name-container">
-                    <div id="name-line">{playerName}</div>
-                    <div id="type-block"></div>
-                </div>
-            }
+            <div id="prologue-text-and-name-container">
+                <p className="prologue-text">{narrationText}</p>
+                {displayNameBox &&
+                    <div id="name-container">
+                        <div id="name-line">{playerName}</div>
+                        <div id="type-block"></div>
+                    </div>
+                }
+            </div>
             {displayYesNoBox &&
                 <div id="yes-no-box-container">
                     <div id="yes-no-box">

@@ -73,7 +73,7 @@ function TitleScreen({ setOnTitleScreen, setOnProloguePage }) {
 
 
     return (
-        <>
+        <div id="title-screen-container">
             <div id="title-text">
                 <p id="left-title-text">Dragon</p>
                 <p id="right-title-text">Slayer</p>
@@ -85,7 +85,7 @@ function TitleScreen({ setOnTitleScreen, setOnProloguePage }) {
             <p id="start-text" className={display}>Press Spacebar or Enter to Begin</p>
             {/* overlay for screen flash */}
             <div id="screen-flash"></div>
-        </>
+        </div>
     )
 }
 
