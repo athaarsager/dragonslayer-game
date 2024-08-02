@@ -5,6 +5,8 @@ import "./ProloguePage.css";
 
 function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) {
 
+    // need to adjust some css still
+
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
@@ -13,6 +15,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
 
     // Ref for evaluating the selectedOption
     const selectedOptionRef = useRef(selectedOption);
+    const yesNoBoxNumberRef = useRef(yesNoBoxNumber);
 
     let resolveKeyPress = null;
 
@@ -99,16 +102,20 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
     }
 
     function makeSelection(e) {
-        if (e.key !== " " && e.key !== "Enter") {
+        if ((e.key !== " " && e.key !== "Enter") || !displayYesNoBox) {
             return;
         }
-        document.removeEventListener("keydown", changeSelection);
-        document.removeEventListener("keydown", makeSelection);
-        console.log("In makeSelection. This is the selectedOptionRef.current:", selectedOptionRef.current);
-        if (yesNoBoxNumber === 1) {
+        // document.removeEventListener("keydown", changeSelection);
+        if (yesNoBoxNumberRef.current === 1) {
             if (selectedOptionRef.current === 1) {
+                document.removeEventListener("keydown", makeSelection);
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[3].textContent);
+                // probably animation here or something
+                setDisplayYesNoBox(true);
+                console.log("YesNoBoxNumber should be updating to 2 here");
+                setYesNoBoxNumber(2);
+                document.addEventListener("keydown", makeSelection);
             } else {
                 // return player to input for name selection
                 // may need to edit logic again to account for text animation
@@ -116,11 +123,15 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
                 setNarrationText(openingText[0].textContent);
                 setPlayerName("");
                 setDisplayNameBox(true);
+                setYesNoBoxNumber(1);
+                document.removeEventListener("keydown", makeSelection);
             }
-        } else if (yesNoBoxNumber === 2) {
+        } else if (yesNoBoxNumberRef.current === 2) {
+            console.log("YesNoBoxNumber is 2");
             if (selectedOptionRef.current === 1) {
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[4].textContent);
+                document.removeEventListener("keydown", makeSelection);
             } else {
                 // return player to input for name selection
                 // may need to edit logic again to account for text animation
@@ -128,6 +139,8 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
                 setNarrationText(openingText[0].textContent);
                 setPlayerName("");
                 setDisplayNameBox(true);
+                setYesNoBoxNumber(1);
+                document.removeEventListener("keydown", makeSelection);
             }
             // logic for class selection will go here
         } else {
@@ -159,7 +172,6 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
 
     useEffect(() => {
         if (displayYesNoBox) {
-            console.log("displayYesNoBox is truthy. Adding changeSelection and makeSelection event listeners");
             document.addEventListener("keydown", changeSelection);
             document.addEventListener("keydown", makeSelection);
         }
@@ -175,6 +187,10 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         console.log("In use effect. This is the selectedOption:", selectedOption);
         console.log("In use effect. This is the selectedOptionRef.current:", selectedOptionRef.current);
     }, [selectedOption]);
+
+    useEffect(() => {
+        yesNoBoxNumberRef.current = yesNoBoxNumber;
+    }, [yesNoBoxNumber]);
 
     return (
         <div id="narration-container">
