@@ -1,13 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./ProloguePage.css";
 
 function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) {
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
+    const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
+    const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
     const [selectedOption, setSelectedOption] = useState(1);
+
+    // Ref for evaluating the selectedOption
+    const selectedOptionRef = useRef(selectedOption);
 
     let resolveKeyPress = null;
 
@@ -68,7 +73,63 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
             }
             document.removeEventListener("keydown", updatePlayerName);
             setDisplayNameBox(false);
+            // May need to adjust this logic a little bit when adding animations
             setNarrationText(`${openingText[1].textContent} '${playerName}' ${openingText[2].textContent}`);
+            AddYesNoBox();
+            document.addEventListener("keydown", makeSelection);
+            return;
+        }
+    }
+
+    function AddYesNoBox() {
+        setDisplayYesNoBox(true);
+        if (selectedOption !== 1) {
+            setSelectedOption(1);
+        }
+    }
+
+    function changeSelection(e) {
+        if (displayYesNoBox) {
+            if (e.key === "ArrowDown") {
+                setSelectedOption(2);
+            } else if (e.key === "ArrowUp") {
+                setSelectedOption(1);
+            }
+        }
+    }
+
+    function makeSelection(e) {
+        if (e.key !== " " && e.key !== "Enter") {
+            return;
+        }
+        if (yesNoBoxNumber === 1) {
+            if (selectedOptionRef.current === 1) {
+                setDisplayYesNoBox(false);
+                setNarrationText(openingText[3].textContent);
+                document.removeEventListener("keydown", changeSelection());
+                document.removeEventListener("keydown", makeSelection("FirstYesNoBox"));
+            } else {
+                // return player to input for name selection
+                // may need to edit logic again to account for text animation
+                setDisplayYesNoBox(false);
+                setNarrationText(openingText[0].textContent);
+                setPlayerName("");
+                setDisplayNameBox(true);
+            }
+        } else if(yesNoBoxNumber === 2) {
+            if (selectedOptionRef.current === 1) {
+                setDisplayYesNoBox(false);
+                setNarrationText(openingText[4].textContent);
+            } else {
+                // return player to input for name selection
+                // may need to edit logic again to account for text animation
+                setDisplayYesNoBox(false);
+                setNarrationText(openingText[0].textContent);
+                setPlayerName("");
+                setDisplayNameBox(true);
+            }
+            // logic for class selection will go here
+        } else {
             return;
         }
     }
@@ -91,6 +152,18 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         setDisplayNameBox(true);
     }, []);
 
+    useEffect(() => {
+        if (displayYesNoBox) {
+            document.addEventListener("keydown", changeSelection);
+            document.addEventListener("keydown", makeSelection);
+        }
+    }, [displayYesNoBox]);
+
+    // This updates the selectedOptionRef whenever the selectedOption is updated
+    useEffect(() => {
+        selectedOptionRef.current = selectedOption;
+    }, [selectedOption]);
+
     return (
         <div id="narration-container">
             <p className="prologue-text">{narrationText}</p>
@@ -100,22 +173,24 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
                     <div id="type-block"></div>
                 </div>
             }
-            <div id="yes-no-box-container">
-                <div id="yes-no-box">
-                    <div className="option-container">
-                        <div className="selector-container">
-                            <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
+            {displayYesNoBox &&
+                <div id="yes-no-box-container">
+                    <div id="yes-no-box">
+                        <div className="option-container">
+                            <div className="selector-container">
+                                <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
+                            </div>
+                            <p className="prologue-text">Yes</p>
                         </div>
-                        <p className="prologue-text">Yes</p>
-                    </div>
-                    <div className="option-container">
-                        <div className="selector-container">
-                            <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
+                        <div className="option-container">
+                            <div className="selector-container">
+                                <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
+                            </div>
+                            <p className="prologue-text" id="no-option">No</p>
                         </div>
-                        <p className="prologue-text" id="no-option">No</p>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     );
 }
