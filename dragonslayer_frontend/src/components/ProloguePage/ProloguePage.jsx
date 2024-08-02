@@ -60,7 +60,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         });
     }
 
-    function handleConfirm(e) {
+    function handleNameConfirm(e) {
         if (e.key === "Enter") {
             if (playerName === "") {
                 return;
@@ -68,7 +68,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
             console.log("This is the value of playerName:", playerName);
             document.removeEventListener("keydown", updatePlayerName);
             setDisplayNameBox(false);
-            setNarrationText(`${openingText[1].textContent} ${playerName} ${openingText[2].textContent}`);
+            setNarrationText(`${openingText[1].textContent} '${playerName}' ${openingText[2].textContent}`);
             return;
         }
     }
@@ -78,7 +78,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
     // in the updatePlayerName function
     useEffect(() => {
         if (displayNameBox) {
-            document.addEventListener("keydown", handleConfirm)
+            document.addEventListener("keydown", handleNameConfirm)
         }
 
     }, [playerName, displayNameBox]);
