@@ -7,6 +7,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(1);
 
     let resolveKeyPress = null;
 
@@ -99,14 +100,20 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
                     <div id="type-block"></div>
                 </div>
             }
-            <div id="yes-no-box">
-                <div className="option-container">
-                    <div className="selector">&#9659;</div>
-                    <p className="prologue-text">Yes</p>
-                </div>
-                <div className="option-container">
-                    <div className="selector">&#9659;</div>
-                    <p className="prologue-text">No</p>
+            <div id="yes-no-box-container">
+                <div id="yes-no-box">
+                    <div className="option-container">
+                        <div className="selector-container">
+                            <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
+                        </div>
+                        <p className="prologue-text">Yes</p>
+                    </div>
+                    <div className="option-container">
+                        <div className="selector-container">
+                            <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
+                        </div>
+                        <p className="prologue-text" id="no-option">No</p>
+                    </div>
                 </div>
             </div>
         </div>
