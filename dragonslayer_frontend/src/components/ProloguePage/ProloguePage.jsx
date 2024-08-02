@@ -65,7 +65,6 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
             if (playerName === "") {
                 return;
             }
-            console.log("This is the value of playerName:", playerName);
             document.removeEventListener("keydown", updatePlayerName);
             setDisplayNameBox(false);
             setNarrationText(`${openingText[1].textContent} '${playerName}' ${openingText[2].textContent}`);
@@ -100,6 +99,16 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
                     <div id="type-block"></div>
                 </div>
             }
+            <div id="yes-no-box">
+                <div className="option-container">
+                    <div className="selector">&#9659;</div>
+                    <p className="prologue-text">Yes</p>
+                </div>
+                <div className="option-container">
+                    <div className="selector">&#9659;</div>
+                    <p className="prologue-text">No</p>
+                </div>
+            </div>
         </div>
     );
 }

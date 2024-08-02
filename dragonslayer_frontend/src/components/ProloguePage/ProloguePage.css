@@ -18,3 +18,27 @@
     background-color: white;
     margin-left: 2px;
 }
+
+#yes-no-box {
+    border: 2px solid white;
+    border-radius: 10px;
+    width: 8vw;
+}
+
+.option-container {
+    display: flex;
+    align-items: center;
+    margin-left: 2vh;
+    height: 6vh;
+}
+
+.selector {
+    font-size: 25px;
+    text-align: right;
+    margin-right: 0.75rem;
+    grid-column: 1 / span 1;
+}
+
+.unselected {
+    display: none;
+}
