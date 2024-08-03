@@ -8,6 +8,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
+    const [displayClassesMenu, setDisplayClassesMenu] = useState(false);
     const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
     const [selectedOption, setSelectedOption] = useState(0);
     // using this variable to set when event listener should be added for choosing class
@@ -54,18 +55,19 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
 
     // going to use a separate function for opening text and prolgue text I think...
     function progressOpeningText(e) {
-        if (e.key === " " || e.key === "Enter")   
-        if (narrationText === `${openingText[4].textContent}, "${playerName}."`) {
-            setNarrationText(openingText[5].textContent);
-            setReadyToProgressText(false);
-        } else {
-            for (let i = 6; i < openingText.length; i++) {
-                if (narrationText === openingText[i].textContent) {
-                    setNarrationText(openingText[i + 1].textContent);
-                    return;
+        if (e.key === " " || e.key === "Enter")
+            if (narrationText === `${openingText[4].textContent}, "${playerName}."`) {
+                setNarrationText(openingText[5].textContent);
+                setReadyToProgressText(false);
+                setDisplayClassesMenu(true);
+            } else {
+                for (let i = 6; i < openingText.length; i++) {
+                    if (narrationText === openingText[i].textContent) {
+                        setNarrationText(openingText[i + 1].textContent);
+                        return;
+                    }
                 }
             }
-        }
     }
 
     // Logic for player typing in their name. Limit 8 characters
@@ -247,6 +249,22 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
                     </div>
                 </div>
             }
+            <div id="classes-menu">
+                <div className="class-option-container">
+                    <div className="selector-container">
+                        <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
+                    </div>
+                    <div className="selector-container">
+                        <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
+                    </div>
+                    <div className="selector-container">
+                        <div className={selectedOption === 3 ? "selector" : "selector unselected"}>&#9659;</div>
+                    </div>
+                    <div className="selector-container">
+                        <div className={selectedOption === 4 ? "selector" : "selector unselected"}>&#9659;</div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

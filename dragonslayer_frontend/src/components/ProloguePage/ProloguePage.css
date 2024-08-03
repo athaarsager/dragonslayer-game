@@ -28,7 +28,7 @@
     justify-content: center;
 }
 
-#yes-no-box {
+#yes-no-box, #classes-menu {
     border: 2px solid white;
     border-radius: 10px;
     width: 8vw;
@@ -39,6 +39,13 @@
     align-items: center;
     margin-left: 1vw;
     height: 6vh;
+}
+
+.class-option-container {
+    display: flex;
+    align-items: center;
+    margin-left: 1vw;
+    height: 12vh;
 }
 
 .selector-container {
