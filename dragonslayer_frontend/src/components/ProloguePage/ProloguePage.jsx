@@ -5,13 +5,13 @@ import "./ProloguePage.css";
 
 function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) {
 
-    // need to adjust some css still
-
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
     const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
     const [selectedOption, setSelectedOption] = useState(0);
+    // using this variable to set when event listener should be added for choosing class
+    const [readyToProgressText, setReadyToProgressText] = useState(false);
 
     // Ref for evaluating the selectedOption
     const selectedOptionRef = useRef(selectedOption);
@@ -32,6 +32,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
             // when it is resolved in the below function, it resolves it here as well
             // resolve is a function that is assigned to a variable here so it can be accessed
             // outside of the promise
+            console.log("In progresText, resolving promise");
             resolveKeyPress = resolve;
         });
     }
@@ -49,6 +50,22 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         document.addEventListener("keydown", resolveUserInput);
         await progressText();
         document.removeEventListener("keydown", resolveUserInput);
+    }
+
+    // going to use a separate function for opening text and prolgue text I think...
+    function progressOpeningText(e) {
+        if (e.key === " " || e.key === "Enter")   
+        if (narrationText === `${openingText[4].textContent}, "${playerName}."`) {
+            setNarrationText(openingText[5].textContent);
+            setReadyToProgressText(false);
+        } else {
+            for (let i = 6; i < openingText.length; i++) {
+                if (narrationText === openingText[i].textContent) {
+                    setNarrationText(openingText[i + 1].textContent);
+                    return;
+                }
+            }
+        }
     }
 
     // Logic for player typing in their name. Limit 8 characters
@@ -130,8 +147,9 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
             console.log("YesNoBoxNumber is 2");
             if (selectedOptionRef.current === 1) {
                 setDisplayYesNoBox(false);
-                setNarrationText(openingText[4].textContent);
+                setNarrationText(`${openingText[4].textContent}, "${playerName}."`);
                 document.removeEventListener("keydown", makeSelection);
+                setReadyToProgressText(true);
             } else {
                 // return player to input for name selection
                 // may need to edit logic again to account for text animation
@@ -181,11 +199,19 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) 
         };
     }, [displayYesNoBox]);
 
+    useEffect(() => {
+        // add event listener here
+        if (readyToProgressText) {
+            console.log("Adding event listener for progressing text");
+            document.addEventListener("keydown", progressOpeningText);
+        } else if (!readyToProgressText) {
+            document.removeEventListener("keydown", progressOpeningText);
+        }
+    }, [readyToProgressText]);
+
     // This updates the selectedOptionRef whenever the selectedOption is updated
     useEffect(() => {
         selectedOptionRef.current = selectedOption;
-        console.log("In use effect. This is the selectedOption:", selectedOption);
-        console.log("In use effect. This is the selectedOptionRef.current:", selectedOptionRef.current);
     }, [selectedOption]);
 
     useEffect(() => {
