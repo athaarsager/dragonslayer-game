@@ -8,23 +8,41 @@ import NarrationDisplay from "../NarrationDisplay/NarrationDisplay";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
 
-function BattleScreen({enemyName, battleMenuOpen, setBattleMenuOpen}) {
+function BattleScreen(props) {
+
+    const {
+        enemyName,
+        battleMenuOpen,
+        setBattleMenuOpen,
+        classAttacks,
+        setClassAttacks,
+        classAttacksToDisplay,
+        setClassAttacksToDisplay,
+        selectedOption,
+        setSelectedOption,
+        attackOptionChosen,
+        setAttackOptionChosen,
+        dragonIsAwaitingPlayerResponse,
+        setDragonIsAwaitingPlayerResponse,
+        onActionMenu,
+        setOnActionMenu,
+        onFinalText,
+        setOnFinalText,
+        gameOver,
+        setGameOver
+    } = props
 
     const playRoundRef = useRef();
     const resetBattleStatsRef = useRef();
     const battleMenuTextRef = useRef();
 
-    const [onActionMenu, setOnActionMenu] = useState(true);
-    const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [defendOptionChosen, setDefendOptionChosen] = useState(false);
     const [prayOptionChosen, setPrayOptionChosen] = useState(false);
     const [battleTextList, setBattleTextList] = useState([]);
     const [battleText, setBattleText] = useState("A Dragon draws near!");
     const [specialMenuBattleText, setSpecialMenuBattleText] = useState("");
 
-    const [classAttacks, setClassAttacks] = useState([]);
     const [originalClassAttacksToDisplay, setOriginalClassAttacksToDisplay] = useState([]);
-    const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
 
     const [maxPlayerStats, setMaxPlayerStats] = useState({});
     const [currentPlayerStats, setCurrentPlayerStats] = useState({});
@@ -36,20 +54,16 @@ function BattleScreen({enemyName, battleMenuOpen, setBattleMenuOpen}) {
     const [maxDragonStats, setMaxDragonStats] = useState({});
     const [dragonHp, setDragonHp] = useState(NaN);
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
-    const [dragonIsAwaitingPlayerResponse, setDragonIsAwaitingPlayerResponse] = useState(false);
+    
 
     const [enemyAttacks, setEnemyAttacks] = useState([]);
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
 
-    const [gameOver, setGameOver] = useState(false);
     const [badEndingText, setBadEndingText] = useState([]);
 
-    // state variable for evaluating where the selector arrow is
-    const [selectedOption, setSelectedOption] = useState(0);
     // This ensures the menu battle text does not re-appear after bad ending reached
     const [badEndingReached, setBadEndingReached] = useState(false);
     const [displayNarrationText, setDisplayNarrationText] = useState(false);
-    const [onFinalText, setOnFinalText] = useState(false);
 
     // need to use ref to ensure an old value is not captured when an event listener is added
     const selectedOptionRef = useRef(selectedOption);
@@ -503,6 +517,22 @@ BattleScreen.propTypes = {
     enemyName: PropTypes.string.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired,
     setBattleMenuOpen: PropTypes.func.isRequired,
+    attackOptionChosen: PropTypes.bool.isRequired,
+    setAttackOptionChosen: PropTypes.func.isRequired,
+    classAttacks: PropTypes.arrayOf(PropTypes.object).isRequired,
+    setClassAttacks: PropTypes.func.isRequired,
+    onActionMenu: PropTypes.bool.isRequired,
+    setOnActionMenu: PropTypes.func.isRequired,
+    classAttacksToDisplay: PropTypes.arrayOf(PropTypes.object).isRequired,
+    setClassAttacksToDisplay: PropTypes.func.isRequired,
+    selectedOption: PropTypes.number.isRequired,
+    setSelectedOption: PropTypes.func.isRequired,
+    dragonIsAwaitingPlayerResponse: PropTypes.bool.isRequired,
+    setDragonIsAwaitingPlayerResponse: PropTypes.func.isRequired,
+    onFinalText: PropTypes.bool.isRequired,
+    setOnFinalText: PropTypes.func.isRequired,
+    gameOver: PropTypes.bool.isRequired,
+    setGameOver: PropTypes.func.isRequired,
 }
 
 export default BattleScreen;

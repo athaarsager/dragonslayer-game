@@ -20,7 +20,53 @@ export default function App() {
     const [playerName, setPlayerName] = useState("");
     const [enemyName, setEnemyName] = useState("");
 
-    const [playerClasses, setPlayerClasses] =  useState([]);
+    const [playerClasses, setPlayerClasses] = useState([]);
+
+    // prop variables
+    const [attackOptionChosen, setAttackOptionChosen] = useState(false);
+    const [classAttacks, setClassAttacks] = useState([]);
+    const [onActionMenu, setOnActionMenu] = useState(true);
+    const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
+    // state variable for evaluating where the selector arrow is
+    const [selectedOption, setSelectedOption] = useState(0);
+    const [dragonIsAwaitingPlayerResponse, setDragonIsAwaitingPlayerResponse] = useState(false);
+    const [onFinalText, setOnFinalText] = useState(false);
+    const [gameOver, setGameOver] = useState(false);
+
+    const battleScreenProps = {
+        enemyName,
+        battleMenuOpen,
+        setBattleMenuOpen,
+        classAttacks,
+        setClassAttacks,
+        classAttacksToDisplay,
+        setClassAttacksToDisplay,
+        selectedOption,
+        setSelectedOption,
+        attackOptionChosen,
+        setAttackOptionChosen,
+        dragonIsAwaitingPlayerResponse,
+        setDragonIsAwaitingPlayerResponse,
+        onActionMenu,
+        setOnActionMenu,
+        onFinalText,
+        setOnFinalText,
+        gameOver,
+        setGameOver
+    }
+
+    const actionMenuProps = {
+        classAttacks,
+        classAttacksToDisplay,
+        selectedOption,
+        attackOptionChosen,
+        setAttackOptionChosen,
+        dragonIsAwaitingPlayerResponse,
+        setOnActionMenu,
+        battleMenuOpen,
+        onFinalText,
+        gameOver
+    }
 
 
     async function fetchOpeningText() {
@@ -72,17 +118,13 @@ export default function App() {
                     playerClasses={playerClasses}
                     displayClassesMenu={displayClassesMenu}
                     setDisplayClassesMenu={setDisplayClassesMenu}
-                    />
-            }
-            {onBattleScreen &&
-                <BattleScreen 
-                enemyName={enemyName}
-                battleMenuOpen={battleMenuOpen}
-                setBattleMenuOpen={setBattleMenuOpen}
                 />
             }
+            {onBattleScreen &&
+                <BattleScreen {...battleScreenProps}/>
+            }
             {/* The conditional rendering logic is already inside this component */}
-            <ActionMenu />
+            <ActionMenu {...actionMenuProps}/>
         </>
     )
 }
