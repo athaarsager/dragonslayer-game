@@ -250,20 +250,14 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                 </div>
             }
             <div id="classes-menu">
-                <div className="class-option-container">
+                {playerClasses.map((playerClass, index) => (
+                <div key={index} className="class-option-container">
                     <div className="selector-container">
-                        <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
+                        <div className={selectedOption === index + 1 ? "selector" : "selector unselected"}>&#9659;</div>
                     </div>
-                    <div className="selector-container">
-                        <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
-                    </div>
-                    <div className="selector-container">
-                        <div className={selectedOption === 3 ? "selector" : "selector unselected"}>&#9659;</div>
-                    </div>
-                    <div className="selector-container">
-                        <div className={selectedOption === 4 ? "selector" : "selector unselected"}>&#9659;</div>
-                    </div>
+                    <p>{playerClass.name}</p>
                 </div>
+                ))}
             </div>
         </div>
     );
