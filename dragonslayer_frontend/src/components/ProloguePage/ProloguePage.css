@@ -41,13 +41,6 @@
     height: 6vh;
 }
 
-.class-option-container {
-    display: flex;
-    align-items: center;
-    margin-left: 1vw;
-    height: 12vh;
-}
-
 .selector-container {
     width: 1.8vw;
 }
@@ -60,4 +53,12 @@
 
 .unselected {
     display: none;
+}
+
+.text-box {
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+    border-radius: 10px;
+    width: 100vh;
 }

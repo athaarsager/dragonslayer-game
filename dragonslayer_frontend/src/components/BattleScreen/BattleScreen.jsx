@@ -501,7 +501,7 @@ function BattleScreen({enemyName, battleMenuOpen, setBattleMenuOpen}) {
 
 BattleScreen.propTypes = {
     enemyName: PropTypes.string.isRequired,
-    battleMenuOpen: PropTypes.boolean.isRequired,
+    battleMenuOpen: PropTypes.bool.isRequired,
     setBattleMenuOpen: PropTypes.func.isRequired,
 }
 

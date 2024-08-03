@@ -249,6 +249,9 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                     </div>
                 </div>
             }
+            <div className="text-box">
+                <p>ClassDescriptionTextHere</p>
+            </div>
             {/* <div id="classes-menu">
                 {playerClasses.map((playerClass, index) => (
                 <div key={index} className="class-option-container">
@@ -269,7 +272,7 @@ ProloguePage.propTypes = {
     playerName: PropTypes.string.isRequired,
     setPlayerName: PropTypes.func.isRequired,
     playerClasses: PropTypes.arrayOf(PropTypes.object).isRequired,
-    displayClassesMenu: PropTypes.boolean.isRequired,
+    displayClassesMenu: PropTypes.bool.isRequired,
     setDisplayClassesMenu: PropTypes.func.isRequired,
 }
 
