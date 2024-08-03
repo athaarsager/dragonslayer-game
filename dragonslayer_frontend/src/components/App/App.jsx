@@ -15,7 +15,10 @@ export default function App() {
     const [prologueText, setPrologueText] = useState([]);
 
     const [playerName, setPlayerName] = useState("");
-    
+    const [enemyName, setEnemyName] = useState("");
+
+    const [playerClasses, setPlayerClasses] =  useState([]);
+
 
     async function fetchOpeningText() {
         const response = await axios.get("/api/game_text/opening_text");
@@ -27,9 +30,19 @@ export default function App() {
         setPrologueText(response.data);
     }
 
+    async function fetchClasses() {
+        const response = await axios.get("/api/character_classes");
+        console.log("These are the character classes:", response.data);
+        // set the enemy's name to "dragon" right off the bat
+        setEnemyName(response.data[4].name);
+        setPlayerClasses(response.data.slice(0, 4));
+        console.log("These will be the playerClasses:", response.data.slice(0, 4));
+    }
+
     useEffect(() => {
         fetchOpeningText();
         fetchPrologueText();
+        fetchClasses();
     }, []);
 
     useEffect(() => {
@@ -44,19 +57,24 @@ export default function App() {
         <>
             {onTitleScreen &&
                 <TitleScreen
-                     setOnTitleScreen={setOnTitleScreen} 
-                     setOnProloguePage={setOnProloguePage}/>
-            }
-            {onBattleScreen &&
-                <BattleScreen />
+                    setOnTitleScreen={setOnTitleScreen}
+                    setOnProloguePage={setOnProloguePage} />
             }
             {onProloguePage &&
-                <ProloguePage 
+                <ProloguePage
                     openingText={openingText}
                     prologueText={prologueText}
                     playerName={playerName}
-                    setPlayerName={setPlayerName}/>
+                    setPlayerName={setPlayerName}
+                    playerClasses={playerClasses}
+                    />
             }
+            {onBattleScreen &&
+                <BattleScreen 
+                enemyName={enemyName}
+                />
+            }
+
         </>
     )
 }

@@ -6,8 +6,9 @@ import BattleLogic from "../BattleLogic/BattleLogic";
 import ActionMenu from "../ActionMenu/ActionMenu";
 import NarrationDisplay from "../NarrationDisplay/NarrationDisplay";
 import { gsap } from "gsap";
+import PropTypes from "prop-types";
 
-function BattleScreen() {
+function BattleScreen({enemyName}) {
 
     const playRoundRef = useRef();
     const resetBattleStatsRef = useRef();
@@ -38,7 +39,6 @@ function BattleScreen() {
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
     const [dragonIsAwaitingPlayerResponse, setDragonIsAwaitingPlayerResponse] = useState(false);
 
-    const [enemyName, setEnemyName] = useState("");
     const [enemyAttacks, setEnemyAttacks] = useState([]);
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
 
@@ -117,14 +117,6 @@ function BattleScreen() {
         // don't want to reset hp values accidentally
         setDragonHp(response.data[0].hp);
         setDragonMaxHp(response.data[0].hp);
-    }
-
-    // This function may need to be moved to the class display screen. Leaving it here for now
-    async function fetchClasses() {
-        const response = await axios.get("/api/character_classes");
-        console.log("These are the character classes:", response.data);
-        // set the enemy's name to "dragon" right off the bat
-        setEnemyName(response.data[4].name);
     }
 
     async function fetchBattleMenuText() {
@@ -348,7 +340,6 @@ function BattleScreen() {
     }
 
     useEffect(() => {
-        fetchClasses();
         fetchClassAttacks();
         fetchClassAttacksToDisplay();
         fetchCharacterStats();
@@ -507,6 +498,10 @@ function BattleScreen() {
             </div>
         </>
     )
+}
+
+BattleScreen.propTypes = {
+    enemyName: PropTypes.string.isRequired,
 }
 
 export default BattleScreen;

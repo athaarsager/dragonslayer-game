@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
 import "./ProloguePage.css";
 
-function ProloguePage({ openingText, prologueText, playerName, setPlayerName }) {
+function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses }) {
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
@@ -273,7 +273,8 @@ ProloguePage.propTypes = {
     openingText: PropTypes.arrayOf(PropTypes.object).isRequired,
     prologueText: PropTypes.arrayOf(PropTypes.object).isRequired,
     playerName: PropTypes.string.isRequired,
-    setPlayerName: PropTypes.func.isRequired
+    setPlayerName: PropTypes.func.isRequired,
+    playerClasses: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 export default ProloguePage;
