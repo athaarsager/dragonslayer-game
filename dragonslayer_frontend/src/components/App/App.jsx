@@ -1,6 +1,7 @@
 import TitleScreen from '../TitleScreen/TitleScreen.jsx';
 import BattleScreen from '../BattleScreen/BattleScreen.jsx';
 import ProloguePage from '../ProloguePage/ProloguePage.jsx';
+import ActionMenu from '../ActionMenu/ActionMenu.jsx';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 
@@ -10,9 +11,11 @@ export default function App() {
     const [onTitleScreen, setOnTitleScreen] = useState(true);
     const [onBattleScreen, setOnBattleScreen] = useState(false);
     const [onProloguePage, setOnProloguePage] = useState(false);
+    const [battleMenuOpen, setBattleMenuOpen] = useState(true);
 
     const [openingText, setOpeningText] = useState([]);
     const [prologueText, setPrologueText] = useState([]);
+    const [displayClassesMenu, setDisplayClassesMenu] = useState(false);
 
     const [playerName, setPlayerName] = useState("");
     const [enemyName, setEnemyName] = useState("");
@@ -67,14 +70,19 @@ export default function App() {
                     playerName={playerName}
                     setPlayerName={setPlayerName}
                     playerClasses={playerClasses}
+                    displayClassesMenu={displayClassesMenu}
+                    setDisplayClassesMenu={setDisplayClassesMenu}
                     />
             }
             {onBattleScreen &&
                 <BattleScreen 
                 enemyName={enemyName}
+                battleMenuOpen={battleMenuOpen}
+                setBattleMenuOpen={setBattleMenuOpen}
                 />
             }
-
+            {/* The conditional rendering logic is already inside this component */}
+            <ActionMenu />
         </>
     )
 }

@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
 import "./ProloguePage.css";
 
-function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses }) {
+function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses, displayClassesMenu, setDisplayClassesMenu }) {
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
-    const [displayClassesMenu, setDisplayClassesMenu] = useState(false);
+    
     const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
     const [selectedOption, setSelectedOption] = useState(0);
     // using this variable to set when event listener should be added for choosing class
@@ -249,16 +249,16 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                     </div>
                 </div>
             }
-            <div id="classes-menu">
+            {/* <div id="classes-menu">
                 {playerClasses.map((playerClass, index) => (
                 <div key={index} className="class-option-container">
                     <div className="selector-container">
                         <div className={selectedOption === index + 1 ? "selector" : "selector unselected"}>&#9659;</div>
                     </div>
-                    <p>{playerClass.name}</p>
+                    <p className="prologue-text">{playerClass.name}</p>
                 </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 }
@@ -269,6 +269,8 @@ ProloguePage.propTypes = {
     playerName: PropTypes.string.isRequired,
     setPlayerName: PropTypes.func.isRequired,
     playerClasses: PropTypes.arrayOf(PropTypes.object).isRequired,
+    displayClassesMenu: PropTypes.boolean.isRequired,
+    setDisplayClassesMenu: PropTypes.func.isRequired,
 }
 
 export default ProloguePage;

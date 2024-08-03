@@ -8,13 +8,12 @@ import NarrationDisplay from "../NarrationDisplay/NarrationDisplay";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
 
-function BattleScreen({enemyName}) {
+function BattleScreen({enemyName, battleMenuOpen, setBattleMenuOpen}) {
 
     const playRoundRef = useRef();
     const resetBattleStatsRef = useRef();
     const battleMenuTextRef = useRef();
 
-    const [battleMenuOpen, setBattleMenuOpen] = useState(true);
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
     const [defendOptionChosen, setDefendOptionChosen] = useState(false);
@@ -502,6 +501,8 @@ function BattleScreen({enemyName}) {
 
 BattleScreen.propTypes = {
     enemyName: PropTypes.string.isRequired,
+    battleMenuOpen: PropTypes.boolean.isRequired,
+    setBattleMenuOpen: PropTypes.func.isRequired,
 }
 
 export default BattleScreen;
