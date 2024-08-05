@@ -151,6 +151,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                 document.removeEventListener("keydown", makeSelection);
                 setReadyToProgressText(true);
                 setSelectedOption(0);
+                setYesNoBoxNumber(0);
             } else {
                 // return player to input for name selection
                 // may need to edit logic again to account for text animation
