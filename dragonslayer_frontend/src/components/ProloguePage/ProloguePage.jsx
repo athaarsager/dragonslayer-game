@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
 import "./ProloguePage.css";
 
-function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses, displayClassesMenu, setDisplayClassesMenu, displaySelector }) {
+function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses, displayClassesMenu, setDisplayClassesMenu, displaySelector, selectedOption, setSelectedOption }) {
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
+    const [classDescription, setClassDescription] = useState(playerClasses.length > 0 ? playerClasses[0].description: "");
 
     const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
-    const [selectedOption, setSelectedOption] = useState(0);
     // using this variable to set when event listener should be added for choosing class
     const [readyToProgressText, setReadyToProgressText] = useState(false);
 
@@ -121,10 +121,9 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
     }
 
     function makeSelection(e) {
-        if ((e.key !== " " && e.key !== "Enter") || !displayYesNoBox) {
+        if ((e.key !== " " && e.key !== "Enter") || (!displayYesNoBox && !displayClassesMenu)) {
             return;
         }
-        // document.removeEventListener("keydown", changeSelection);
         if (yesNoBoxNumberRef.current === 1) {
             if (selectedOptionRef.current === 1) {
                 document.removeEventListener("keydown", makeSelection);
@@ -152,6 +151,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                 setNarrationText(`${openingText[4].textContent}, "${playerName}."`);
                 document.removeEventListener("keydown", makeSelection);
                 setReadyToProgressText(true);
+                setSelectedOption(0);
             } else {
                 // return player to input for name selection
                 // may need to edit logic again to account for text animation
@@ -166,6 +166,11 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
         } else {
             return;
         }
+    }
+
+    // Will also handle logic for displaying rejection text
+    function displayClassDescriptions() {
+        setClassDescription(playerClasses[selectedOptionRef.current].description);
     }
 
     // useEffect for handling when a player confirms their name
@@ -223,8 +228,21 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
     useEffect(() => {
         if (displayClassesMenu) {
             document.addEventListener("keydown", displaySelector);
+            document.addEventListener("keydown", makeSelection);
+        } else {
+            document.removeEventListener("keydown", displaySelector);
         }
-    }, [displayClassesMenu])
+
+        return () => {
+            document.removeEventListener("keydown", displaySelector);
+        }
+    }, [displayClassesMenu]);
+
+    useEffect(() => {
+        if (displayClassesMenu) {
+            displayClassDescriptions();
+        }
+    }, [selectedOption, displayClassesMenu]);
 
     return (
         <div id="narration-container">
@@ -257,7 +275,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
             }
             {displayClassesMenu &&
                 <div className="text-box">
-                    <p>ClassDescriptionTextHere</p>
+                    <p>{classDescription}</p>
                 </div>
             }
         </div>
@@ -273,6 +291,8 @@ ProloguePage.propTypes = {
     displayClassesMenu: PropTypes.bool.isRequired,
     setDisplayClassesMenu: PropTypes.func.isRequired,
     displaySelector: PropTypes.func.isRequired,
+    selectedOption: PropTypes.number.isRequired,
+    setSelectedOption: PropTypes.func.isRequired
 }
 
 export default ProloguePage;

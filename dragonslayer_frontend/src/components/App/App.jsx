@@ -35,6 +35,7 @@ export default function App() {
 
     const battleScreenProps = {
         enemyName,
+        playerClasses,
         displaySelector,
         battleMenuOpen,
         setBattleMenuOpen,
@@ -58,6 +59,7 @@ export default function App() {
     }
 
     const actionMenuProps = {
+        playerClasses,
         classAttacks,
         classAttacksToDisplay,
         selectedOption,
@@ -155,6 +157,8 @@ export default function App() {
                     displayClassesMenu={displayClassesMenu}
                     setDisplayClassesMenu={setDisplayClassesMenu}
                     displaySelector={displaySelector}
+                    selectedOption={selectedOption}
+                    setSelectedOption={setSelectedOption}
                 />
             }
             {onBattleScreen &&

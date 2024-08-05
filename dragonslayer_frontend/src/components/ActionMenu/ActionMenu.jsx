@@ -5,6 +5,7 @@ function ActionMenu(props) {
 
     // Need to add variable for if this menu is being displayed on prologue page
     const {
+        playerClasses,
         classAttacks,
         classAttacksToDisplay,
         selectedOption,
@@ -67,15 +68,20 @@ function ActionMenu(props) {
         <>
             {battleMenuOpen || displayClassesMenu &&
                 <div id={gameOver || onFinalText ? "game-over-menu" : "battle-menu"} className="text-box">
+                    {/* Would have been better to loop over the arrays here...oh well. I suppose class names would have gotten tricky */}
                     <div className={"option-one selector-container left-option"}>
                         <div className={selectedOption === 0 ? "selector" : "selector unselected"}>&#9659;</div>
                         <div className="action">
-                            {attackOptionChosen ? classAttacksToDisplay[0].attack.name : firstOptionText}</div>
+                            {attackOptionChosen ? classAttacksToDisplay[0].attack.name : 
+                            displayClassesMenu ? playerClasses[0].name :
+                            firstOptionText}</div>
                     </div>
                     <div className={"option-two selector-container right-option"}>
                         <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
                         <div className="action">
-                            {attackOptionChosen ? classAttacksToDisplay[1].attack.name : secondOptionText}</div>
+                            {attackOptionChosen ? classAttacksToDisplay[1].attack.name : 
+                            displayClassesMenu ? playerClasses[1].name :
+                            secondOptionText}</div>
                     </div>
                     <div></div>
                     {!gameOver && !onFinalText &&
@@ -83,12 +89,16 @@ function ActionMenu(props) {
                             <div className={"option-three selector-container left-option"}>
                                 <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
                                 <div className="action">
-                                    {attackOptionChosen ? classAttacksToDisplay[2].attack.name : thirdOptionText}</div>
+                                    {attackOptionChosen ? classAttacksToDisplay[2].attack.name : 
+                                    displayClassesMenu ? playerClasses[2].name :
+                                    thirdOptionText}</div>
                             </div>
                             <div className={"option-four selector-container right-option"}>
                                 <div className={selectedOption === 3 ? "selector" : "selector unselected"}>&#9659;</div>
                                 <div className="action">
-                                    {attackOptionChosen ? classAttacksToDisplay[3].attack.name : fourthOptionText}</div>
+                                    {attackOptionChosen ? classAttacksToDisplay[3].attack.name : 
+                                    displayClassesMenu ? playerClasses[3].name :
+                                    fourthOptionText}</div>
                             </div>
                             <div></div>
                         </>
@@ -100,6 +110,7 @@ function ActionMenu(props) {
 }
 // This is to avoid a linting error
 ActionMenu.propTypes = {
+    playerClasses: PropTypes.arrayOf(PropTypes.object).isRequired,
     classAttacks: PropTypes.array.isRequired,
     classAttacksToDisplay: PropTypes.array.isRequired,
     selectedOption: PropTypes.number.isRequired,

@@ -12,6 +12,7 @@ function BattleScreen(props) {
 
     const {
         enemyName,
+        playerClasses,
         displaySelector,
         battleMenuOpen,
         setBattleMenuOpen,
@@ -486,6 +487,7 @@ function BattleScreen(props) {
 
 BattleScreen.propTypes = {
     enemyName: PropTypes.string.isRequired,
+    playerClasses: PropTypes.arrayOf(PropTypes.object).isRequired,
     displaySelector: PropTypes.func.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired,
     setBattleMenuOpen: PropTypes.func.isRequired,
