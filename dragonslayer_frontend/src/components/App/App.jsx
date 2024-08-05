@@ -11,7 +11,7 @@ export default function App() {
     const [onTitleScreen, setOnTitleScreen] = useState(true);
     const [onBattleScreen, setOnBattleScreen] = useState(false);
     const [onProloguePage, setOnProloguePage] = useState(false);
-    const [battleMenuOpen, setBattleMenuOpen] = useState(true);
+    const [battleMenuOpen, setBattleMenuOpen] = useState(false);
 
     const [openingText, setOpeningText] = useState([]);
     const [prologueText, setPrologueText] = useState([]);
@@ -37,6 +37,7 @@ export default function App() {
         enemyName,
         battleMenuOpen,
         setBattleMenuOpen,
+        displayClassesMenu,
         classAttacks,
         setClassAttacks,
         classAttacksToDisplay,
@@ -64,6 +65,7 @@ export default function App() {
         dragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         battleMenuOpen,
+        displayClassesMenu,
         onFinalText,
         gameOver
     }

@@ -14,6 +14,7 @@ function BattleScreen(props) {
         enemyName,
         battleMenuOpen,
         setBattleMenuOpen,
+        displayClassesMenu,
         classAttacks,
         setClassAttacks,
         classAttacksToDisplay,
@@ -476,6 +477,7 @@ function BattleScreen(props) {
         dragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         battleMenuOpen,
+        displayClassesMenu,
         onFinalText,
         gameOver
     }
@@ -517,6 +519,7 @@ BattleScreen.propTypes = {
     enemyName: PropTypes.string.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired,
     setBattleMenuOpen: PropTypes.func.isRequired,
+    displayClassesMenu: PropTypes.bool.isRequired,
     attackOptionChosen: PropTypes.bool.isRequired,
     setAttackOptionChosen: PropTypes.func.isRequired,
     classAttacks: PropTypes.arrayOf(PropTypes.object).isRequired,

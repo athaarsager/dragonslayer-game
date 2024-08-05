@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 function ActionMenu(props) {
 
+    // Need to add variable for if this menu is being displayed on prologue page
     const {
         classAttacks,
         classAttacksToDisplay,
@@ -11,6 +12,7 @@ function ActionMenu(props) {
         dragonIsAwaitingPlayerResponse,
         setOnActionMenu,
         battleMenuOpen,
+        displayClassesMenu,
         onFinalText,
         gameOver
     } = props
@@ -62,7 +64,7 @@ function ActionMenu(props) {
 
     return (
         <>
-            {battleMenuOpen &&
+            {battleMenuOpen || displayClassesMenu &&
                 <>
                     <div className={"option-one selector-container left-option"}>
                         <div className={selectedOption === 0 ? "selector" : "selector unselected"}>&#9659;</div>
@@ -105,6 +107,7 @@ ActionMenu.propTypes = {
     dragonIsAwaitingPlayerResponse: PropTypes.bool.isRequired,
     setOnActionMenu: PropTypes.func.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired,
+    displayClassesMenu: PropTypes.bool.isRequired,
     onFinalText: PropTypes.bool.isRequired,
     gameOver: PropTypes.bool.isRequired
 };
