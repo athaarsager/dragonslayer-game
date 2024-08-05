@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import "./ActionMenu.css";
 function ActionMenu(props) {
 
     // Need to add variable for if this menu is being displayed on prologue page
@@ -65,7 +66,7 @@ function ActionMenu(props) {
     return (
         <>
             {battleMenuOpen || displayClassesMenu &&
-                <>
+                <div id={gameOver || onFinalText ? "game-over-menu" : "battle-menu"} className="text-box">
                     <div className={"option-one selector-container left-option"}>
                         <div className={selectedOption === 0 ? "selector" : "selector unselected"}>&#9659;</div>
                         <div className="action">
@@ -92,7 +93,7 @@ function ActionMenu(props) {
                             <div></div>
                         </>
                     }
-                </>
+                </div>
             }
         </>
     );

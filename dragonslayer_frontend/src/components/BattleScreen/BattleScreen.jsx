@@ -508,7 +508,7 @@ function BattleScreen(props) {
             <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
                 <p>{battleText}</p>
             </div>
-            <div id={gameOver || onFinalText ? "game-over-menu" : "battle-menu"} className="text-box">
+            <div className="text-box">
                 <ActionMenu {...actionMenuProps} />
             </div>
         </>
