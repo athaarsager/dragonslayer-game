@@ -231,3 +231,43 @@
 #class-descriptions {
     margin-left: 8px;
 }
+
+/* Title Screen css */
+
+#title-screen-container {
+    text-align: center;
+}
+
+#title-text {
+    font-family: fantasy;
+    font-size: 108px;
+    color: red;
+    margin-top: 2%;
+    display: flex;
+}
+
+#swords-image {
+    margin-top: -8%;
+    margin-bottom: 5%;
+    height: 38vh;
+}
+
+#start-text {
+    font-size: 24px;
+    color: silver;
+}
+
+#screen-flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0;
+    pointer-events: none; /* Prevents interacton according to ChatGPT */
+}
+
+.hide-display {
+    display: none;
+}

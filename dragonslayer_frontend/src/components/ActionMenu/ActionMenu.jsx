@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import "./ActionMenu.css";
 function ActionMenu(props) {
 
     // Need to add variable for if this menu is being displayed on prologue page

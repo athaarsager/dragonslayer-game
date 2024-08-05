@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import "./BattleScreen.css";
 import BattleLogic from "../BattleLogic/BattleLogic";
 import ActionMenu from "../ActionMenu/ActionMenu";
 import NarrationDisplay from "../NarrationDisplay/NarrationDisplay";

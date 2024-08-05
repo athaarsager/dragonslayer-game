@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
-import "./ProloguePage.css";
 
 function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses, displayClassesMenu, setDisplayClassesMenu, displaySelector, selectedOption, setSelectedOption }) {
 

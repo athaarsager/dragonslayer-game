@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
-import "./NarrationDisplay.css";
 import gsap from "gsap";
 
 function NarrationDisplay(props) {

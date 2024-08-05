@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import "./TitleScreen.css";
 import gsap from "gsap";
 import { useState, useEffect, useRef } from "react";
 
