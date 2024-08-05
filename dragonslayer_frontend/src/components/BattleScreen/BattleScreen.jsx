@@ -12,6 +12,7 @@ function BattleScreen(props) {
 
     const {
         enemyName,
+        displaySelector,
         battleMenuOpen,
         setBattleMenuOpen,
         displayClassesMenu,
@@ -143,39 +144,6 @@ function BattleScreen(props) {
         const response = await axios.get("/api/game_text/bad_end");
         console.log("This is the bad ending text array:", response.data);
         setBadEndingText(response.data);
-    }
-
-    // function manually determines which item should be selected in the battle action menu
-    // based on what key was pressed
-    const displaySelector = (e) => {
-        // left options are represented by 0 and 2
-        // right options are represented by 1 and 3
-        // using 0 indexing to fit with array locations
-        if (e.key === "ArrowLeft") {
-            if (gameOver) {
-                setSelectedOption(0);
-            } else {
-                setSelectedOption((prev) => (prev % 2 === 1 ? prev - 1 : prev));
-            }
-        } else if (e.key === "ArrowRight") {
-            if (gameOver) {
-                setSelectedOption(1);
-            } else {
-                setSelectedOption((prev) => (prev % 2 === 0 ? prev + 1 : prev));
-            }
-        } else if (e.key === "ArrowUp") {
-            if (gameOver) {
-                return;
-            } else {
-                setSelectedOption((prev) => (prev > 1 ? prev - 2 : prev));
-            }
-        } else if (e.key === "ArrowDown") {
-            if (gameOver) {
-                return;
-            } else {
-                setSelectedOption((prev) => (prev < 2 ? prev + 2 : prev));
-            }
-        }
     }
 
     // Need to store this in a variable so it doesn't change when player moves selector arrow or moves menus
@@ -508,7 +476,8 @@ function BattleScreen(props) {
             <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
                 <p>{battleText}</p>
             </div>
-            <div className="text-box">
+            {/* Conditional rendering logic is inside the ActionMenu component */}
+            <div>
                 <ActionMenu {...actionMenuProps} />
             </div>
         </>
@@ -517,6 +486,7 @@ function BattleScreen(props) {
 
 BattleScreen.propTypes = {
     enemyName: PropTypes.string.isRequired,
+    displaySelector: PropTypes.func.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired,
     setBattleMenuOpen: PropTypes.func.isRequired,
     displayClassesMenu: PropTypes.bool.isRequired,

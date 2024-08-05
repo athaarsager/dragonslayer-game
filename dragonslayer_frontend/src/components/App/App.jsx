@@ -35,6 +35,7 @@ export default function App() {
 
     const battleScreenProps = {
         enemyName,
+        displaySelector,
         battleMenuOpen,
         setBattleMenuOpen,
         displayClassesMenu,
@@ -90,6 +91,39 @@ export default function App() {
         console.log("These will be the playerClasses:", response.data.slice(0, 4));
     }
 
+    // function manually determines which item should be selected in the battle action menu
+    // based on what key was pressed
+    function displaySelector(e) {
+        // left options are represented by 0 and 2
+        // right options are represented by 1 and 3
+        // using 0 indexing to fit with array locations
+        if (e.key === "ArrowLeft") {
+            if (gameOver) {
+                setSelectedOption(0);
+            } else {
+                setSelectedOption((prev) => (prev % 2 === 1 ? prev - 1 : prev));
+            }
+        } else if (e.key === "ArrowRight") {
+            if (gameOver) {
+                setSelectedOption(1);
+            } else {
+                setSelectedOption((prev) => (prev % 2 === 0 ? prev + 1 : prev));
+            }
+        } else if (e.key === "ArrowUp") {
+            if (gameOver) {
+                return;
+            } else {
+                setSelectedOption((prev) => (prev > 1 ? prev - 2 : prev));
+            }
+        } else if (e.key === "ArrowDown") {
+            if (gameOver) {
+                return;
+            } else {
+                setSelectedOption((prev) => (prev < 2 ? prev + 2 : prev));
+            }
+        }
+    }
+
     useEffect(() => {
         fetchOpeningText();
         fetchPrologueText();
@@ -120,6 +154,7 @@ export default function App() {
                     playerClasses={playerClasses}
                     displayClassesMenu={displayClassesMenu}
                     setDisplayClassesMenu={setDisplayClassesMenu}
+                    displaySelector={displaySelector}
                 />
             }
             {onBattleScreen &&

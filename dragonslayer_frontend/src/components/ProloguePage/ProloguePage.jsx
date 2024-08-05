@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
 import "./ProloguePage.css";
 
-function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses, displayClassesMenu, setDisplayClassesMenu  }) {
+function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses, displayClassesMenu, setDisplayClassesMenu, displaySelector }) {
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
-    
+
     const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
     const [selectedOption, setSelectedOption] = useState(0);
     // using this variable to set when event listener should be added for choosing class
@@ -220,6 +220,12 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
         yesNoBoxNumberRef.current = yesNoBoxNumber;
     }, [yesNoBoxNumber]);
 
+    useEffect(() => {
+        if (displayClassesMenu) {
+            document.addEventListener("keydown", displaySelector);
+        }
+    }, [displayClassesMenu])
+
     return (
         <div id="narration-container">
             <div id="prologue-text-and-name-container">
@@ -249,19 +255,11 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                     </div>
                 </div>
             }
-            <div className="text-box">
-                <p>ClassDescriptionTextHere</p>
-            </div>
-            {/* <div id="classes-menu">
-                {playerClasses.map((playerClass, index) => (
-                <div key={index} className="class-option-container">
-                    <div className="selector-container">
-                        <div className={selectedOption === index + 1 ? "selector" : "selector unselected"}>&#9659;</div>
-                    </div>
-                    <p className="prologue-text">{playerClass.name}</p>
+            {displayClassesMenu &&
+                <div className="text-box">
+                    <p>ClassDescriptionTextHere</p>
                 </div>
-                ))}
-            </div> */}
+            }
         </div>
     );
 }
@@ -274,6 +272,7 @@ ProloguePage.propTypes = {
     playerClasses: PropTypes.arrayOf(PropTypes.object).isRequired,
     displayClassesMenu: PropTypes.bool.isRequired,
     setDisplayClassesMenu: PropTypes.func.isRequired,
+    displaySelector: PropTypes.func.isRequired,
 }
 
 export default ProloguePage;
