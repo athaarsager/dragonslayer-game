@@ -145,6 +145,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
             }
         } else if (yesNoBoxNumberRef.current === 2) {
             console.log("YesNoBoxNumber is 2");
+            // This is what progresses the player into the next segment (the class select screen)
             if (selectedOptionRef.current === 1) {
                 setDisplayYesNoBox(false);
                 setNarrationText(`${openingText[4].textContent}, "${playerName}."`);
@@ -164,7 +165,22 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
             }
             // logic for class selection will go here
         } else {
-            return;
+            switch (selectedOptionRef.current) {
+                case 0:
+                    setClassDescription(playerClasses[0].denialText);
+                    break;
+                case 1:
+                    setClassDescription(playerClasses[1].denialText);
+                    break;
+                case 2:
+                    setClassDescription(playerClasses[2].denialText); 
+                    break;
+                case 3:
+                    setDisplayClassesMenu(false);
+                    // maybe add a brief pause here
+                    setNarrationText(openingText[6].textContent);
+                    break;
+            }
         }
     }
 
