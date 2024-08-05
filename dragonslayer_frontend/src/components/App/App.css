@@ -7,7 +7,7 @@
     padding-bottom: 1rem;
     display: grid;
     /* Create grid with 5 columns and 2 rows */
-    /* grid-template-columns: 25% 15% 20% 25% 15%; */
+    grid-template-columns: 25% 15% 20% 25% 15%;
     grid-template-rows: 50% 50%;
     margin-bottom: 1rem;
 }
