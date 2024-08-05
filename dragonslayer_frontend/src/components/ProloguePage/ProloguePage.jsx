@@ -245,7 +245,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
     }, [selectedOption, displayClassesMenu]);
 
     return (
-        <div id="narration-container">
+        <div id="prologue-narration-container">
             <div id="prologue-text-and-name-container">
                 <p className="prologue-text">{narrationText}</p>
                 {displayNameBox &&
@@ -259,14 +259,14 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                 <div id="yes-no-box-container">
                     <div id="yes-no-box">
                         <div className="option-container">
-                            <div className="selector-container">
-                                <div className={selectedOption === 1 ? "selector" : "selector unselected"}>&#9659;</div>
+                            <div className="yes-no-selector">
+                                <div className={selectedOption === 1 ? "prologue-page-selector" : "prologue-page-selector unselected"}>&#9659;</div>
                             </div>
                             <p className="prologue-text">Yes</p>
                         </div>
                         <div className="option-container">
-                            <div className="selector-container">
-                                <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>
+                            <div className="yes-no-selector">
+                                <div className={selectedOption === 2 ? "prologue-page-selector" : "prologue-page-selector unselected"}>&#9659;</div>
                             </div>
                             <p className="prologue-text" id="no-option">No</p>
                         </div>
@@ -274,8 +274,8 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                 </div>
             }
             {displayClassesMenu &&
-                <div className="text-box">
-                    <p>{classDescription}</p>
+                <div id="prologue-text-box">
+                    <p id="class-descriptions">{classDescription}</p>
                 </div>
             }
         </div>

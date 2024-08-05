@@ -475,7 +475,7 @@ function BattleScreen(props) {
                 <p>Mana: {playerMana || playerMana >= 0 ? playerMana : ""}</p>
             </div>
             <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
-                <p>{battleText}</p>
+                <p id="battle-text-p">{battleText}</p>
             </div>
             {/* Conditional rendering logic is inside the ActionMenu component */}
             <div>

@@ -2,6 +2,7 @@ import TitleScreen from '../TitleScreen/TitleScreen.jsx';
 import BattleScreen from '../BattleScreen/BattleScreen.jsx';
 import ProloguePage from '../ProloguePage/ProloguePage.jsx';
 import ActionMenu from '../ActionMenu/ActionMenu.jsx';
+import "./App.css";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 
@@ -163,7 +164,7 @@ export default function App() {
             }
             {onBattleScreen &&
                 <BattleScreen {...battleScreenProps}/>
-            }
+             }
             {/* The conditional rendering logic is already inside this component */}
             <ActionMenu {...actionMenuProps}/>
         </>
