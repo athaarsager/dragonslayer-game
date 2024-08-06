@@ -2,7 +2,21 @@
 import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
 
-function ProloguePage({ openingText, prologueText, playerName, setPlayerName, playerClasses, displayClassesMenu, setDisplayClassesMenu, displaySelector, selectedOption, setSelectedOption }) {
+function ProloguePage(props) {
+
+    const {
+        openingText,
+        prologueText,
+        playerName, 
+        setPlayerName, 
+        playerClasses, 
+        displayClassesMenu, 
+        setDisplayClassesMenu, 
+        displaySelector, 
+        selectedOption, 
+        setSelectedOption,
+        setOnBattleScreen,
+    } = props;
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
     const [displayNameBox, setDisplayNameBox] = useState(false);
@@ -144,7 +158,6 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                 document.removeEventListener("keydown", makeSelection);
             }
         } else if (yesNoBoxNumberRef.current === 2) {
-            console.log("YesNoBoxNumber is 2");
             // This is what progresses the player into the next segment (the class select screen)
             if (selectedOptionRef.current === 1) {
                 setDisplayYesNoBox(false);
@@ -163,7 +176,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                 setYesNoBoxNumber(1);
                 document.removeEventListener("keydown", makeSelection);
             }
-            // logic for class selection will go here
+            // logic for class selection
         } else {
             switch (selectedOptionRef.current) {
                 case 0:
@@ -179,6 +192,7 @@ function ProloguePage({ openingText, prologueText, playerName, setPlayerName, pl
                     setDisplayClassesMenu(false);
                     // maybe add a brief pause here
                     setNarrationText(openingText[6].textContent);
+                    // insert progress text function here or something
                     break;
             }
         }
@@ -308,7 +322,8 @@ ProloguePage.propTypes = {
     setDisplayClassesMenu: PropTypes.func.isRequired,
     displaySelector: PropTypes.func.isRequired,
     selectedOption: PropTypes.number.isRequired,
-    setSelectedOption: PropTypes.func.isRequired
+    setSelectedOption: PropTypes.func.isRequired,
+    setOnBattleScreen: PropTypes.func.isRequired
 }
 
 export default ProloguePage;

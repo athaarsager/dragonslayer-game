@@ -74,6 +74,20 @@ export default function App() {
         gameOver
     }
 
+    const prologuePageProps = {
+        openingText,
+        prologueText,
+        playerName, 
+        setPlayerName, 
+        playerClasses, 
+        displayClassesMenu, 
+        setDisplayClassesMenu, 
+        displaySelector, 
+        selectedOption, 
+        setSelectedOption,
+        setOnBattleScreen,
+    }
+
 
     async function fetchOpeningText() {
         const response = await axios.get("/api/game_text/opening_text");
@@ -149,24 +163,13 @@ export default function App() {
                     setOnProloguePage={setOnProloguePage} />
             }
             {onProloguePage &&
-                <ProloguePage
-                    openingText={openingText}
-                    prologueText={prologueText}
-                    playerName={playerName}
-                    setPlayerName={setPlayerName}
-                    playerClasses={playerClasses}
-                    displayClassesMenu={displayClassesMenu}
-                    setDisplayClassesMenu={setDisplayClassesMenu}
-                    displaySelector={displaySelector}
-                    selectedOption={selectedOption}
-                    setSelectedOption={setSelectedOption}
-                />
+                <ProloguePage {...prologuePageProps}/>
             }
             {onBattleScreen &&
-                <BattleScreen {...battleScreenProps}/>
-             }
+                <BattleScreen {...battleScreenProps} />
+            }
             {/* The conditional rendering logic is already inside this component */}
-            <ActionMenu {...actionMenuProps}/>
+            <ActionMenu {...actionMenuProps} />
         </>
     )
 }
