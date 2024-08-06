@@ -217,7 +217,6 @@ function ProloguePage(props) {
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[0].textContent);
                 setPlayerName("");
-                setDisplayNameBox(true);
                 setYesNoBoxNumber(1);
                 document.removeEventListener("keydown", makeSelection);
             }
