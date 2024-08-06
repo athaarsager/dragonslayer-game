@@ -24,8 +24,9 @@ function ProloguePage(props) {
     const [classDescription, setClassDescription] = useState(playerClasses.length > 0 ? playerClasses[0].description: "");
 
     const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
-    // using this variable to set when event listener should be added for choosing class
+
     const [readyToProgressText, setReadyToProgressText] = useState(false);
+    const [timeToInitializePrologueText, setTimeToInitializePrologueText] = useState(false);
 
     // Refs
     const selectedOptionRef = useRef(selectedOption);
@@ -70,14 +71,16 @@ function ProloguePage(props) {
     // going to use a separate function for opening text and prolgue text I think...
     function progressOpeningText(e) {
         if (e.key === " " || e.key === "Enter")
+            console.log("In progressOpeningText");
             if (narrationTextRef.current === `${openingText[4].textContent}, "${playerName}."`) {
                 setNarrationText(openingText[5].textContent);
                 setReadyToProgressText(false);
                 setDisplayClassesMenu(true);
             } else {
                 for (let i = 6; i < openingText.length; i++) {
-                    if (i === 9) {
+                    if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
                         setReadyToProgressText(false);
+                        setTimeToInitializePrologueText(true);
                         return;
                     }
                     if (narrationTextRef.current === openingText[i].textContent) {
@@ -86,6 +89,12 @@ function ProloguePage(props) {
                     }
                 }
             }
+    }
+
+    async function progressPrologueText(initialText) {
+        await pauseOnText();
+        setNarrationText(initialText);
+
     }
 
     // Logic for player typing in their name. Limit 8 characters
@@ -271,6 +280,17 @@ function ProloguePage(props) {
     useEffect(() => {
         narrationTextRef.current = narrationText;
     }, [narrationText]);
+
+    useEffect(() => {
+        if (timeToInitializePrologueText) {
+            let narrationBlock = "";
+            for (let i = 0; i < 3; i++) {
+                narrationBlock += ` ${prologueText[i].textContent}`;
+            }
+            setTimeToInitializePrologueText(false);
+            progressPrologueText(narrationBlock);
+        }
+    }, [timeToInitializePrologueText]);
 
     useEffect(() => {
         if (displayClassesMenu) {
