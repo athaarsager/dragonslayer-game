@@ -91,9 +91,15 @@ function ProloguePage(props) {
             }
     }
 
-    async function progressPrologueText(initialText) {
+    async function progressPrologueText(textBlock) {
         await pauseOnText();
-        setNarrationText(initialText);
+        setNarrationText(textBlock);
+        await pauseOnText();
+        for (let i = 3; i < 6; i++) {
+            textBlock += ` ${prologueText[i].textContent}`;
+        }
+        setNarrationText(textBlock);
+        await pauseOnText();
 
     }
 
