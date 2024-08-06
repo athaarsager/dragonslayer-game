@@ -7,13 +7,13 @@ function ProloguePage(props) {
     const {
         openingText,
         prologueText,
-        playerName, 
-        setPlayerName, 
-        playerClasses, 
-        displayClassesMenu, 
-        setDisplayClassesMenu, 
-        displaySelector, 
-        selectedOption, 
+        playerName,
+        setPlayerName,
+        playerClasses,
+        displayClassesMenu,
+        setDisplayClassesMenu,
+        displaySelector,
+        selectedOption,
         setSelectedOption,
         setOnBattleScreen,
         setOnProloguePage,
@@ -23,9 +23,10 @@ function ProloguePage(props) {
     const [narrationText, setNarrationText] = useState("");
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
-    const [classDescription, setClassDescription] = useState(playerClasses.length > 0 ? playerClasses[0].description: "");
+    const [classDescription, setClassDescription] = useState(playerClasses.length > 0 ? playerClasses[0].description : "");
 
     const [yesNoBoxNumber, setYesNoBoxNumber] = useState(1);
+    const [animationCompleted, setAnimationCompleted] = useState(false);
 
     const [readyToProgressText, setReadyToProgressText] = useState(false);
     const [timeToInitializePrologueText, setTimeToInitializePrologueText] = useState(false);
@@ -72,7 +73,7 @@ function ProloguePage(props) {
     }
 
 
-    function animateTypingText(text) {
+    function animateTypingText(text, callback) {
         if (!narrationTextDisplayRef.current) {
             return;
         }
@@ -92,7 +93,8 @@ function ProloguePage(props) {
             {
                 opacity: 1,
                 duration: 0.1,
-                stagger: 0.03
+                stagger: 0.03,
+                onComplete: callback
             }
         );
     }
@@ -100,23 +102,23 @@ function ProloguePage(props) {
     function progressOpeningText(e) {
         if (e.key === " " || e.key === "Enter")
             console.log("In progressOpeningText");
-            if (narrationTextRef.current === `${openingText[4].textContent}, "${playerName}."`) {
-                setNarrationText(openingText[5].textContent);
-                setReadyToProgressText(false);
-                setDisplayClassesMenu(true);
-            } else {
-                for (let i = 6; i < openingText.length; i++) {
-                    if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
-                        setReadyToProgressText(false);
-                        setTimeToInitializePrologueText(true);
-                        return;
-                    }
-                    if (narrationTextRef.current === openingText[i].textContent) {
-                        setNarrationText(openingText[i + 1].textContent);
-                        return;
-                    }
+        if (narrationTextRef.current === `${openingText[4].textContent}, "${playerName}."`) {
+            setNarrationText(openingText[5].textContent);
+            setReadyToProgressText(false);
+            setDisplayClassesMenu(true);
+        } else {
+            for (let i = 6; i < openingText.length; i++) {
+                if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
+                    setReadyToProgressText(false);
+                    setTimeToInitializePrologueText(true);
+                    return;
+                }
+                if (narrationTextRef.current === openingText[i].textContent) {
+                    setNarrationText(openingText[i + 1].textContent);
+                    return;
                 }
             }
+        }
     }
 
     async function progressPrologueText(textBlock) {
@@ -248,7 +250,7 @@ function ProloguePage(props) {
                     setClassDescription(playerClasses[1].denialText);
                     break;
                 case 2:
-                    setClassDescription(playerClasses[2].denialText); 
+                    setClassDescription(playerClasses[2].denialText);
                     break;
                 case 3:
                     console.log("In final case of switch case statement");
@@ -288,16 +290,19 @@ function ProloguePage(props) {
         // Add an event listener here for user typing in their name
         // Also change state so component where user types their name displays
         // These should not happen until after the text scroll animation plays
-        document.addEventListener("keydown", updatePlayerName);
-        setDisplayNameBox(true);
-    }, []);
+        if (animationCompleted) {
+            console.log("Adding event listener for inputting player name");
+            document.addEventListener("keydown", updatePlayerName);
+            setDisplayNameBox(true);
+        }
+    }, [animationCompleted]);
 
     useEffect(() => {
         if (displayYesNoBox) {
             console.log("Adding makeSelection");
             document.addEventListener("keydown", changeSelection);
             document.addEventListener("keydown", makeSelection);
-        } 
+        }
         return () => {
             document.removeEventListener("keydown", changeSelection);
             document.removeEventListener("keydown", makeSelection);
@@ -326,7 +331,7 @@ function ProloguePage(props) {
 
     useEffect(() => {
         narrationTextRef.current = narrationText;
-        animateTypingText(narrationText);
+        animateTypingText(narrationText, () => setAnimationCompleted(true));
     }, [narrationText]);
 
     useEffect(() => {
