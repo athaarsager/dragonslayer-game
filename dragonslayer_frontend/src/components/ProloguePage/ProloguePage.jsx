@@ -16,6 +16,7 @@ function ProloguePage(props) {
         selectedOption, 
         setSelectedOption,
         setOnBattleScreen,
+        setOnProloguePage,
     } = props;
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
@@ -48,7 +49,6 @@ function ProloguePage(props) {
             // when it is resolved in the below function, it resolves it here as well
             // resolve is a function that is assigned to a variable here so it can be accessed
             // outside of the promise
-            console.log("In progresText, resolving promise");
             resolveKeyPress = resolve;
         });
     }
@@ -100,7 +100,19 @@ function ProloguePage(props) {
         }
         setNarrationText(textBlock);
         await pauseOnText();
-
+        setNarrationText(`${playerName}, ${prologueText[6].textContent}`);
+        await pauseOnText();
+        setNarrationText(prologueText[7].textContent);
+        await pauseOnText();
+        appendText(prologueText[8].textContent);
+        await pauseOnText();
+        appendText(prologueText[9].textContent);
+        await pauseOnText();
+        setNarrationText(prologueText[10].textContent);
+        await pauseOnText();
+        // Begin battle!
+        setOnProloguePage(false);
+        setOnBattleScreen(true);
     }
 
     // Logic for player typing in their name. Limit 8 characters
@@ -368,7 +380,8 @@ ProloguePage.propTypes = {
     displaySelector: PropTypes.func.isRequired,
     selectedOption: PropTypes.number.isRequired,
     setSelectedOption: PropTypes.func.isRequired,
-    setOnBattleScreen: PropTypes.func.isRequired
+    setOnBattleScreen: PropTypes.func.isRequired,
+    setOnProloguePage: PropTypes.func.isRequired
 }
 
 export default ProloguePage;
