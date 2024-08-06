@@ -437,6 +437,7 @@ function BattleScreen(props) {
     };
 
     const actionMenuProps = {
+        playerClasses,
         classAttacks,
         classAttacksToDisplay,
         selectedOption,

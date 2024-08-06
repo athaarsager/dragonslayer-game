@@ -63,9 +63,18 @@ function ActionMenu(props) {
         }
     }, [gameOver, onFinalText]);
 
+    useEffect(() => {
+        if (battleMenuOpen) {
+        console.log("On the action menu");
+        console.log("This is the value of displayClassesMenu:", displayClassesMenu);
+        } else if (!battleMenuOpen) {
+            console.log("Left the action menu");
+        }
+    }, [battleMenuOpen]);
+
     return (
         <>
-            {battleMenuOpen || displayClassesMenu &&
+            {(battleMenuOpen || displayClassesMenu) &&
                 <div id={gameOver || onFinalText ? "game-over-menu" : "battle-menu"} className="text-box">
                     {/* Would have been better to loop over the arrays here...oh well. I suppose class names would have gotten tricky */}
                     <div className={"option-one selector-container left-option"}>
@@ -83,7 +92,7 @@ function ActionMenu(props) {
                             secondOptionText}</div>
                     </div>
                     <div></div>
-                    {!gameOver && !onFinalText &&
+                    {(!gameOver && !onFinalText) &&
                         <>
                             <div className={"option-three selector-container left-option"}>
                                 <div className={selectedOption === 2 ? "selector" : "selector unselected"}>&#9659;</div>

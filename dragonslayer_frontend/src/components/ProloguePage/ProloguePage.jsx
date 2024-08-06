@@ -17,6 +17,7 @@ function ProloguePage(props) {
         setSelectedOption,
         setOnBattleScreen,
         setOnProloguePage,
+        setBattleMenuOpen,
     } = props;
 
     const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
@@ -113,6 +114,7 @@ function ProloguePage(props) {
         // Begin battle!
         setOnProloguePage(false);
         setOnBattleScreen(true);
+        setBattleMenuOpen(true);
     }
 
     // Logic for player typing in their name. Limit 8 characters
@@ -381,7 +383,8 @@ ProloguePage.propTypes = {
     selectedOption: PropTypes.number.isRequired,
     setSelectedOption: PropTypes.func.isRequired,
     setOnBattleScreen: PropTypes.func.isRequired,
-    setOnProloguePage: PropTypes.func.isRequired
+    setOnProloguePage: PropTypes.func.isRequired,
+    setBattleMenuOpen: PropTypes.func.isRequired,
 }
 
 export default ProloguePage;

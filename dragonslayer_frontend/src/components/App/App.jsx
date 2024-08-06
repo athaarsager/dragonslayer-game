@@ -87,6 +87,7 @@ export default function App() {
         setSelectedOption,
         setOnBattleScreen,
         setOnProloguePage,
+        setBattleMenuOpen,
     }
 
 
