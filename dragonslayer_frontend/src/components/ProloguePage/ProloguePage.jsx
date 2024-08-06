@@ -27,9 +27,10 @@ function ProloguePage(props) {
     // using this variable to set when event listener should be added for choosing class
     const [readyToProgressText, setReadyToProgressText] = useState(false);
 
-    // Ref for evaluating the selectedOption
+    // Refs
     const selectedOptionRef = useRef(selectedOption);
     const yesNoBoxNumberRef = useRef(yesNoBoxNumber);
+    const narrationTextRef = useRef(narrationText);
 
     let resolveKeyPress = null;
 
@@ -69,13 +70,17 @@ function ProloguePage(props) {
     // going to use a separate function for opening text and prolgue text I think...
     function progressOpeningText(e) {
         if (e.key === " " || e.key === "Enter")
-            if (narrationText === `${openingText[4].textContent}, "${playerName}."`) {
+            if (narrationTextRef.current === `${openingText[4].textContent}, "${playerName}."`) {
                 setNarrationText(openingText[5].textContent);
                 setReadyToProgressText(false);
                 setDisplayClassesMenu(true);
             } else {
                 for (let i = 6; i < openingText.length; i++) {
-                    if (narrationText === openingText[i].textContent) {
+                    if (i === 9) {
+                        setReadyToProgressText(false);
+                        return;
+                    }
+                    if (narrationTextRef.current === openingText[i].textContent) {
                         setNarrationText(openingText[i + 1].textContent);
                         return;
                     }
@@ -137,6 +142,7 @@ function ProloguePage(props) {
         if ((e.key !== " " && e.key !== "Enter") || (!displayYesNoBox && !displayClassesMenu)) {
             return;
         }
+        console.log("In makeSelection");
         if (yesNoBoxNumberRef.current === 1) {
             if (selectedOptionRef.current === 1) {
                 document.removeEventListener("keydown", makeSelection);
@@ -189,10 +195,15 @@ function ProloguePage(props) {
                     setClassDescription(playerClasses[2].denialText); 
                     break;
                 case 3:
+                    console.log("In final case of switch case statement");
                     setDisplayClassesMenu(false);
                     // maybe add a brief pause here
                     setNarrationText(openingText[6].textContent);
                     // insert progress text function here or something
+                    setReadyToProgressText(true);
+                    // setRemoveMakeSelection(true);
+                    setSelectedOption(0);
+                    document.removeEventListener("keydown", makeSelection);
                     break;
             }
         }
@@ -227,9 +238,10 @@ function ProloguePage(props) {
 
     useEffect(() => {
         if (displayYesNoBox) {
+            console.log("Adding makeSelection");
             document.addEventListener("keydown", changeSelection);
             document.addEventListener("keydown", makeSelection);
-        }
+        } 
         return () => {
             document.removeEventListener("keydown", changeSelection);
             document.removeEventListener("keydown", makeSelection);
@@ -241,10 +253,11 @@ function ProloguePage(props) {
         if (readyToProgressText) {
             console.log("Adding event listener for progressing text");
             document.addEventListener("keydown", progressOpeningText);
-        } else if (!readyToProgressText) {
+        } else if (!readyToProgressText || narrationText === openingText[9].textContent) {
+            console.log("Removing progress text event listener")
             document.removeEventListener("keydown", progressOpeningText);
         }
-    }, [readyToProgressText]);
+    }, [readyToProgressText, narrationText]);
 
     // This updates the selectedOptionRef whenever the selectedOption is updated
     useEffect(() => {
@@ -256,15 +269,21 @@ function ProloguePage(props) {
     }, [yesNoBoxNumber]);
 
     useEffect(() => {
+        narrationTextRef.current = narrationText;
+    }, [narrationText]);
+
+    useEffect(() => {
         if (displayClassesMenu) {
             document.addEventListener("keydown", displaySelector);
             document.addEventListener("keydown", makeSelection);
         } else {
             document.removeEventListener("keydown", displaySelector);
+            document.removeEventListener("keydown", makeSelection);
         }
 
         return () => {
             document.removeEventListener("keydown", displaySelector);
+            document.removeEventListener("Keydown", makeSelection);
         }
     }, [displayClassesMenu]);
 
