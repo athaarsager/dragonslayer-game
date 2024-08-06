@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import BattleLogic from "../BattleLogic/BattleLogic";
-import ActionMenu from "../ActionMenu/ActionMenu";
 import NarrationDisplay from "../NarrationDisplay/NarrationDisplay";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
@@ -11,11 +10,10 @@ function BattleScreen(props) {
 
     const {
         enemyName,
-        playerClasses,
+        setEnemyName,
         displaySelector,
         battleMenuOpen,
         setBattleMenuOpen,
-        displayClassesMenu,
         classAttacks,
         setClassAttacks,
         classAttacksToDisplay,
@@ -436,21 +434,6 @@ function BattleScreen(props) {
         setBattleMenuOpen,
     };
 
-    const actionMenuProps = {
-        playerClasses,
-        classAttacks,
-        classAttacksToDisplay,
-        selectedOption,
-        attackOptionChosen,
-        setAttackOptionChosen,
-        dragonIsAwaitingPlayerResponse,
-        setOnActionMenu,
-        battleMenuOpen,
-        displayClassesMenu,
-        onFinalText,
-        gameOver
-    }
-
     return (
         <>
             <BattleLogic {...battleLogicProps} />
@@ -477,21 +460,16 @@ function BattleScreen(props) {
             <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
                 <p id="battle-text-p">{battleText}</p>
             </div>
-            {/* Conditional rendering logic is inside the ActionMenu component */}
-            <div>
-                <ActionMenu {...actionMenuProps} />
-            </div>
         </>
     )
 }
 
 BattleScreen.propTypes = {
     enemyName: PropTypes.string.isRequired,
-    playerClasses: PropTypes.arrayOf(PropTypes.object).isRequired,
+    setEnemyName: PropTypes.func.isRequired,
     displaySelector: PropTypes.func.isRequired,
     battleMenuOpen: PropTypes.bool.isRequired,
     setBattleMenuOpen: PropTypes.func.isRequired,
-    displayClassesMenu: PropTypes.bool.isRequired,
     attackOptionChosen: PropTypes.bool.isRequired,
     setAttackOptionChosen: PropTypes.func.isRequired,
     classAttacks: PropTypes.arrayOf(PropTypes.object).isRequired,

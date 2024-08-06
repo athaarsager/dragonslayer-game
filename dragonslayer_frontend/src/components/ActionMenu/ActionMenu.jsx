@@ -63,15 +63,6 @@ function ActionMenu(props) {
         }
     }, [gameOver, onFinalText]);
 
-    useEffect(() => {
-        if (battleMenuOpen) {
-        console.log("On the action menu");
-        console.log("This is the value of displayClassesMenu:", displayClassesMenu);
-        } else if (!battleMenuOpen) {
-            console.log("Left the action menu");
-        }
-    }, [battleMenuOpen]);
-
     return (
         <>
             {(battleMenuOpen || displayClassesMenu) &&

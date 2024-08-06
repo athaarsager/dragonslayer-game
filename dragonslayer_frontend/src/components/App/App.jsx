@@ -36,6 +36,7 @@ export default function App() {
 
     const battleScreenProps = {
         enemyName,
+        setEnemyName,
         playerClasses,
         displaySelector,
         battleMenuOpen,
