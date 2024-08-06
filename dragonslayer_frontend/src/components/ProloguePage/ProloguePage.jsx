@@ -171,7 +171,7 @@ function ProloguePage(props) {
             }
             document.removeEventListener("keydown", updatePlayerName);
             setDisplayNameBox(false);
-            // May need to adjust this logic a little bit when adding animations
+            setAnimationCompleted(false);
             setNarrationText(`${openingText[1].textContent} '${playerName}' ${openingText[2].textContent}`);
             AddYesNoBox();
             document.addEventListener("keydown", makeSelection);
@@ -290,10 +290,13 @@ function ProloguePage(props) {
         // Add an event listener here for user typing in their name
         // Also change state so component where user types their name displays
         // These should not happen until after the text scroll animation plays
-        if (animationCompleted) {
-            console.log("Adding event listener for inputting player name");
+        if (animationCompleted && narrationTextRef.current === openingText[0].textContent) {
             document.addEventListener("keydown", updatePlayerName);
             setDisplayNameBox(true);
+        }
+
+        return () => {
+            document.removeEventListener("keydown", updatePlayerName);
         }
     }, [animationCompleted]);
 
@@ -332,6 +335,8 @@ function ProloguePage(props) {
     useEffect(() => {
         narrationTextRef.current = narrationText;
         animateTypingText(narrationText, () => setAnimationCompleted(true));
+        // Need to reset this
+        setAnimationCompleted(false);
     }, [narrationText]);
 
     useEffect(() => {
@@ -376,7 +381,7 @@ function ProloguePage(props) {
         <div id="prologue-narration-container">
             <div id="prologue-text-and-name-container">
                 <p className="prologue-text">{narrationText}</p>
-                {displayNameBox &&
+                {(displayNameBox && animationCompleted) &&
                     <div id="name-container">
                         <div id="name-line">{playerName}</div>
                         <div id="type-block"></div>
