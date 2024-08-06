@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
-
+import gsap from "gsap";
 function ProloguePage(props) {
 
     const {
@@ -20,7 +20,7 @@ function ProloguePage(props) {
         setBattleMenuOpen,
     } = props;
 
-    const [narrationText, setNarrationText] = useState(openingText.length > 0 ? openingText[0].textContent : "");
+    const [narrationText, setNarrationText] = useState("");
     const [displayNameBox, setDisplayNameBox] = useState(false);
     const [displayYesNoBox, setDisplayYesNoBox] = useState(false);
     const [classDescription, setClassDescription] = useState(playerClasses.length > 0 ? playerClasses[0].description: "");
@@ -34,6 +34,8 @@ function ProloguePage(props) {
     const selectedOptionRef = useRef(selectedOption);
     const yesNoBoxNumberRef = useRef(yesNoBoxNumber);
     const narrationTextRef = useRef(narrationText);
+    // This gets set to a DOM element on page load
+    const narrationTextDisplayRef = useRef(null);
 
     let resolveKeyPress = null;
 
@@ -69,7 +71,32 @@ function ProloguePage(props) {
         document.removeEventListener("keydown", resolveUserInput);
     }
 
-    // going to use a separate function for opening text and prolgue text I think...
+
+    function animateTypingText(text) {
+        if (!narrationTextDisplayRef.current) {
+            return;
+        }
+        const container = narrationTextDisplayRef.current;
+        console.log("This is the container:", container);
+        container.innerHTML = "";
+        const chars = text.split("");
+        chars.forEach(char => {
+            const span = document.createElement("span");
+            span.innerHTML = char;
+            container.appendChild(span);
+        });
+
+        gsap.fromTo(
+            container.children,
+            { opacity: 0 },
+            {
+                opacity: 1,
+                duration: 0.1,
+                stagger: 0.03
+            }
+        );
+    }
+
     function progressOpeningText(e) {
         if (e.key === " " || e.key === "Enter")
             console.log("In progressOpeningText");
@@ -299,6 +326,7 @@ function ProloguePage(props) {
 
     useEffect(() => {
         narrationTextRef.current = narrationText;
+        animateTypingText(narrationText);
     }, [narrationText]);
 
     useEffect(() => {
@@ -332,6 +360,12 @@ function ProloguePage(props) {
             displayClassDescriptions();
         }
     }, [selectedOption, displayClassesMenu]);
+
+    useEffect(() => {
+        narrationTextDisplayRef.current = document.querySelector('.prologue-text');
+        setNarrationText(openingText.length > 0 ? openingText[0].textContent : "");
+        console.log("This is the narrationTextDisplayRef.current:", narrationTextDisplayRef.current);
+    }, []);
 
     return (
         <div id="prologue-narration-container">
