@@ -205,15 +205,11 @@ function ProloguePage(props) {
                 document.removeEventListener("keydown", makeSelection);
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[3].textContent);
-                // probably animation here or something
-                setDisplayYesNoBox(true);
                 console.log("YesNoBoxNumber should be updating to 2 `here");
                 setYesNoBoxNumber(2);
                 document.addEventListener("keydown", makeSelection);
             } else {
                 // return player to input for name selection
-                // may need to edit logic again to account for text animation
-                // START HERE!!! Need to delay appearance of yesNoBox and change background color to black
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[0].textContent);
                 setPlayerName("");
@@ -231,11 +227,9 @@ function ProloguePage(props) {
                 setYesNoBoxNumber(0);
             } else {
                 // return player to input for name selection
-                // may need to edit logic again to account for text animation
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[0].textContent);
                 setPlayerName("");
-                setDisplayNameBox(true);
                 setYesNoBoxNumber(1);
                 document.removeEventListener("keydown", makeSelection);
             }
@@ -295,6 +289,8 @@ function ProloguePage(props) {
             setDisplayNameBox(true);
             // make first yesNo box not appear until after text is done animating
         } else if (animationCompleted && narrationTextRef.current === `${openingText[1].textContent} '${playerName}' ${openingText[2].textContent}`) {
+            addYesNoBox();
+        } else if (animationCompleted && narrationTextRef.current === openingText[3].textContent) {
             addYesNoBox();
         }
 
