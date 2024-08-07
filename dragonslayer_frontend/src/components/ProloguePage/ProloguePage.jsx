@@ -76,7 +76,6 @@ function ProloguePage(props) {
             return;
         }
         const container = narrationTextDisplayRef.current;
-        console.log("This is the container:", container);
         container.innerHTML = "";
         const chars = text.split("");
         chars.forEach(char => {
@@ -99,19 +98,22 @@ function ProloguePage(props) {
 
     function progressOpeningText(e) {
         if ((e.key === " " || e.key === "Enter") && animationCompletedRef.current) {
-            console.log("In progressOpeningText");
-            console.log("This is the value of animationCompletedRef.current:", animationCompletedRef.current);
             if (narrationTextRef.current === `${openingText[4].textContent}, "${playerName}."`) {
                 setNarrationText(openingText[5].textContent);
                 setReadyToProgressText(false);
             } else {
                 for (let i = 6; i < openingText.length; i++) {
+                    console.log("ProgressingOpeningText");
+                    console.log("This is the value of i:", i);
+                    console.log("This is the value of narrationTextRef.current:", narrationTextRef.current);
+                    console.log("This is the value of openingText[i].textContent:", openingText[i].textContent);
                     if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
                         setReadyToProgressText(false);
                         setTimeToInitializePrologueText(true);
                         return;
                     }
                     if (narrationTextRef.current === openingText[i].textContent) {
+                        console.log("Setting narration text to:", openingText[i + 1].textContent);
                         setNarrationText(openingText[i + 1].textContent);
                         return;
                     }
@@ -121,7 +123,9 @@ function ProloguePage(props) {
     }
 
     async function progressPrologueText(textBlock) {
-        await pauseOnText();
+        if (!narrationTextRef.current === openingText[9].textContent) {
+            await pauseOnText();
+        }
         setNarrationText(textBlock);
         await pauseOnText();
         setNarrationText(prologueText[2].textContent);
@@ -249,7 +253,7 @@ function ProloguePage(props) {
                     // maybe add a brief pause here
                     setNarrationText(openingText[6].textContent);
                     // insert progress text function here or something
-                    setReadyToProgressText(true);
+                    setReadyToProgressText(false);
                     // setRemoveMakeSelection(true);
                     setSelectedOption(0);
                     document.removeEventListener("keydown", makeSelection);
