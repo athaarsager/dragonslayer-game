@@ -43,10 +43,7 @@ function ProloguePage(props) {
     // Re-using some functionality I wrote for the other narration page below.
     // There's probably a more efficient way for me to do this aside from copy-pasting.
     // Oh well, can fix later if I'm feeling motivated
-    function appendText(newText) {
-        setNarrationText(currentText => currentText + newText);
-    }
-
+   
     function progressText() {
         return new Promise((resolve) => {
             // This is what changes resolveKeyPress from null to truthy
@@ -105,7 +102,6 @@ function ProloguePage(props) {
         if (narrationTextRef.current === `${openingText[4].textContent}, "${playerName}."`) {
             setNarrationText(openingText[5].textContent);
             setReadyToProgressText(false);
-            setDisplayClassesMenu(true);
         } else {
             for (let i = 6; i < openingText.length; i++) {
                 if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
@@ -125,6 +121,9 @@ function ProloguePage(props) {
         await pauseOnText();
         setNarrationText(textBlock);
         await pauseOnText();
+        setNarrationText(prologueText[2].textContent);
+        await pauseOnText();
+        textBlock = "";
         for (let i = 3; i < 6; i++) {
             textBlock += ` ${prologueText[i].textContent}`;
         }
@@ -132,14 +131,10 @@ function ProloguePage(props) {
         await pauseOnText();
         setNarrationText(`${playerName}, ${prologueText[6].textContent}`);
         await pauseOnText();
-        setNarrationText(prologueText[7].textContent);
-        await pauseOnText();
-        appendText(prologueText[8].textContent);
-        await pauseOnText();
-        appendText(prologueText[9].textContent);
-        await pauseOnText();
-        setNarrationText(prologueText[10].textContent);
-        await pauseOnText();
+        for (let i = 7; i < prologueText.length; i++) {
+            setNarrationText(prologueText[i].textContent);
+            await pauseOnText();
+        }
         // Begin battle!
         setOnProloguePage(false);
         setOnBattleScreen(true);
@@ -281,9 +276,7 @@ function ProloguePage(props) {
 
     // Handles delaying menus from appearing until text animation is complete
     useEffect(() => {
-        // Add an event listener here for user typing in their name
-        // Also change state so component where user types their name displays
-        // These should not happen until after the text scroll animation plays
+        // Add an event listener to this first one for user typing in their name
         if (animationCompleted && narrationTextRef.current === openingText[0].textContent) {
             document.addEventListener("keydown", updatePlayerName);
             setDisplayNameBox(true);
@@ -292,6 +285,8 @@ function ProloguePage(props) {
             addYesNoBox();
         } else if (animationCompleted && narrationTextRef.current === openingText[3].textContent) {
             addYesNoBox();
+        } else if (animationCompleted && narrationTextRef.current === openingText[5].textContent) {
+            setDisplayClassesMenu(true);
         }
 
         return () => {
@@ -341,7 +336,7 @@ function ProloguePage(props) {
     useEffect(() => {
         if (timeToInitializePrologueText) {
             let narrationBlock = "";
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 2; i++) {
                 narrationBlock += ` ${prologueText[i].textContent}`;
             }
             setTimeToInitializePrologueText(false);
