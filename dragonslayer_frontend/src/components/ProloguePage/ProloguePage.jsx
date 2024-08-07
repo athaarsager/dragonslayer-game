@@ -103,17 +103,12 @@ function ProloguePage(props) {
                 setReadyToProgressText(false);
             } else {
                 for (let i = 6; i < openingText.length; i++) {
-                    console.log("ProgressingOpeningText");
-                    console.log("This is the value of i:", i);
-                    console.log("This is the value of narrationTextRef.current:", narrationTextRef.current);
-                    console.log("This is the value of openingText[i].textContent:", openingText[i].textContent);
                     if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
                         setReadyToProgressText(false);
                         setTimeToInitializePrologueText(true);
                         return;
                     }
                     if (narrationTextRef.current === openingText[i].textContent) {
-                        console.log("Setting narration text to:", openingText[i + 1].textContent);
                         setNarrationText(openingText[i + 1].textContent);
                         return;
                     }
@@ -201,13 +196,11 @@ function ProloguePage(props) {
         if ((e.key !== " " && e.key !== "Enter") || (!displayYesNoBox && !displayClassesMenu)) {
             return;
         }
-        console.log("In makeSelection");
         if (yesNoBoxNumberRef.current === 1) {
             if (selectedOptionRef.current === 1) {
                 document.removeEventListener("keydown", makeSelection);
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[3].textContent);
-                console.log("YesNoBoxNumber should be updating to 2 `here");
                 setYesNoBoxNumber(2);
                 document.addEventListener("keydown", makeSelection);
             } else {
@@ -248,7 +241,6 @@ function ProloguePage(props) {
                     setClassDescription(playerClasses[2].denialText);
                     break;
                 case 3:
-                    console.log("In final case of switch case statement");
                     setDisplayClassesMenu(false);
                     // maybe add a brief pause here
                     setNarrationText(openingText[6].textContent);
@@ -304,7 +296,6 @@ function ProloguePage(props) {
 
     useEffect(() => {
         if (displayYesNoBox) {
-            console.log("Adding makeSelection");
             document.addEventListener("keydown", changeSelection);
             document.addEventListener("keydown", makeSelection);
         }
@@ -317,10 +308,8 @@ function ProloguePage(props) {
     useEffect(() => {
         // add event listener here
         if (readyToProgressText) {
-            console.log("Adding event listener for progressing text");
             document.addEventListener("keydown", progressOpeningText);
         } else if (!readyToProgressText || narrationText === openingText[9].textContent) {
-            console.log("Removing progress text event listener")
             document.removeEventListener("keydown", progressOpeningText);
         }
     }, [readyToProgressText, narrationText]);
@@ -376,7 +365,6 @@ function ProloguePage(props) {
     useEffect(() => {
         narrationTextDisplayRef.current = document.querySelector('.prologue-text');
         setNarrationText(openingText.length > 0 ? openingText[0].textContent : "");
-        console.log("This is the narrationTextDisplayRef.current:", narrationTextDisplayRef.current);
     }, []);
 
     return (
