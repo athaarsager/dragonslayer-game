@@ -11,6 +11,7 @@ function NarrationDisplay(props) {
         setOnFinalText,
         onFinalText,
         setBattleMenuOpen,
+        playerName
     } = props;
     const [narrationText, setNarrationText] = useState("");
     // This is for tracking when new text is added so it can be animated separately
@@ -43,7 +44,7 @@ function NarrationDisplay(props) {
                 }
                 // Account for appending player name to text after "Congratulations"
                 if (i === 0) {
-                    entry += " playerNameHere! ";
+                    entry += ` ${playerName} `;
                     setNewText(entry);
                 } else {
                     setNewText(entry);
@@ -133,6 +134,7 @@ NarrationDisplay.propTypes = {
     setOnFinalText: PropTypes.func.isRequired,
     onFinalText: PropTypes.bool.isRequired,
     setBattleMenuOpen: PropTypes.func.isRequired,
+    playerName: PropTypes.string.isRequired,
 };
 
 export default NarrationDisplay;

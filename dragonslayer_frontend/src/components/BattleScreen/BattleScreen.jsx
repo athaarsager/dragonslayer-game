@@ -32,6 +32,7 @@ function BattleScreen(props) {
         setGameOver,
         setOnBattleScreen,
         setOnTitleScreen,
+        playerName,
         setPlayerName
     } = props
 
@@ -445,6 +446,7 @@ function BattleScreen(props) {
         setOnFinalText,
         onFinalText,
         setBattleMenuOpen,
+        playerName
     };
 
     return (
@@ -505,6 +507,7 @@ BattleScreen.propTypes = {
     setGameOver: PropTypes.func.isRequired,
     setOnBattleScreen: PropTypes.func.isRequired,
     setOnTitleScreen: PropTypes.func.isRequired,
+    playerName: PropTypes.string.isRequired,
     setPlayerName: PropTypes.func.isRequired
 }
 
