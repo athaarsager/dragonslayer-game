@@ -35,6 +35,7 @@ function ProloguePage(props) {
     const selectedOptionRef = useRef(selectedOption);
     const yesNoBoxNumberRef = useRef(yesNoBoxNumber);
     const narrationTextRef = useRef(narrationText);
+    const animationCompletedRef = useRef(animationCompleted);
     // This gets set to a DOM element on page load
     const narrationTextDisplayRef = useRef(null);
 
@@ -43,7 +44,7 @@ function ProloguePage(props) {
     // Re-using some functionality I wrote for the other narration page below.
     // There's probably a more efficient way for me to do this aside from copy-pasting.
     // Oh well, can fix later if I'm feeling motivated
-   
+
     function progressText() {
         return new Promise((resolve) => {
             // This is what changes resolveKeyPress from null to truthy
@@ -97,21 +98,23 @@ function ProloguePage(props) {
     }
 
     function progressOpeningText(e) {
-        if (e.key === " " || e.key === "Enter")
+        if ((e.key === " " || e.key === "Enter") && animationCompletedRef.current) {
             console.log("In progressOpeningText");
-        if (narrationTextRef.current === `${openingText[4].textContent}, "${playerName}."`) {
-            setNarrationText(openingText[5].textContent);
-            setReadyToProgressText(false);
-        } else {
-            for (let i = 6; i < openingText.length; i++) {
-                if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
-                    setReadyToProgressText(false);
-                    setTimeToInitializePrologueText(true);
-                    return;
-                }
-                if (narrationTextRef.current === openingText[i].textContent) {
-                    setNarrationText(openingText[i + 1].textContent);
-                    return;
+            console.log("This is the value of animationCompletedRef.current:", animationCompletedRef.current);
+            if (narrationTextRef.current === `${openingText[4].textContent}, "${playerName}."`) {
+                setNarrationText(openingText[5].textContent);
+                setReadyToProgressText(false);
+            } else {
+                for (let i = 6; i < openingText.length; i++) {
+                    if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
+                        setReadyToProgressText(false);
+                        setTimeToInitializePrologueText(true);
+                        return;
+                    }
+                    if (narrationTextRef.current === openingText[i].textContent) {
+                        setNarrationText(openingText[i + 1].textContent);
+                        return;
+                    }
                 }
             }
         }
@@ -276,6 +279,7 @@ function ProloguePage(props) {
 
     // Handles delaying menus from appearing until text animation is complete
     useEffect(() => {
+        animationCompletedRef.current = animationCompleted;
         // Add an event listener to this first one for user typing in their name
         if (animationCompleted && narrationTextRef.current === openingText[0].textContent) {
             document.addEventListener("keydown", updatePlayerName);
