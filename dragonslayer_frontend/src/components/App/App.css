@@ -139,6 +139,14 @@
     color: red;
 }
 
+.menu-replacement {
+    height: 10.5rem;
+    width: 100%;
+    background-color: black;
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
 /* Narration Display css */
 
 .narration-container {

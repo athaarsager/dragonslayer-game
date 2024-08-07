@@ -473,6 +473,10 @@ function BattleScreen(props) {
             <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
                 <p id="battle-text-p">{battleText}</p>
             </div>
+            {!battleMenuOpen &&
+                <div className="menu-replacement">
+                </div>
+            }
         </>
     )
 }
