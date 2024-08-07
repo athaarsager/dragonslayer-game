@@ -106,6 +106,7 @@ function ProloguePage(props) {
                     if (i === 9 && narrationTextRef.current !== openingText[5].textContent) {
                         setReadyToProgressText(false);
                         setTimeToInitializePrologueText(true);
+                        document.removeEventListener("keydown", progressOpeningText);
                         return;
                     }
                     if (narrationTextRef.current === openingText[i].textContent) {
@@ -312,6 +313,7 @@ function ProloguePage(props) {
         } else if (!readyToProgressText || narrationText === openingText[9].textContent) {
             document.removeEventListener("keydown", progressOpeningText);
         }
+
     }, [readyToProgressText, narrationText]);
 
     // This updates the selectedOptionRef whenever the selectedOption is updated

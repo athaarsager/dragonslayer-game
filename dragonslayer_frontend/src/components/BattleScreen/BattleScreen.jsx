@@ -33,7 +33,8 @@ function BattleScreen(props) {
         setOnBattleScreen,
         setOnTitleScreen,
         playerName,
-        setPlayerName
+        setPlayerName,
+        originalClassAttacksToDisplay
     } = props
 
     const playRoundRef = useRef();
@@ -45,8 +46,6 @@ function BattleScreen(props) {
     const [battleTextList, setBattleTextList] = useState([]);
     const [battleText, setBattleText] = useState("A Dragon draws near!");
     const [specialMenuBattleText, setSpecialMenuBattleText] = useState("");
-
-    const [originalClassAttacksToDisplay, setOriginalClassAttacksToDisplay] = useState([]);
 
     const [maxPlayerStats, setMaxPlayerStats] = useState({});
     const [currentPlayerStats, setCurrentPlayerStats] = useState({});
@@ -100,13 +99,6 @@ function BattleScreen(props) {
         const response = await axios.get("/api/attacks/4");
         console.log(response.data);
         setClassAttacks(response.data);
-    }
-
-    async function fetchClassAttacksToDisplay() {
-        const response = await axios.get("/api/attacks/4/display");
-        console.log("These are the attacks to display:", response.data);
-        setOriginalClassAttacksToDisplay(response.data);
-        setClassAttacksToDisplay(response.data);
     }
 
     async function fetchCharacterStats() {
@@ -211,8 +203,9 @@ function BattleScreen(props) {
 
     const executeAction = async (e) => {
         if ((e.key === " " || e.key === "Enter")) {
-            console.log("In execute action. This is the value of onFinalText:", onFinalText);
-            if ((classAttacksToDisplay.length === 0 || !battleMenuOpen) && !onFinalText) return;
+            if ((classAttacksToDisplay.length === 0 || !battleMenuOpen) && !onFinalText) {
+                return;
+            }
             console.log("In execute action. this is the value of onActionMenu:", onActionMenu);
 
             // use the ref so that we're always using the most recent value
@@ -335,7 +328,6 @@ function BattleScreen(props) {
 
     useEffect(() => {
         fetchClassAttacks();
-        fetchClassAttacksToDisplay();
         fetchCharacterStats();
         fetchDragonAttacks();
         fetchDragonStats();
@@ -405,6 +397,10 @@ function BattleScreen(props) {
             fadeDragon(dragon);
         }
     }, [timeForDragonToFade]);
+
+    useEffect(() => {
+        console.log("Value of battleMenuOpen changed. This is the new value of battleMenuOpen:", battleMenuOpen);
+    }, [battleMenuOpen]);
 
     const battleLogicProps = {
         currentPlayerStats,
@@ -508,7 +504,8 @@ BattleScreen.propTypes = {
     setOnBattleScreen: PropTypes.func.isRequired,
     setOnTitleScreen: PropTypes.func.isRequired,
     playerName: PropTypes.string.isRequired,
-    setPlayerName: PropTypes.func.isRequired
+    setPlayerName: PropTypes.func.isRequired,
+    originalClassAttacksToDisplay: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default BattleScreen;

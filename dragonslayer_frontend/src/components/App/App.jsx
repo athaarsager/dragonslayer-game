@@ -28,6 +28,7 @@ export default function App() {
     const [classAttacks, setClassAttacks] = useState([]);
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
+    const [originalClassAttacksToDisplay, setOriginalClassAttacksToDisplay] = useState([]);
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
     const [dragonIsAwaitingPlayerResponse, setDragonIsAwaitingPlayerResponse] = useState(false);
@@ -62,6 +63,7 @@ export default function App() {
         setOnTitleScreen,
         playerName,
         setPlayerName,
+        originalClassAttacksToDisplay
     }
 
     const actionMenuProps = {
@@ -115,6 +117,13 @@ export default function App() {
         console.log("These will be the playerClasses:", response.data.slice(0, 4));
     }
 
+    async function fetchClassAttacksToDisplay() {
+        const response = await axios.get("/api/attacks/4/display");
+        console.log("These are the attacks to display:", response.data);
+        setOriginalClassAttacksToDisplay(response.data);
+        setClassAttacksToDisplay(response.data);
+    }
+
     // function manually determines which item should be selected in the battle action menu
     // based on what key was pressed
     function displaySelector(e) {
@@ -152,6 +161,7 @@ export default function App() {
         fetchOpeningText();
         fetchPrologueText();
         fetchClasses();
+        fetchClassAttacksToDisplay();
     }, []);
 
     useEffect(() => {
