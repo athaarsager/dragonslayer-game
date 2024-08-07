@@ -70,7 +70,7 @@ function ProloguePage(props) {
     }
 
 
-    function animateTypingText(text, callback) {
+    function animateText(text, callback) {
         if (!narrationTextDisplayRef.current) {
             return;
         }
@@ -328,7 +328,7 @@ function ProloguePage(props) {
 
     useEffect(() => {
         narrationTextRef.current = narrationText;
-        animateTypingText(narrationText, () => setAnimationCompleted(true));
+        animateText(narrationText, () => setAnimationCompleted(true));
         // Need to reset this
         setAnimationCompleted(false);
     }, [narrationText]);
