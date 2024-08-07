@@ -57,7 +57,10 @@ export default function App() {
         onFinalText,
         setOnFinalText,
         gameOver,
-        setGameOver
+        setGameOver,
+        setOnBattleScreen,
+        setOnTitleScreen,
+        setPlayerName,
     }
 
     const actionMenuProps = {

@@ -29,7 +29,10 @@ function BattleScreen(props) {
         onFinalText,
         setOnFinalText,
         gameOver,
-        setGameOver
+        setGameOver,
+        setOnBattleScreen,
+        setOnTitleScreen,
+        setPlayerName
     } = props
 
     const playRoundRef = useRef();
@@ -54,7 +57,7 @@ function BattleScreen(props) {
     const [maxDragonStats, setMaxDragonStats] = useState({});
     const [dragonHp, setDragonHp] = useState(NaN);
     const [dragonMaxHp, setDragonMaxHp] = useState(NaN);
-    
+
 
     const [enemyAttacks, setEnemyAttacks] = useState([]);
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
@@ -192,7 +195,7 @@ function BattleScreen(props) {
             const attackDescriptions = classAttacksToDisplay.map((attack) => attack.attack.description);
             if (selectedOption === 1 && swordIsCharged) {
                 setBattleText("You're already gripping the sword with both hands. You can't hold it any tighter!");
-            } else if(selectedOption === 1 && dragonIsAwaitingPlayerResponse) {
+            } else if (selectedOption === 1 && dragonIsAwaitingPlayerResponse) {
                 setBattleText("Don't waste your opportunity! Attack the Dragon now!");
             } else if (selectedOption === 3 && classAttacksToDisplay[3].attack.name === "Do Nothing" && dragonIsAwaitingPlayerResponse) {
                 setBattleText("Don't waste your opportunity! Attack the Dragon now!");
@@ -228,6 +231,7 @@ function BattleScreen(props) {
                     return;
                 } else if (currentSelectedOption === 1) {
                     // Need logic to bring player to title screen here
+                    returnToTitleScreen();
                     return;
                 }
             } else if (onActionMenu && !gameOver) {
@@ -307,6 +311,15 @@ function BattleScreen(props) {
         // This would also change if just reloading final boss fight
         setEnemyName("Dragon");
 
+    }
+
+    function returnToTitleScreen() {
+        resetDisplayStateVariables();
+        resetBattleStatsRef.current();
+        setOnBattleScreen(false);
+        setOnTitleScreen(true);
+        setBattleMenuOpen(false);
+        setPlayerName("");
     }
 
     function removeMenuEventListeners() {
@@ -486,6 +499,9 @@ BattleScreen.propTypes = {
     setOnFinalText: PropTypes.func.isRequired,
     gameOver: PropTypes.bool.isRequired,
     setGameOver: PropTypes.func.isRequired,
+    setOnBattleScreen: PropTypes.func.isRequired,
+    setOnTitleScreen: PropTypes.func.isRequired,
+    setPlayerName: PropTypes.func.isRequired
 }
 
 export default BattleScreen;
