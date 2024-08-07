@@ -162,6 +162,10 @@ function BattleScreen(props) {
     // needing to use your chicken to block the fireBreath attack.
     // Need one to display if you've already thrown the chicken, and another for if the chicken is alive still
     const renderMenuBattleText = () => {
+        if (gameOver) {
+            setBattleText("Game Over");
+            return;
+        }
         if (battleText === battleMenuTextRef.current) {
             // prevent re-setting state and reloading page whenever cursor moves on main menu
             return;
@@ -170,10 +174,6 @@ function BattleScreen(props) {
         // This function triggers asynchronously when stuff happens in playRound()
         // However, I don't want it to activate if player is not attacking
         if (defendOptionChosen || prayOptionChosen) {
-            return;
-        }
-        if (gameOver) {
-            setBattleText("Game Over");
             return;
         }
         // This ensures text switches back to main menu text
