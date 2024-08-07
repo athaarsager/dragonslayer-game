@@ -173,13 +173,12 @@ function ProloguePage(props) {
             setDisplayNameBox(false);
             setAnimationCompleted(false);
             setNarrationText(`${openingText[1].textContent} '${playerName}' ${openingText[2].textContent}`);
-            AddYesNoBox();
             document.addEventListener("keydown", makeSelection);
             return;
         }
     }
 
-    function AddYesNoBox() {
+    function addYesNoBox() {
         setDisplayYesNoBox(true);
         if (selectedOption !== 1) {
             setSelectedOption(1);
@@ -208,12 +207,13 @@ function ProloguePage(props) {
                 setNarrationText(openingText[3].textContent);
                 // probably animation here or something
                 setDisplayYesNoBox(true);
-                console.log("YesNoBoxNumber should be updating to 2 here");
+                console.log("YesNoBoxNumber should be updating to 2 `here");
                 setYesNoBoxNumber(2);
                 document.addEventListener("keydown", makeSelection);
             } else {
                 // return player to input for name selection
                 // may need to edit logic again to account for text animation
+                // START HERE!!! Need to delay appearance of yesNoBox and change background color to black
                 setDisplayYesNoBox(false);
                 setNarrationText(openingText[0].textContent);
                 setPlayerName("");
@@ -285,6 +285,7 @@ function ProloguePage(props) {
 
     }, [playerName, displayNameBox]);
 
+    // Handles delaying menus from appearing until text animation is complete
     useEffect(() => {
         // Add an event listener here for user typing in their name
         // Also change state so component where user types their name displays
@@ -292,6 +293,9 @@ function ProloguePage(props) {
         if (animationCompleted && narrationTextRef.current === openingText[0].textContent) {
             document.addEventListener("keydown", updatePlayerName);
             setDisplayNameBox(true);
+            // make first yesNo box not appear until after text is done animating
+        } else if (animationCompleted && narrationTextRef.current === `${openingText[1].textContent} '${playerName}' ${openingText[2].textContent}`) {
+            addYesNoBox();
         }
 
         return () => {
