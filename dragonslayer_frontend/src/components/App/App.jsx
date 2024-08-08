@@ -30,6 +30,7 @@ export default function App() {
     const [onActionMenu, setOnActionMenu] = useState(true);
     const [classAttacksToDisplay, setClassAttacksToDisplay] = useState([]);
     const [originalClassAttacksToDisplay, setOriginalClassAttacksToDisplay] = useState([]);
+    const [battleLoading, setBattleLoading] = useState(false);
     // state variable for evaluating where the selector arrow is
     const [selectedOption, setSelectedOption] = useState(0);
     const [dragonIsAwaitingPlayerResponse, setDragonIsAwaitingPlayerResponse] = useState(false);
@@ -65,7 +66,9 @@ export default function App() {
         playerName,
         setPlayerName,
         originalClassAttacksToDisplay,
-        characterClass
+        characterClass,
+        battleLoading,
+        setBattleLoading
     }
 
     const actionMenuProps = {
@@ -80,7 +83,8 @@ export default function App() {
         battleMenuOpen,
         displayClassesMenu,
         onFinalText,
-        gameOver
+        gameOver,
+        battleLoading
     }
 
     const prologuePageProps = {
@@ -98,6 +102,7 @@ export default function App() {
         setOnProloguePage,
         setBattleMenuOpen,
         setCharacterClass,
+        setBattleLoading
     }
 
 

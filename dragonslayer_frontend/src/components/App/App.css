@@ -60,6 +60,19 @@
 }
 
 /* BattleScreen css */
+#spinner-container-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#spinner-container {
+    margin-top: -50%;
+    margin-bottom: 100%;
+}
+
 #dragon-hp-container-container {
     display: flex;
     flex-direction: column;

@@ -15,7 +15,8 @@ function ActionMenu(props) {
         battleMenuOpen,
         displayClassesMenu,
         onFinalText,
-        gameOver
+        gameOver,
+        battleLoading
     } = props
 
     const [firstOptionText, setFirstOptionText] = useState("Attack");
@@ -65,7 +66,7 @@ function ActionMenu(props) {
 
     return (
         <>
-            {(battleMenuOpen || displayClassesMenu) &&
+            {((battleMenuOpen || displayClassesMenu) && !battleLoading) &&
                 <div id={gameOver || onFinalText ? "game-over-menu" : "battle-menu"} className="text-box">
                     {/* Would have been better to loop over the arrays here...oh well. I suppose class names would have gotten tricky */}
                     <div className={"option-one selector-container left-option"}>
@@ -120,6 +121,7 @@ ActionMenu.propTypes = {
     battleMenuOpen: PropTypes.bool.isRequired,
     displayClassesMenu: PropTypes.bool.isRequired,
     onFinalText: PropTypes.bool.isRequired,
-    gameOver: PropTypes.bool.isRequired
+    gameOver: PropTypes.bool.isRequired,
+    battleLoading: PropTypes.bool.isRequired
 };
 export default ActionMenu;

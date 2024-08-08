@@ -5,6 +5,7 @@ import BattleLogic from "../BattleLogic/BattleLogic";
 import NarrationDisplay from "../NarrationDisplay/NarrationDisplay";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
+import { TailSpin } from "react-loader-spinner";
 
 function BattleScreen(props) {
 
@@ -35,7 +36,9 @@ function BattleScreen(props) {
         playerName,
         setPlayerName,
         originalClassAttacksToDisplay,
-        characterClass
+        characterClass,
+        battleLoading,
+        setBattleLoading
     } = props
 
     const playRoundRef = useRef();
@@ -64,6 +67,14 @@ function BattleScreen(props) {
     const [currentEnemyStats, setCurrentEnemyStats] = useState({});
 
     const [badEndingText, setBadEndingText] = useState([]);
+
+    // use these variables for conditional rendering of loading spinner
+    const [fetchClassAttacksSucceeded, setFetchClassAttacksSucceeded] = useState(false);
+    const [fetchCharacterStatsSucceeded, setFetchCharacterStatsSucceeded] = useState(false);
+    const [fetchDragonAttacksSucceeded, setFetchDragonAttacksSucceeded] = useState(false);
+    const [fetchDragonStatsSucceeded, setFetchDragonStatsSucceeded] = useState(false);
+    const [fetchBattleMenuTextSucceeded, setFetchBattleMenuTextSucceeded] = useState(false);
+    const [fetchBadEndingTextSucceeded, setFetchBadEndingTextSucceeded] = useState(false);
 
     // This ensures the menu battle text does not re-appear after bad ending reached
     const [badEndingReached, setBadEndingReached] = useState(false);
@@ -102,6 +113,7 @@ function BattleScreen(props) {
             const response = await axios.get(`/api/attacks/${characterClass}`);
             console.log(response.data);
             setClassAttacks(response.data);
+            setFetchClassAttacksSucceeded(true);
         } catch (error) {
             console.error("Error fetching class attacks:", error);
         }
@@ -116,6 +128,7 @@ function BattleScreen(props) {
             setPlayerHp(response.data[0].hp);
             setPlayerMana(response.data[0].mana);
             setPlayerManaDisplay(playerMana);
+            setFetchCharacterStatsSucceeded(true);
         } catch (error) {
             console.error("Error fetching character stats:", error);
         }
@@ -126,6 +139,7 @@ function BattleScreen(props) {
             const response = await axios.get("/api/attacks/5");
             console.log("These are the dragon's attacks:", response.data);
             setEnemyAttacks(response.data);
+            setFetchDragonAttacksSucceeded(true);
         } catch (error) {
             console.error("Error fetching dragon attacks:", error);
         }
@@ -141,6 +155,7 @@ function BattleScreen(props) {
             // don't want to reset hp values accidentally
             setDragonHp(response.data[0].hp);
             setDragonMaxHp(response.data[0].hp);
+            setFetchDragonStatsSucceeded(true);
         } catch (error) {
             console.error("Error fetching dragon stats:", error);
         }
@@ -151,6 +166,7 @@ function BattleScreen(props) {
             const response = await axios.get("/api/game_text/battle_menu_text");
             console.log("This is the battleMenuTextList:", response.data);
             setBattleTextList(response.data);
+            setFetchBattleMenuTextSucceeded(true);
         } catch (error) {
             console.error("Error fetching battle menu text:", error);
         }
@@ -161,6 +177,7 @@ function BattleScreen(props) {
             const response = await axios.get("/api/game_text/bad_end");
             console.log("This is the bad ending text array:", response.data);
             setBadEndingText(response.data);
+            setFetchBadEndingTextSucceeded(true);
         } catch (error) {
             console.error("Error fetching bad ending text:", error);
         }
@@ -359,7 +376,6 @@ function BattleScreen(props) {
         fetchDragonStats();
         fetchBattleMenuText();
         fetchBadEndingText();
-        console.log("This is the value of BattleText:", battleText);
     }, []);
 
     useEffect(() => {
@@ -428,6 +444,13 @@ function BattleScreen(props) {
         console.log("Value of battleMenuOpen changed. This is the new value of battleMenuOpen:", battleMenuOpen);
     }, [battleMenuOpen]);
 
+    useEffect(() => {
+        if (fetchClassAttacksSucceeded && fetchCharacterStatsSucceeded && fetchDragonAttacksSucceeded &&
+            fetchDragonStatsSucceeded && fetchBattleMenuTextSucceeded && fetchBadEndingTextSucceeded) {
+            setBattleLoading(false);
+        }
+    }, [fetchClassAttacksSucceeded, fetchCharacterStatsSucceeded, fetchDragonAttacksSucceeded, fetchDragonStatsSucceeded, fetchBattleMenuTextSucceeded, fetchBadEndingTextSucceeded]);
+
     const battleLogicProps = {
         currentPlayerStats,
         setCurrentPlayerStats,
@@ -473,32 +496,42 @@ function BattleScreen(props) {
 
     return (
         <>
-            <BattleLogic {...battleLogicProps} />
-            <div id={displayNarrationText ? "empty-dragon-hp-container-container" : "dragon-hp-container-container"}>
-                <div id={displayNarrationText ? "empty-dragon-hp-container" : "dragon-hp-container"}>
-                    <div id="dragon-hp"></div>
-                </div>
-            </div>
-            {!displayNarrationText ?
+            {!battleLoading ?
                 <>
-                    {/* Credit for dragon image: Image by Artie Blur from Pixabay 
-                    Granted, it is AI generated, so do I need to credit him? Probablys still should...*/}
-                    <div id="dragon-display">
-                        <img id="dragon-image" src="/public/images/dragon.jpg"
-                            alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
+                    <BattleLogic {...battleLogicProps} />
+                    <div id={displayNarrationText ? "empty-dragon-hp-container-container" : "dragon-hp-container-container"}>
+                        <div id={displayNarrationText ? "empty-dragon-hp-container" : "dragon-hp-container"}>
+                            <div id="dragon-hp"></div>
+                        </div>
                     </div>
-                </> : badEndingText.length > 0 && /* This component will only render if badEndingText is populated */
-                <NarrationDisplay {...narrationDisplayProps} />}
+                    {!displayNarrationText ?
+                        <>
+                            {/* Credit for dragon image: Image by Artie Blur from Pixabay 
+                    Granted, it is AI generated, so do I need to credit him? Probablys still should...*/}
+                            <div id="dragon-display">
+                                <img id="dragon-image" src="/public/images/dragon.jpg"
+                                    alt="A dark blue dragon whose tail and wings exude flames as it sets a forest on fire in the night" />
+                            </div>
+                        </> : badEndingText.length > 0 && /* This component will only render if badEndingText is populated */
+                        <NarrationDisplay {...narrationDisplayProps} />}
 
-            <div id="character-stat-display">
-                <p>Hp: {playerHp || playerHp >= 0 ? playerHp : ""}</p>
-                <p>Mana: {playerMana || playerMana >= 0 ? playerMana : ""}</p>
-            </div>
-            <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
-                <p id="battle-text-p">{battleText}</p>
-            </div>
-            {!battleMenuOpen &&
-                <div className="menu-replacement">
+                    <div id="character-stat-display">
+                        <p>Hp: {playerHp || playerHp >= 0 ? playerHp : ""}</p>
+                        <p>Mana: {playerMana || playerMana >= 0 ? playerMana : ""}</p>
+                    </div>
+                    <div id={gameOver ? "game-over-text" : "battle-text"} className="text-box">
+                        <p id="battle-text-p">{battleText}</p>
+                    </div>
+                    {!battleMenuOpen &&
+                        <div className="menu-replacement">
+                        </div>
+                    }
+                </> :
+                <div id="spinner-container-container">
+                    <div id="spinner-container">
+                        <p>Loading Battle...</p>
+                        <TailSpin id="spinner"/>
+                    </div>
                 </div>
             }
         </>
@@ -532,7 +565,9 @@ BattleScreen.propTypes = {
     playerName: PropTypes.string.isRequired,
     setPlayerName: PropTypes.func.isRequired,
     originalClassAttacksToDisplay: PropTypes.arrayOf(PropTypes.object).isRequired,
-    characterClass: PropTypes.number.isRequired
+    characterClass: PropTypes.number.isRequired,
+    battleLoading: PropTypes.bool.isRequired,
+    setBattleLoading: PropTypes.func.isRequired
 }
 
 export default BattleScreen;
