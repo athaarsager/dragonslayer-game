@@ -490,6 +490,7 @@ function BattleLogic(props) {
             setCurrentPlayerStats(playerRoundStats);
             // Need this here so that hp updates on screen before message displays
             if (playerRoundStats.hp <= 0) {
+                await pauseOnText();
                 setBattleText("You crumple to the ground in agony as you die. Disappointing. So much for you being the hero.");
             }
             return;
