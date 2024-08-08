@@ -124,3 +124,32 @@ VALUES
 ('The Dragon seems bored by this pitiful fight.', 'Battle_Menu_Text'),
 ('The Dragon looks at you hungrily.', 'Battle_Menu_Text'),
 ('The Dragon stares into your soul.', 'Battle_Menu_Text');
+
+--Insert Statements for opening text that is talking with the player
+INSERT INTO game_text (text_content, type)
+VALUES
+('Before we begin, what name would you like to be called?', 'Opening_Text'),
+('Are you sure', 'Opening_Text'),
+('is what you would like to be called?', 'Opening_Text'),
+('Like, absolutely sure that you don''t have a..I don''t know...cooler or more heroic-sounding name?', 'Opening_Text'),
+('Fine. As you wish', 'Opening_Text'),
+('And what is your profession?', 'Opening_Text'),
+('Very well.', 'Opening_Text'),
+('With all of that information, I will make the necessary adjustments to the script.', 'Opening_Text'),
+('Just give me one moment...There!', 'Opening_Text'),
+('*Ahem* Without further ado, let us begin your adventure!', 'Opening_Text'),
+
+--Insert Statements for prologue
+INSERT INTO game_text (text_content, type)
+VALUES
+('In the magical land of Fantasia, a small village lies tucked away in the mountains.', 'Prologue'),
+('It is a place of prosperity and peace where the people live in heartfelt community with each other and are one with the land.', 'Prologue'),
+('At least...that is how it was before Alduran arrived!', 'Prologue'),
+('When the ancient wyrm descended from the heavens to take new territory, it was this village that he chose to claim.', 'Prologue'),
+('In a blaze of fire and terror, the village was razed to the ground and its inhabitants subject to enslavement at the Dragon''s behest.', 'Prologue'),
+('Many a valiant hero has attempted to liberate this village (and perhaps earn some gold and glory along the way), but all have fallen to the Dragon''s terrible power!', 'Prologue'),
+('you are our only hope! You are the only one who can save us from Alduran''s power!', 'Prologue'),
+('...What''s that? You''re wondering what makes you special compared to the would-be heroes who came before?', 'Prologue'),
+('Well, that would be your...courage. Yes, most definitely that. You are far more courageous than any who has come before!', 'Prologue'),
+('Most assuredly, it shall be your guiding light and power in your epic battle against the forces of evil!', 'Prologue'),
+('Go forth now! The Dragon''s lair is just ahead!', 'Prologue');
