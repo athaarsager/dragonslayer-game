@@ -42,6 +42,7 @@ create table game_text (
 id serial PRIMARY KEY NOT NULL,
 text_content text NOT NULL,
 type text NOT NULL
+);
 
 
 --Insert Statements
