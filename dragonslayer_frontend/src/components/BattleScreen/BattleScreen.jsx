@@ -99,7 +99,7 @@ function BattleScreen(props) {
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         try {
-            const response = await axios.get("/api/attacks/4");
+            const response = await axios.get(`/api/attacks/${characterClass}`);
             console.log(response.data);
             setClassAttacks(response.data);
         } catch (error) {
