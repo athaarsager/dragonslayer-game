@@ -69,6 +69,11 @@
     margin-top: 3px;
 }
 
+#empty-dragon-hp-container-container {
+    margin-top: 3px;
+    height: 5vh;
+}
+
 #dragon-hp-container {
     display: flex;
     justify-content: flex-start;
@@ -77,6 +82,10 @@
     background-color: black;
     border: 1px solid white;
     border-radius: 10px;
+}
+
+#empty-dragon-hp-container {
+    height: 3vh;
 }
 
 #dragon-hp {

@@ -77,7 +77,7 @@ VALUES
 (4, 4, 'Fetch Pitchfork', 0, 0, 'Risk going near the dragon to fetch your thrown pitchfork.', 'You run to fetch your pitchfork!'),
 (4, 5, 'Fetch Chicken', 0, 0, 'Your chicken has failed you. You can''t help but love it anyway. You should fetch it back before it gets hurt.', 'You run and fetch your lucky chicken!'),
 (4, 6, 'Do Nothing', 0, 0, 'Your beloved friend is dead. Take a moment to mourn.', 'You do nothing as grief over your dead chicken consumes you!'),
-(4, 7, 'Eat Chicken Nuggets', 0, 0, 'There''s still one thing your beloved friend can do for you...', 'You eat the lucky chicken nuggets!'),
+(4, 7, 'Eat Fried Chicken', 0, 0, 'There''s still one thing your beloved friend can do for you...', 'You eat the lucky fried chicken!'),
 (4, 8, 'Call of Cock-a-Doodle-Doo', 100, 600, 'The power and love of your chicken friend fills you from within! A new power is at your disposal!', 'Summoning the power of your dead friend from within, you unleash a powerful blast of...ROOSTER energy?!'),
 (4, 9, 'Listen', 0, 0, 'Don''t be an idiot! The dragon is trying to trick you!', 'Ignoring the fact that this is obviously a TERRIBLE idea, you listen carefully to what the dragon has to say.');
 

@@ -72,6 +72,7 @@ function BattleScreen(props) {
     const selectedOptionRef = useRef(selectedOption);
 
     const [timeForDragonToFade, setTimeForDragonToFade] = useState(false);
+  
     // Registering fade effect. Just copied from example in the docs
     gsap.registerEffect({
         name: "fade",
@@ -361,7 +362,7 @@ function BattleScreen(props) {
         // need to use this DOM element to ensure that the current width of the hp bar
         // is always compared to its maximum length
         const dragonHpDisplayContainer = document.getElementById("dragon-hp-container");
-        if (dragonHpDisplay) {
+        if (dragonHpDisplay && !displayNarrationText) {
             const dragonHpWidth = dragonHpDisplayContainer.offsetWidth;
             if (dragonHp <= 0) {
                 dragonHpDisplay.style.width = "0px";
@@ -448,11 +449,11 @@ function BattleScreen(props) {
     return (
         <>
             <BattleLogic {...battleLogicProps} />
-            <div id="dragon-hp-container-container">
-                <div id="dragon-hp-container">
-                    <div id="dragon-hp"></div>
+                <div id={displayNarrationText ? "empty-dragon-hp-container-container" : "dragon-hp-container-container"}>
+                    <div id={displayNarrationText ? "empty-dragon-hp-container" : "dragon-hp-container"}>
+                        <div id="dragon-hp"></div>
+                    </div>
                 </div>
-            </div>
             {!displayNarrationText ?
                 <>
                     {/* Credit for dragon image: Image by Artie Blur from Pixabay 

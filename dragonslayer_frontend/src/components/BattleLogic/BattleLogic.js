@@ -129,7 +129,7 @@ function BattleLogic(props) {
     async function playerActs(enemy, action, playerRoundStats, enemyRoundStats) {
         console.log("These are the playerRoundStats:", playerRoundStats);
         if (attackOptionChosen) {
-            if (action.attack.name === "Eat Chicken Nuggets") {
+            if (action.attack.name === "Eat Fried Chicken") {
                 await playerHeals(playerRoundStats, action);
                 updateClassAttacksToDisplay(3, 8);
             } else {
@@ -386,7 +386,7 @@ function BattleLogic(props) {
                 setBattleText("With a mightly cluck, your lucky chicken flies in front of the flames, shielding you from the blast!");
                 // Somewhere include the text: "The smell of dragon-fried chicken fills your nostrils"
                 // Probably on main battle screen textbox
-                // Replace fetch chicken with eat chicken nuggets
+                // Replace fetch chicken with eat fried chicken
                 updateClassAttacksToDisplay(3, 7);
             } else {
                 await enemyUsesAttack(enemyAttacks[4], action, playerRoundStats);
