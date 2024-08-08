@@ -34,7 +34,8 @@ function BattleScreen(props) {
         setOnTitleScreen,
         playerName,
         setPlayerName,
-        originalClassAttacksToDisplay
+        originalClassAttacksToDisplay,
+        characterClass
     } = props
 
     const playRoundRef = useRef();
@@ -108,7 +109,7 @@ function BattleScreen(props) {
 
     async function fetchCharacterStats() {
         try {
-            const response = await axios.get(`/api/stats/4`);
+            const response = await axios.get(`/api/stats/${characterClass}`);
             console.log("These are the character's stats:", response.data[0]);
             setMaxPlayerStats(response.data[0]);
             setCurrentPlayerStats(response.data[0]);
@@ -530,7 +531,8 @@ BattleScreen.propTypes = {
     setOnTitleScreen: PropTypes.func.isRequired,
     playerName: PropTypes.string.isRequired,
     setPlayerName: PropTypes.func.isRequired,
-    originalClassAttacksToDisplay: PropTypes.arrayOf(PropTypes.object).isRequired
+    originalClassAttacksToDisplay: PropTypes.arrayOf(PropTypes.object).isRequired,
+    characterClass: PropTypes.number.isRequired
 }
 
 export default BattleScreen;

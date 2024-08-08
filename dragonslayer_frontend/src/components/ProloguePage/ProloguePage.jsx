@@ -18,6 +18,7 @@ function ProloguePage(props) {
         setOnBattleScreen,
         setOnProloguePage,
         setBattleMenuOpen,
+        setCharacterClass
     } = props;
 
     const [narrationText, setNarrationText] = useState("");
@@ -243,6 +244,7 @@ function ProloguePage(props) {
                     break;
                 case 3:
                     setDisplayClassesMenu(false);
+                    setCharacterClass(4);
                     // maybe add a brief pause here
                     setNarrationText(openingText[6].textContent);
                     // insert progress text function here or something
@@ -421,6 +423,7 @@ ProloguePage.propTypes = {
     setOnBattleScreen: PropTypes.func.isRequired,
     setOnProloguePage: PropTypes.func.isRequired,
     setBattleMenuOpen: PropTypes.func.isRequired,
+    setCharacterClass: PropTypes.func.isRequired
 }
 
 export default ProloguePage;

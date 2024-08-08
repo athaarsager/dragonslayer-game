@@ -22,6 +22,7 @@ export default function App() {
     const [enemyName, setEnemyName] = useState("");
 
     const [playerClasses, setPlayerClasses] = useState([]);
+    const [characterClass, setCharacterClass] = useState(NaN);
 
     // prop variables
     const [attackOptionChosen, setAttackOptionChosen] = useState(false);
@@ -63,7 +64,8 @@ export default function App() {
         setOnTitleScreen,
         playerName,
         setPlayerName,
-        originalClassAttacksToDisplay
+        originalClassAttacksToDisplay,
+        characterClass
     }
 
     const actionMenuProps = {
@@ -95,6 +97,7 @@ export default function App() {
         setOnBattleScreen,
         setOnProloguePage,
         setBattleMenuOpen,
+        setCharacterClass,
     }
 
 
