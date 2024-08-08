@@ -72,7 +72,7 @@ function BattleScreen(props) {
     const selectedOptionRef = useRef(selectedOption);
 
     const [timeForDragonToFade, setTimeForDragonToFade] = useState(false);
-  
+
     // Registering fade effect. Just copied from example in the docs
     gsap.registerEffect({
         name: "fade",
@@ -97,48 +97,72 @@ function BattleScreen(props) {
 
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
-        const response = await axios.get("/api/attacks/4");
-        console.log(response.data);
-        setClassAttacks(response.data);
+        try {
+            const response = await axios.get("/api/attacks/4");
+            console.log(response.data);
+            setClassAttacks(response.data);
+        } catch (error) {
+            console.error("Error fetching class attacks:", error);
+        }
     }
 
     async function fetchCharacterStats() {
-        const response = await axios.get(`/api/stats/4`);
-        console.log("These are the character's stats:", response.data[0]);
-        setMaxPlayerStats(response.data[0]);
-        setCurrentPlayerStats(response.data[0]);
-        setPlayerHp(response.data[0].hp);
-        setPlayerMana(response.data[0].mana);
-        setPlayerManaDisplay(playerMana);
+        try {
+            const response = await axios.get(`/api/stats/4`);
+            console.log("These are the character's stats:", response.data[0]);
+            setMaxPlayerStats(response.data[0]);
+            setCurrentPlayerStats(response.data[0]);
+            setPlayerHp(response.data[0].hp);
+            setPlayerMana(response.data[0].mana);
+            setPlayerManaDisplay(playerMana);
+        } catch (error) {
+            console.error("Error fetching character stats:", error);
+        }
     }
 
     async function fetchDragonAttacks() {
-        const response = await axios.get("/api/attacks/5");
-        console.log("These are the dragon's attacks:", response.data);
-        setEnemyAttacks(response.data);
+        try {
+            const response = await axios.get("/api/attacks/5");
+            console.log("These are the dragon's attacks:", response.data);
+            setEnemyAttacks(response.data);
+        } catch (error) {
+            console.error("Error fetching dragon attacks:", error);
+        }
     }
 
     async function fetchDragonStats() {
-        const response = await axios.get("/api/stats/5");
-        console.log("These are the dragon's stats:", response.data[0]);
-        setMaxDragonStats(response.data[0]);
-        setCurrentEnemyStats(response.data[0]);
-        // This might be problematic if page refreshed or component remounts several times
-        // don't want to reset hp values accidentally
-        setDragonHp(response.data[0].hp);
-        setDragonMaxHp(response.data[0].hp);
+        try {
+            const response = await axios.get("/api/stats/5");
+            console.log("These are the dragon's stats:", response.data[0]);
+            setMaxDragonStats(response.data[0]);
+            setCurrentEnemyStats(response.data[0]);
+            // This might be problematic if page refreshed or component remounts several times
+            // don't want to reset hp values accidentally
+            setDragonHp(response.data[0].hp);
+            setDragonMaxHp(response.data[0].hp);
+        } catch (error) {
+            console.error("Error fetching dragon stats:", error);
+        }
     }
 
     async function fetchBattleMenuText() {
-        const response = await axios.get("/api/game_text/battle_menu_text");
-        console.log("This is the battleMenuTextList:", response.data);
-        setBattleTextList(response.data);
+        try {
+            const response = await axios.get("/api/game_text/battle_menu_text");
+            console.log("This is the battleMenuTextList:", response.data);
+            setBattleTextList(response.data);
+        } catch (error) {
+            console.error("Error fetching battle menu text:", error);
+        }
     }
 
     async function fetchBadEndingText() {
-        const response = await axios.get("/api/game_text/bad_end");
-        console.log("This is the bad ending text array:", response.data);
-        setBadEndingText(response.data);
+        try {
+            const response = await axios.get("/api/game_text/bad_end");
+            console.log("This is the bad ending text array:", response.data);
+            setBadEndingText(response.data);
+        } catch (error) {
+            console.error("Error fetching bad ending text:", error);
+        }
     }
 
     // Need to store this in a variable so it doesn't change when player moves selector arrow or moves menus
@@ -449,11 +473,11 @@ function BattleScreen(props) {
     return (
         <>
             <BattleLogic {...battleLogicProps} />
-                <div id={displayNarrationText ? "empty-dragon-hp-container-container" : "dragon-hp-container-container"}>
-                    <div id={displayNarrationText ? "empty-dragon-hp-container" : "dragon-hp-container"}>
-                        <div id="dragon-hp"></div>
-                    </div>
+            <div id={displayNarrationText ? "empty-dragon-hp-container-container" : "dragon-hp-container-container"}>
+                <div id={displayNarrationText ? "empty-dragon-hp-container" : "dragon-hp-container"}>
+                    <div id="dragon-hp"></div>
                 </div>
+            </div>
             {!displayNarrationText ?
                 <>
                     {/* Credit for dragon image: Image by Artie Blur from Pixabay 

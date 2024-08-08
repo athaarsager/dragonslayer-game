@@ -99,29 +99,45 @@ export default function App() {
 
 
     async function fetchOpeningText() {
+        try {
         const response = await axios.get("/api/game_text/opening_text");
         setOpeningText(response.data);
+        } catch (error) {
+            console.error("Error fetching opening text:", error);
+        }
     }
 
     async function fetchPrologueText() {
+        try {
         const response = await axios.get("/api/game_text/prologue_text");
         setPrologueText(response.data);
+        } catch (error) {
+            console.error("Error fetching prologue text:", error);
+        }
     }
 
     async function fetchClasses() {
+        try {
         const response = await axios.get("/api/character_classes");
         console.log("These are the character classes:", response.data);
         // set the enemy's name to "dragon" right off the bat
         setEnemyName(response.data[4].name);
         setPlayerClasses(response.data.slice(0, 4));
         console.log("These will be the playerClasses:", response.data.slice(0, 4));
+        } catch (error) {
+            console.error("Error fetching classes:", error);
+        }
     }
 
     async function fetchClassAttacksToDisplay() {
+        try {
         const response = await axios.get("/api/attacks/4/display");
         console.log("These are the attacks to display:", response.data);
         setOriginalClassAttacksToDisplay(response.data);
         setClassAttacksToDisplay(response.data);
+        } catch (error) {
+            console.error("Error fetching classAttacksToDisplay:", error);
+        }
     }
 
     // function manually determines which item should be selected in the battle action menu
