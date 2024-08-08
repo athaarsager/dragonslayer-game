@@ -60,7 +60,7 @@ function ProloguePage(props) {
     // This function is added via event listener and executes when a key is pressed
     function resolveUserInput(e) {
         // resolveKeyPress is set to a value whenever progressRound is called
-        if (resolveKeyPress && (e.key === " " || e.key === "Enter")) {
+        if (resolveKeyPress && (e.key === " " || e.key === "Enter") && animationCompletedRef.current === true) {
             resolveKeyPress(); // Resolve the Promise when the desired key is pressed thanks to the resolve function stored in this variable
             resolveKeyPress = null; // Reset the resolveKeyPress variable
         }
