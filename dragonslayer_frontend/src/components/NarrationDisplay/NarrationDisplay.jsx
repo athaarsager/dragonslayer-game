@@ -44,7 +44,7 @@ function NarrationDisplay(props) {
                 }
                 // Account for appending player name to text after "Congratulations"
                 if (i === 0) {
-                    entry += ` ${playerName} `;
+                    entry += ` ${playerName}! `;
                     setNewText(entry);
                 } else {
                     setNewText(entry);

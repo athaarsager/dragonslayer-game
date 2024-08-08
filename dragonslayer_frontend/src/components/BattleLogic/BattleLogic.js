@@ -419,11 +419,12 @@ function BattleLogic(props) {
         await progressRound();
         console.log("In enemyUsesAttack. This is the action:", action);
         console.log(`This is the enemy damage calculation: ${enemyAttack.attack.power} * ${currentEnemyStats.attack} * playerdefense: ${1 / playerRoundStats.defense}`);
-        let damageEnemyDealt = Math.floor(enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense);
+        let damageEnemyDealt = Math.floor((enemyAttack.attack.power * currentEnemyStats.attack) * (1 / playerRoundStats.defense));
         // use the actual action name here because the state update is behind and I don't want to deal with that
         // Also prevents stat buffs/debuffs from lasting more than this one turn
         if (action === "defend") {
             damageEnemyDealt *= 0.5;
+            damageEnemyDealt = Math.floor(damageEnemyDealt);
             console.log("Enemy damage decreased by half:", damageEnemyDealt);
         }
         // I'm dumb for not making the action variable an object every time.
