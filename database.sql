@@ -38,6 +38,12 @@ Attack_To_Be_Replaced_By integer,
 Special_Text text
 );
 
+create table game_text (
+id serial PRIMARY KEY NOT NULL,
+text_content text NOT NULL,
+type text NOT NULL
+
+
 --Insert Statements
 
 -- class inserts
