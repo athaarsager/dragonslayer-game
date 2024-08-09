@@ -60,8 +60,8 @@ VALUES
 -- stat inserts for dragon and peasant
 INSERT INTO Stat (Character_Class_Id, Hp, Mana, Attack, Defense)
 VALUES
-(5, 1000, 1000, 100, 100),
-(4, 100, 0, 10, 20);
+(5, 1000, 1000, 1, 1),
+(4, 100, 0, 1, 1);
 
 --Dragon's attacks
 INSERT INTO attack (Character_Class_Id, Display_Id, Name, Mana_Cost, Power, Description, Attack_Text)
@@ -77,15 +77,15 @@ VALUES
 --Peasant's attacks
 INSERT INTO attack (Character_Class_Id, Display_Id, Name, Mana_Cost, Power, Description, Attack_Text)
 VALUES
-(4, 0, 'Sword Attack', 0, 120, 'A basic sword attack with your grandpa''s (t)rusty blade. Maybe it will give the dragon tetanus.', 'You swing your sword at the dragon!'),
+(4, 0, 'Sword Attack', 0, 20, 'A basic sword attack with your grandpa''s (t)rusty blade. Maybe it will give the dragon tetanus.', 'You swing your sword at the dragon!'),
 (4, 1, 'Charge Sword', 0, 0, 'Grip your blade with two hands. Twice the grip means twice the power on your next swing, right?', 'You focus your mind and grip your sword with both hands.'),
-(4, 2, 'Throw Pitchfork', 0, 150, 'Your throwing arm is pretty good. You could do some damage with this. If it doesn''t kill the dragon though, you''l have to run fetch it before you can throw it again...', 'You take aim at the dragon''s eye and throw your pitchfork!'),
+(4, 2, 'Throw Pitchfork', 0, 50, 'Your throwing arm is pretty good. You could do some damage with this. If it doesn''t kill the dragon though, you''l have to run fetch it before you can throw it again...', 'You take aim at the dragon''s eye and throw your pitchfork!'),
 (4, 3, 'Throw Chicken', 0, 0, 'Your lucky chicken has been by your side as long as you can remember. Perhaps it will unleash vengeance upon your behalf?', 'You throw your lucky chicken at the dragon! ...Nothing happens.'),
 (4, 4, 'Fetch Pitchfork', 0, 0, 'Risk going near the dragon to fetch your thrown pitchfork.', 'You run to fetch your pitchfork!'),
 (4, 5, 'Fetch Chicken', 0, 0, 'Your chicken has failed you. You can''t help but love it anyway. You should fetch it back before it gets hurt.', 'You run and fetch your lucky chicken!'),
 (4, 6, 'Do Nothing', 0, 0, 'Your beloved friend is dead. Take a moment to mourn.', 'You do nothing as grief over your dead chicken consumes you!'),
 (4, 7, 'Eat Fried Chicken', 0, 0, 'There''s still one thing your beloved friend can do for you...', 'You eat the lucky fried chicken!'),
-(4, 8, 'Call of Cock-a-Doodle-Doo', 100, 600, 'The power and love of your chicken friend fills you from within! A new power is at your disposal!', 'Summoning the power of your dead friend from within, you unleash a powerful blast of...ROOSTER energy?!'),
+(4, 8, 'Call of Cock-a-Doodle-Doo', 0, 500, 'The power and love of your chicken friend fills you from within! A new power is at your disposal!', 'Summoning the power of your dead friend from within, you unleash a powerful blast of...ROOSTER energy?!'),
 (4, 9, 'Listen', 0, 0, 'Don''t be an idiot! The dragon is trying to trick you!', 'Ignoring the fact that this is obviously a TERRIBLE idea, you listen carefully to what the dragon has to say.');
 
 --Extra Effect Inserts for Dragon attacks
@@ -144,7 +144,7 @@ VALUES
 ('Very well.', 'Opening_Text'),
 ('With all of that information, I will make the necessary adjustments to the script.', 'Opening_Text'),
 ('Just give me one moment...There!', 'Opening_Text'),
-('*Ahem* Without further ado, let us begin your adventure!', 'Opening_Text'),
+('*Ahem* Without further ado, let us begin your adventure!', 'Opening_Text');
 
 --Insert Statements for prologue
 INSERT INTO game_text (text_content, type)
