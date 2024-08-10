@@ -80,7 +80,7 @@ function TitleScreen({ setOnTitleScreen, setOnProloguePage }) {
             {/* Image by <a href="https://pixabay.com/users/clker-free-vector-images-3736/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=33979">Clker-Free-Vector-Images</a>
              from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=33979">
              Pixabay</a> */}
-            <img id="swords-image" className={display} src="/public/images/swordsAndShield.png" alt="Two swords crossed over a shield" />
+            <img id="swords-image" className={display} src="/images/swordsAndShield.png" alt="Two swords crossed over a shield" />
             <p id="start-text" className={display}>Press Spacebar or Enter to Begin</p>
             {/* overlay for screen flash */}
             <div id="screen-flash"></div>
