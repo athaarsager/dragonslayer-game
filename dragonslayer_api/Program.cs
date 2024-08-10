@@ -28,12 +28,12 @@ options.UseNpgsql(connectionString));
 
 // Add CORS services. May need to allow for a different origin once website is hosted...
 // This specifies where requests can be accepted from
-builder.Services.AddCors(options =>
+builder.Services.AddCors(options => 
 {
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("http://localhost:5173")
+            builder.WithOrigins("http://localhost:5173", "https://dragonslayer-game.vercel.app/")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
