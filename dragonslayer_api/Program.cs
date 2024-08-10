@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigins",
         builder =>
         {
-            builder.WithOrigins("http://localhost:5173", "https://dragonslayer-game.vercel.app/")
+            builder.WithOrigins("http://localhost:5173", "https://dragonslayer-game.vercel.app")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
