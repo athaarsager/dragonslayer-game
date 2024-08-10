@@ -107,10 +107,14 @@ function BattleScreen(props) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    const apiClient = axios.create({
+        baseURL: import.meta.env.VITE_API_BASE_URL
+    });
+
     // putting axios calls here for now. Will very likely need to move them to a different component later
     async function fetchClassAttacks() {
         try {
-            const response = await axios.get(`/api/attacks/${characterClass}`);
+            const response = await apiClient.get(`/attacks/${characterClass}`);
             console.log(response.data);
             setClassAttacks(response.data);
             setFetchClassAttacksSucceeded(true);
@@ -121,7 +125,7 @@ function BattleScreen(props) {
 
     async function fetchCharacterStats() {
         try {
-            const response = await axios.get(`/api/stats/${characterClass}`);
+            const response = await apiClient.get(`/stats/${characterClass}`);
             console.log("These are the character's stats:", response.data[0]);
             setMaxPlayerStats(response.data[0]);
             setCurrentPlayerStats(response.data[0]);
@@ -136,7 +140,7 @@ function BattleScreen(props) {
 
     async function fetchDragonAttacks() {
         try {
-            const response = await axios.get("/api/attacks/5");
+            const response = await apiClient.get("/attacks/5");
             console.log("These are the dragon's attacks:", response.data);
             setEnemyAttacks(response.data);
             setFetchDragonAttacksSucceeded(true);
@@ -147,7 +151,7 @@ function BattleScreen(props) {
 
     async function fetchDragonStats() {
         try {
-            const response = await axios.get("/api/stats/5");
+            const response = await apiClient.get("/stats/5");
             console.log("These are the dragon's stats:", response.data[0]);
             setMaxDragonStats(response.data[0]);
             setCurrentEnemyStats(response.data[0]);
@@ -163,7 +167,7 @@ function BattleScreen(props) {
 
     async function fetchBattleMenuText() {
         try {
-            const response = await axios.get("/api/game_text/battle_menu_text");
+            const response = await apiClient.get("/game_text/battle_menu_text");
             console.log("This is the battleMenuTextList:", response.data);
             setBattleTextList(response.data);
             setFetchBattleMenuTextSucceeded(true);
@@ -174,7 +178,7 @@ function BattleScreen(props) {
 
     async function fetchBadEndingText() {
         try {
-            const response = await axios.get("/api/game_text/bad_end");
+            const response = await apiClient.get("/game_text/bad_end");
             console.log("This is the bad ending text array:", response.data);
             setBadEndingText(response.data);
             setFetchBadEndingTextSucceeded(true);

@@ -105,10 +105,14 @@ export default function App() {
         setBattleLoading
     }
 
+    // Will want to change this when switching back to dev
+    const apiClient = axios.create({
+        baseURL: import.meta.env.VITE_API_BASE_URL
+    });
 
     async function fetchOpeningText() {
         try {
-        const response = await axios.get("/api/game_text/opening_text");
+        const response = await apiClient.get("/game_text/opening_text");
         setOpeningText(response.data);
         } catch (error) {
             console.error("Error fetching opening text:", error);
@@ -117,7 +121,7 @@ export default function App() {
 
     async function fetchPrologueText() {
         try {
-        const response = await axios.get("/api/game_text/prologue_text");
+        const response = await apiClient.get("/game_text/prologue_text");
         setPrologueText(response.data);
         } catch (error) {
             console.error("Error fetching prologue text:", error);
@@ -126,7 +130,7 @@ export default function App() {
 
     async function fetchClasses() {
         try {
-        const response = await axios.get("/api/character_classes");
+        const response = await apiClient.get("/character_classes");
         console.log("These are the character classes:", response.data);
         // set the enemy's name to "dragon" right off the bat
         setEnemyName(response.data[4].name);
@@ -139,7 +143,7 @@ export default function App() {
 
     async function fetchClassAttacksToDisplay() {
         try {
-        const response = await axios.get("/api/attacks/4/display");
+        const response = await apiClient.get("/attacks/4/display");
         console.log("These are the attacks to display:", response.data);
         setOriginalClassAttacksToDisplay(response.data);
         setClassAttacksToDisplay(response.data);
