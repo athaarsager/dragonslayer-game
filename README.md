@@ -1,18 +1,21 @@
 # DRAGONSLAYER
 
 ## Live Project
-(Play in full-screen mode for best experience)
+Play in full-screen mode for best experience:
+
 https://dragonslayer-game.vercel.app/ 
+
+## Controls
+Arrow keys: Change Selection
+
+Enter and Spacebar: Confirm
+
+Backspace and Shift: Return to Previous Menu
 
 ## Description
 A text-and-turn-based rpg where you are tasked with slaying a dragon! The final version of this game will include two different endings you can unlock based upon your choices, though the current version only features one. 
 
 This was developed with a C# api for the backend and a JavaScript/React frontend.  
-
-## Controls
-Arrow keys: Change Selection
-Enter and Spacebar: Confirm
-Backspace and Shift: Return to Previous Menu
 
 ## Screenshots
 ![Title Screen](./dragonslayer_frontend/public/images/title_screenshort.png)
